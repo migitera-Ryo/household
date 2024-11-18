@@ -6,22 +6,22 @@ public class CreateBalanceInfo {
 	private String selectedButtonNumber;
 	private int amount;
 	private String selectedIncomeType;
-	private String balance_date;
+	private String balanceDate;
 	private String note;
 	
-	public CreateBalanceInfo( String selectedButtonNumber, int amount, String selectedIncomeType, String balance_date, String note){
+	public CreateBalanceInfo( String selectedButtonNumber, int amount, String selectedIncomeType, String balanceDate, String note){
 		this.selectedButtonNumber = selectedButtonNumber;
 		this.amount = amount;
 		this.selectedIncomeType = selectedIncomeType;
-		this.balance_date = balance_date;
+		this.balanceDate = balanceDate;
 		this.note = note;
 	}
 
-	public String getIncome_no() {
+	public String getSelectedButtonNumber() {
 		return selectedButtonNumber;
 	}
 
-	public void setIncome_no(String selectedButtonNumber) {
+	public void setSelectedButtonNumber(String selectedButtonNumber) {
 		this.selectedButtonNumber = selectedButtonNumber;
 	}
 
@@ -33,20 +33,20 @@ public class CreateBalanceInfo {
 		this.amount = amount;
 	}
 
-	public String getIncome_type() {
+	public String getSelectedIncomeType() {
 		return selectedIncomeType;
 	}
 
-	public void setIncome_type(String selectedIncomeType) {
+	public void setSelectedIncomeType(String selectedIncomeType) {
 		this.selectedIncomeType = selectedIncomeType;
 	}
 
-	public String getIncome_date() {
-		return balance_date;
+	public String getBalanceDate() {
+		return balanceDate;
 	}
 
-	public void setIncome_date(String balance_date) {
-		this.balance_date = balance_date;
+	public void setBalanceDate(String balanceDate) {
+		this.balanceDate = balanceDate;
 	}
 
 	public String getNote() {
@@ -56,5 +56,4 @@ public class CreateBalanceInfo {
 	public void setNote(String note) {
 		this.note = note;
 	}
-
 }

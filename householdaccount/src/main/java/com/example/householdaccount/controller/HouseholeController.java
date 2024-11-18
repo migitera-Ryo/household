@@ -28,8 +28,9 @@ public class HouseholeController {
     }
 	
 	@RequestMapping(value = "/recieve", method = RequestMethod.POST) 
-	public CreateBalanceInfo recieve( @Validated  CreateBalanceInfo createbalanceinfo ){
-		System.out.println(createbalanceinfo);
+	public CreateBalanceInfo recieve( @RequestBody  CreateBalanceInfo createbalanceinfo ){
+		System.out.println(createbalanceinfo.getAmount());
+		System.out.println(createbalanceinfo.getBalanceDate());
 		System.out.println("aaaaaaaaaaaa");
 		return createbalanceinfo;
 	}

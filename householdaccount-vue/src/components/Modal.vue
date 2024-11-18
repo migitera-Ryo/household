@@ -14,16 +14,16 @@ export default {
   props: ["message"],
   data(){
     return{
-      income_info:{
+      incomeInfo:{
         selectedButtonNumber: '',
-        balance_date:'',
+        balanceDate:'',
         amount:'',
         selectedIncomeType: '',
         note:''
     },
     revGoods:{
         selectedButtonNumber: '',
-        balance_date:'',
+        balanceDate:'',
         amount:'',
         selectedIncomeType: '',
         note:''
@@ -31,7 +31,7 @@ export default {
       selectedExpenseItem: '',
       isPush1:true,
       isPush2:true,
-      income_types: [
+      incomeTypes: [
         { value: 'value1', text: '給与' },
         { value: 'value2', text: '賞与' },
         { value: 'value2', text: '副業' },
@@ -39,7 +39,7 @@ export default {
         { value: 'value3', text: '臨時収入' },
         { value: 'value3', text: '投資' }
       ],
-      expense_items: [
+      expenseItems: [
         { value: 'value1', text: '食費' },
         { value: 'value2', text: '日用品' },
         { value: 'value2', text: '光熱費' },
@@ -64,8 +64,8 @@ export default {
     },
 
     send: function(){
-			axios.post('http://localhost:8080/api/recieve', this.income_info).
-				then(function(response){console.log(response.data)})
+			axios.post('http://localhost:8080/api/recieve', this.incomeInfo).
+				then(response=>{console.log(response.data),this.revGoods = response.data})
 		},
 
     returnFalse() {
@@ -77,7 +77,7 @@ export default {
     pushedBtn1(){
       this.isPush1 = false;
       this.isPush2 = true;
-      this.income_info.selectedIncomeType = '';
+      this.incomeInfo.selectedIncomeType = '';
     },
     pushedBtn2() {
       this.isPush1 = true;
@@ -95,29 +95,30 @@ export default {
 
         <ul>
         <li v-for="user in users" :key="user">{{user}}</li>
-        <li>{{revGoods.selectedButtonNumber}}</li>
-        <li>{{revGoods.balance_date}}</li>
-        <li>{{revGoods.selectedIncomeType}}</li>
-        <li>{{revGoods.amount}}</li>
-        <li>{{revGoods.note}}</li>
         </ul>
+
+        <p>{{revGoods.selectedButtonNumber}}</p>
+        <p>{{revGoods.balanceDate}}</p>
+        <p>{{revGoods.selectedIncomeType}}</p>
+        <p>{{revGoods.amount}}</p>
+        <p>{{revGoods.note}}</p>
 
         <p>
         <label>支出区分：</label>
-        <input type="radio" v-on:click="pushedBtn1" id="button1" value="1" v-model="income_info.selectedButtonNumber" />
+        <input type="radio" v-on:click="pushedBtn1" id="button1" value="収入" v-model="incomeInfo.selectedButtonNumber" />
         <label for="button1">収入</label>
 
-        <input type="radio" v-on:click="pushedBtn2" id="button2" value="2" v-model="income_info.selectedButtonNumber" />
+        <input type="radio" v-on:click="pushedBtn2" id="button2" value="支出" v-model="incomeInfo.selectedButtonNumber" />
         <label for="button1">支出</label>
         </p>
 
         <label>収支日付：</label>
-        <input type="text" class = "search_text" v-model="income_info.balance_date" placeholder="Type here"/>
+        <input type="text" class = "search_text" v-model="incomeInfo.balanceDate" placeholder="Type here"/>
 
         <p>
         <label>収入種別：</label>
-        <select v-model="income_info.selectedIncomeType" :disabled="isPush1">
-        <option v-for="income_type in income_types" :value="income_type.value" :key="income_type.value">
+        <select v-model="incomeInfo.selectedIncomeType" :disabled="isPush1">
+        <option v-for="income_type in incomeTypes" :value="income_type.text" :key="income_type.value">
           {{ income_type.text }}
         </option>
         </select>
@@ -126,18 +127,18 @@ export default {
         <p>
         <label>支出費目：</label>
         <select v-model="selectedExpenseItem" :disabled="isPush2">
-        <option v-for="expense_item in expense_items" :value="expense_item.value" :key="expense_item.value">
+        <option v-for="expense_item in expenseItems" :value="expense_item.value" :key="expense_item.value">
           {{ expense_item.text }}
         </option>
         </select>
         </p>
 
         <label>金額：</label>
-        <input type="text" class = "search_text" v-model="income_info.amount" placeholder="Type here"/>
+        <input type="text" class = "search_text" v-model="incomeInfo.amount" placeholder="Type here"/>
         
         <p>
           <label>備考：</label>
-          <input type="text" class = "search_text" v-model="income_info.note" placeholder="Type here"/>
+          <input type="text" class = "search_text" v-model="incomeInfo.note" placeholder="Type here"/>
         </p>
         
 

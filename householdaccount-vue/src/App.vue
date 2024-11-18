@@ -65,7 +65,7 @@ export default {
     <h1 style="color:#ffffff">家計簿システム</h1>
   </header>
 
-  <input type="text" class = "search_text" v-model="textInput" placeholder="Type here"/>
+  <input type="text" class = "search_text" placeholder="Type here"/>
   <div align="right" class="bt_create">
     <h1>{{ msg }}</h1>
 
