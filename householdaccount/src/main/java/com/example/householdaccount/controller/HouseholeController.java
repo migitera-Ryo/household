@@ -1,6 +1,7 @@
 package com.example.householdaccount.controller;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.catalina.User;
@@ -14,11 +15,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.householdaccount.entity.CreateBalanceInfo;
+import com.example.householdaccount.service.HouseholdService;
 
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:5173")
 public class HouseholeController {
+	private final HouseholdService service;
+	
+	public HouseholeController(HouseholdService service) {
+        this.service = service;
+    }
+	
+	
+	
 	@GetMapping("/users")
     public List<String> getUsers() {
 		List<String> list = Arrays.asList("AA", "BB", "CC");
@@ -28,11 +38,22 @@ public class HouseholeController {
     }
 	
 	@RequestMapping(value = "/recieve", method = RequestMethod.POST) 
-	public CreateBalanceInfo recieve( @RequestBody  CreateBalanceInfo createbalanceinfo ){
+	public void recieve( @RequestBody  CreateBalanceInfo createbalanceinfo ){
+		
 		System.out.println(createbalanceinfo.getAmount());
 		System.out.println(createbalanceinfo.getBalanceDate());
 		System.out.println("aaaaaaaaaaaa");
-		return createbalanceinfo;
+		
+		createbalanceinfo.setIncomeNo("I240400001");
+		createbalanceinfo.setInitialCreateDateAndTime(new Date());
+		createbalanceinfo.setLastUpdateDateAndTime(new Date());
+		createbalanceinfo.setInitialCreateUserCode("a");
+		createbalanceinfo.setLastUpdateUserCode("a");
+		createbalanceinfo.setVersion(0);
+		
+		
+		this.service.add(createbalanceinfo);
+		System.out.println("iiiiiiiiiiiiiiiiiiiiiiii");
 	}
 
 }

@@ -15,7 +15,6 @@ export default {
   data(){
     return{
       incomeInfo:{
-        selectedButtonNumber: '',
         balanceDate:'',
         amount:'',
         selectedIncomeType: '',
@@ -26,26 +25,27 @@ export default {
         balanceDate:'',
         amount:'',
         selectedIncomeType: '',
-        note:''
+        note:'',
+        deleteFrag:''
     },
       selectedExpenseItem: '',
       isPush1:true,
       isPush2:true,
       incomeTypes: [
-        { value: 'value1', text: '給与' },
-        { value: 'value2', text: '賞与' },
-        { value: 'value2', text: '副業' },
-        { value: 'value2', text: 'お小遣い' },
-        { value: 'value3', text: '臨時収入' },
-        { value: 'value3', text: '投資' }
+        { value: '1', text: '給与' },
+        { value: '2', text: '賞与' },
+        { value: '3', text: '副業' },
+        { value: '4', text: 'お小遣い' },
+        { value: '5', text: '臨時収入' },
+        { value: '6', text: '投資' }
       ],
       expenseItems: [
-        { value: 'value1', text: '食費' },
-        { value: 'value2', text: '日用品' },
-        { value: 'value2', text: '光熱費' },
-        { value: 'value2', text: '住宅費' },
-        { value: 'value3', text: '交通費' },
-        { value: 'value3', text: '通信費' }
+        { value: '1', text: '食費' },
+        { value: '2', text: '日用品' },
+        { value: '3', text: '光熱費' },
+        { value: '4', text: '住宅費' },
+        { value: '5', text: '交通費' },
+        { value: '6', text: '通信費' }
       ],
       users:[]
     }
@@ -65,7 +65,7 @@ export default {
 
     send: function(){
 			axios.post('http://localhost:8080/api/recieve', this.incomeInfo).
-				then(response=>{console.log(response.data),this.revGoods = response.data})
+				then(response=>{console.log(response)})
 		},
 
     returnFalse() {
@@ -102,23 +102,24 @@ export default {
         <p>{{revGoods.selectedIncomeType}}</p>
         <p>{{revGoods.amount}}</p>
         <p>{{revGoods.note}}</p>
+        <p>{{revGoods.deleteFrag}}</p>
 
         <p>
         <label>支出区分：</label>
-        <input type="radio" v-on:click="pushedBtn1" id="button1" value="収入" v-model="incomeInfo.selectedButtonNumber" />
+        <input type="radio" v-on:click="pushedBtn1" id="button1" value="収入"/>
         <label for="button1">収入</label>
 
-        <input type="radio" v-on:click="pushedBtn2" id="button2" value="支出" v-model="incomeInfo.selectedButtonNumber" />
+        <input type="radio" v-on:click="pushedBtn2" id="button2" value="支出"/>
         <label for="button1">支出</label>
         </p>
 
         <label>収支日付：</label>
-        <input type="text" class = "search_text" v-model="incomeInfo.balanceDate" placeholder="Type here"/>
+        <input type="date" class = "search_text" v-model="incomeInfo.balanceDate" placeholder="Type here"/>
 
         <p>
         <label>収入種別：</label>
         <select v-model="incomeInfo.selectedIncomeType" :disabled="isPush1">
-        <option v-for="income_type in incomeTypes" :value="income_type.text" :key="income_type.value">
+        <option v-for="income_type in incomeTypes" :value="income_type.value" :key="income_type.value">
           {{ income_type.text }}
         </option>
         </select>

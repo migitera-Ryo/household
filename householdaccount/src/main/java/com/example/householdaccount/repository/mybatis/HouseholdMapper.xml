@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+        "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.repository.mybatis.HouseholdMapper">
+    <resultMap id="CreateBalnaceInfo" type="com.example.householdaccount.entity.CreateBalnaceInfo">
+        <id property="incomeNo" column="INCOME_NO"/>
+        <result property="amount" column="AMOUNT"/>
+        <result property="selectedIncomeType" column="INCOME_TYPE"/>
+        <result property="balanceDate" column="INCOME_DATE"/>
+        <result property="note" column="NOTE"/>
+        <result property="deleteFrag" column="DELETE_FRAG"/>
+        <result property="initialCreateDateAndTime" column="INITIAL_CREATE_DATE_AND_TIME"/>
+        <result property="lastUpdateDateAndTime" column="LAST_UPDATE__DATE_AND_TIME"/>
+        <result property="initialCreateUserCode" column="INITIAL_CREATE_USER_CODE"/>
+        <result property="lastUpdateUserCode" column="LAST_UPDATE__USER_CODE"/>
+        <result property="version" column="VERSION"/>
+    </resultMap>
+
+    <insert id="add" parameterType="com.example.householdaccount.entity.CreateBalnaceInfo" keyProperty="incomeNo">
+        INSERT INTO INCOME (INCOME_NO , AMOUNT, INCOME_TYPE, INCOME_DATE, NOTE, DELETE_FRAG, 
+        INITIAL_CREATE_DATE_AND_TIME, LAST_UPDATE__DATE_AND_TIME, INITIAL_CREATE_USER_CODE, 
+        LAST_UPDATE__USER_CODE, VERSION) 
+        VALUES (#{incomeNo}, #{amount}, #{selectedIncomeType},#{balanceDate},#{note},
+        #{deleteFrag},#{initialCreateDateAndTime},#{lastUpdateDateAndTime},#{initialCreateUserCode},
+        #{lastUpdateUserCode},#{version});
+    </insert>
+</mapper>

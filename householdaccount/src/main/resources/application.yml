@@ -1,0 +1,13 @@
+#spring.application.name=householdaccount
+
+dbcp2.jdbc:
+  driver-class-name: org.postgresql.Driver
+  url: jdbc:postgresql://localhost:5432/householdaccount
+  username: postgres
+  password: mhm21110
+  initial-size: 1
+  max-idle: 3
+  min-idle: 1
+  
+  mybatis:
+  mapper-locations: classpath:com/example/householdaccount/repository/mybatis/*.xml
