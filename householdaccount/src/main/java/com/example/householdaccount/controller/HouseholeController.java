@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.catalina.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,19 +16,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.householdaccount.entity.CreateBalanceInfo;
-import com.example.householdaccount.service.HouseholdService;
+import com.example.householdaccount.entity.CreateIncomeInfo;
+import com.example.householdaccount.service.HouseholdServices;
 
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:5173")
 public class HouseholeController {
-	private final HouseholdService service;
-	
-	public HouseholeController(HouseholdService service) {
-        this.service = service;
-    }
-	
-	
+	@Autowired
+	HouseholdServices householdServices;
 	
 	@GetMapping("/users")
     public List<String> getUsers() {
@@ -38,21 +35,23 @@ public class HouseholeController {
     }
 	
 	@RequestMapping(value = "/recieve", method = RequestMethod.POST) 
-	public void recieve( @RequestBody  CreateBalanceInfo createbalanceinfo ){
+	public void recieve( @RequestBody  CreateIncomeInfo createincomeinfo ){
 		
-		System.out.println(createbalanceinfo.getAmount());
-		System.out.println(createbalanceinfo.getBalanceDate());
+		System.out.println(createincomeinfo.getAmount());
+		System.out.println(createincomeinfo.getBalanceDate());
 		System.out.println("aaaaaaaaaaaa");
 		
-		createbalanceinfo.setIncomeNo("I240400001");
-		createbalanceinfo.setInitialCreateDateAndTime(new Date());
-		createbalanceinfo.setLastUpdateDateAndTime(new Date());
-		createbalanceinfo.setInitialCreateUserCode("a");
-		createbalanceinfo.setLastUpdateUserCode("a");
-		createbalanceinfo.setVersion(0);
+		createincomeinfo.setIncomeNo("I240400001");
+		createincomeinfo.setInitialCreateDateAndTime(new Date());
+		createincomeinfo.setLastUpdateDateAndTime(new Date());
+		createincomeinfo.setInitialCreateUserCode("a");
+		createincomeinfo.setLastUpdateUserCode("a");
+		createincomeinfo.setVersion(0);
+		
+		System.out.println(createincomeinfo.getInitialCreateDateAndTime());
 		
 		
-		this.service.add(createbalanceinfo);
+		householdServices.postCreateIncomeInfo(createincomeinfo);
 		System.out.println("iiiiiiiiiiiiiiiiiiiiiiii");
 	}
 

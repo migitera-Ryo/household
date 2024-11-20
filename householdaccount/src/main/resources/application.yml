@@ -1,13 +1,18 @@
 #spring.application.name=householdaccount
-
-dbcp2.jdbc:
-  driver-class-name: org.postgresql.Driver
-  url: jdbc:postgresql://localhost:5432/householdaccount
-  username: postgres
-  password: mhm21110
-  initial-size: 1
-  max-idle: 3
-  min-idle: 1
   
-  mybatis:
-  mapper-locations: classpath:com/example/householdaccount/repository/mybatis/*.xml
+spring:
+  datasource:
+    sqlScriptEncoding: UTF-8
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/householdaccount
+    username: postgres
+    password: mhm21110
+  # アプリケーション起動時にデータベースを初期化しないようにする
+  jpa:
+    hibernate:
+      ddl-auto: update
+    # spring boot起動時にDBにテーブル作成できない問題の対応
+   
+logging:
+  level:
+    sql: debug
