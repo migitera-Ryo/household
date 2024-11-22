@@ -59,18 +59,45 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.8</version>
+			<optional>true</optional>
 			</dependency>
-		
-		
-
-	
 		
 		<dependency>
   			<groupId>org.postgresql</groupId>
   			<artifactId>postgresql</artifactId>
   			<scope>runtime</scope>
   		</dependency>
+  		
+  		<dependency>
+			<groupId>org.jmolecules</groupId>
+			<artifactId>jmolecules-ddd</artifactId>
+  		</dependency>
+		
+		<dependency>
+			<groupId>org.jmolecules</groupId>
+			<artifactId>jmolecules-events</artifactId>
+		</dependency>
+  		
+  		<dependency>
+			<groupId>org.jmolecules</groupId>
+			<artifactId>jmolecules-onion-architecture</artifactId>
+  		</dependency>
+		
+		<dependency>
+			<groupId>org.jmolecules</groupId>
+			<artifactId>jmolecules-cqrs-architecture</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.jmolecules.integrations</groupId>
+			<artifactId>jmolecules-spring</artifactId>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.jmolecules.integrations</groupId>
+			<artifactId>jmolecules-jackson</artifactId>
+		</dependency>
+
 	</dependencies>
 
 
@@ -83,4 +110,38 @@
 		</plugins>
 	</build>
 
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.jmolecules.integrations</groupId>
+				<artifactId>jmolecules-jackson</artifactId>
+				<version>0.4.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jmolecules.integrations</groupId>
+				<artifactId>jmolecules-spring</artifactId>
+				<version>0.4.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jmolecules</groupId>
+				<artifactId>jmolecules-ddd</artifactId>
+				<version>1.2.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jmolecules</groupId>
+				<artifactId>jmolecules-events</artifactId>
+				<version>1.2.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jmolecules</groupId>
+				<artifactId>jmolecules-onion-architecture</artifactId>
+				<version>1.2.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jmolecules</groupId>
+				<artifactId>jmolecules-cqrs-architecture</artifactId>
+				<version>1.2.0</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 </project>

@@ -22,6 +22,7 @@ const dataes = [
 
 <script lang="ts">
 import Modal from './components/Modal.vue'
+import Button from './components/button.vue'
 
 export default {
         name: "HollowWorld",
@@ -76,6 +77,9 @@ export default {
       @execute-method="executeMethod"
     ></modal>
   </div>
+
+
+  <Button v-on:click="showModal()" btname="検索"/>
 
 
 

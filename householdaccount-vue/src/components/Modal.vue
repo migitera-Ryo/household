@@ -15,20 +15,19 @@ export default {
   data(){
     return{
       incomeInfo:{
-        balanceDate:'',
+        incomeDate:'',
         amount:'',
-        selectedIncomeType: '',
+        incomeType: '',
         note:''
     },
-    revGoods:{
-        selectedButtonNumber: '',
-        balanceDate:'',
+    expenditureInfo:{
+        expenditureDate:'',
         amount:'',
-        selectedIncomeType: '',
-        note:'',
-        deleteFrag:''
+        expenditureitemCode: '',
+        expenditureitemName: '',
+        note:''
     },
-      selectedExpenseItem: '',
+      selectedItem: '収入',
       isPush1:true,
       isPush2:true,
       incomeTypes: [
@@ -39,7 +38,7 @@ export default {
         { value: '5', text: '臨時収入' },
         { value: '6', text: '投資' }
       ],
-      expenseItems: [
+      expenseItems2: [
         { value: '1', text: '食費' },
         { value: '2', text: '日用品' },
         { value: '3', text: '光熱費' },
@@ -47,7 +46,12 @@ export default {
         { value: '5', text: '交通費' },
         { value: '6', text: '通信費' }
       ],
-      users:[]
+      expenseItems:[
+        {expenditureExpenseItemCode:'',
+          expenditureExpenseItemName:'',
+          expenditureExpenseItemNameKana:'' 
+        }
+      ]
     }
   },
   mounted() {
@@ -56,8 +60,8 @@ export default {
   methods: {
     async fetchUsers() {
       try {
-        const response = await axios.get('http://localhost:8080/api/users');
-        this.users = response.data;
+        const response = await axios.get('http://localhost:8080/api/expenseItems');
+        this.expenseItems = response.data;
       } catch (error) {
         console.error("There was an error fetching the users!", error);
       }
@@ -77,12 +81,12 @@ export default {
     pushedBtn1(){
       this.isPush1 = false;
       this.isPush2 = true;
-      this.incomeInfo.selectedIncomeType = '';
+      //this.income_type.text = '';
     },
     pushedBtn2() {
       this.isPush1 = true;
       this.isPush2 = false;
-      this.selectedExpenseItem = '';
+      //this.selectedExpenseItem = '';
     }
   },
 };
@@ -93,32 +97,22 @@ export default {
       <div id="modal-content" class="modal">
         <p id="modal-message" class="modal__message">{{ message }}</p>
 
-        <ul>
-        <li v-for="user in users" :key="user">{{user}}</li>
-        </ul>
-
-        <p>{{revGoods.selectedButtonNumber}}</p>
-        <p>{{revGoods.balanceDate}}</p>
-        <p>{{revGoods.selectedIncomeType}}</p>
-        <p>{{revGoods.amount}}</p>
-        <p>{{revGoods.note}}</p>
-        <p>{{revGoods.deleteFrag}}</p>
-
         <p>
         <label>支出区分：</label>
-        <input type="radio" v-on:click="pushedBtn1" id="button1" value="収入"/>
+        <input type="radio" v-model="selectedItem" v-on:click="pushedBtn1" id="button1" value="収入" name = "radio"/>
         <label for="button1">収入</label>
 
-        <input type="radio" v-on:click="pushedBtn2" id="button2" value="支出"/>
-        <label for="button1">支出</label>
+        <input type="radio" v-model="selectedItem" v-on:click="pushedBtn2" id="button2" value="支出" name = "radio"/>
+        <label for="button2">支出</label>
         </p>
-
+        
+        <span v-if="selectedItem=='収入'">
         <label>収支日付：</label>
-        <input type="date" class = "search_text" v-model="incomeInfo.balanceDate" placeholder="Type here"/>
+        <input type="date" class = "search_text" v-model="incomeInfo.incomeDate" placeholder="Type here"/>
 
         <p>
         <label>収入種別：</label>
-        <select v-model="incomeInfo.selectedIncomeType" :disabled="isPush1">
+        <select v-model="incomeInfo.incomeType" :disabled="false">
         <option v-for="income_type in incomeTypes" :value="income_type.value" :key="income_type.value">
           {{ income_type.text }}
         </option>
@@ -127,9 +121,9 @@ export default {
 
         <p>
         <label>支出費目：</label>
-        <select v-model="selectedExpenseItem" :disabled="isPush2">
-        <option v-for="expense_item in expenseItems" :value="expense_item.value" :key="expense_item.value">
-          {{ expense_item.text }}
+        <select v-model="expenditureInfo.expenditureitemName" :disabled="true">
+        <option v-for="expense_item in expenseItems" :value="expense_item.expenditureExpenseItemName" :key="expense_item.expenditureExpenseItemCode">
+          {{ expense_item.expenditureExpenseItemName }}
         </option>
         </select>
         </p>
@@ -141,6 +135,39 @@ export default {
           <label>備考：</label>
           <input type="text" class = "search_text" v-model="incomeInfo.note" placeholder="Type here"/>
         </p>
+      </span>
+
+
+      <span v-if="selectedItem=='支出'">
+        <label>収支日付：</label>
+        <input type="date" class = "search_text" v-model="expenditureInfo.expenditureDate" placeholder="Type here"/>
+
+        <p>
+        <label>収入種別：</label>
+        <select v-model="incomeInfo.incomeType" :disabled="true">
+        <option v-for="income_type in incomeTypes" :value="income_type.value" :key="income_type.value">
+          {{ income_type.text }}
+        </option>
+        </select>
+        </p>
+
+        <p>
+        <label>支出費目：</label>
+        <select v-model="expenditureInfo.expenditureitemName":disabled="false">
+        <option v-for="expense_item in expenseItems" :value="expense_item.expenditureExpenseItemName" :key="expense_item.expenditureExpenseItemCode">
+          {{ expense_item.expenditureExpenseItemName }}
+        </option>
+        </select>
+        </p>
+
+        <label>金額：</label>
+        <input type="text" class = "search_text" v-model="expenditureInfo.amount" placeholder="Type here"/>
+        
+        <p>
+          <label>備考：</label>
+          <input type="text" class = "search_text" v-model="expenditureInfo.note" placeholder="Type here"/>
+        </p>
+      </span>
         
 
         <button class="modal__btn" @click="send">

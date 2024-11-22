@@ -3,8 +3,8 @@ package com.example.householdaccount.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.householdaccount.entity.CreateBalanceInfo;
-import com.example.householdaccount.entity.CreateIncomeInfo;
+import com.example.householdaccount.entity.Income;
 
-public interface HouseholdRepository extends JpaRepository<CreateIncomeInfo,Integer>{
+public interface HouseholdRepository extends JpaRepository<Income,Integer>{
 
 }

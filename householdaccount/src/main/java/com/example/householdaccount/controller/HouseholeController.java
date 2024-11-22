@@ -15,8 +15,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.householdaccount.entity.CreateBalanceInfo;
-import com.example.householdaccount.entity.CreateIncomeInfo;
+import com.example.householdaccount.entity.ExpenditureItems;
+import com.example.householdaccount.entity.Income;
+import com.example.householdaccount.form.InputHouseholdInfo;
 import com.example.householdaccount.service.HouseholdServices;
 
 @RestController
@@ -26,32 +27,54 @@ public class HouseholeController {
 	@Autowired
 	HouseholdServices householdServices;
 	
-	@GetMapping("/users")
-    public List<String> getUsers() {
-		List<String> list = Arrays.asList("AA", "BB", "CC");
+	@GetMapping("/expenseItems")
+    public List<ExpenditureItems> getUsers() {
+		List<ExpenditureItems> list = householdServices.expenditureItemsInfo();
         // ユーザーリストを返す
-		System.out.println("aaaaaaaaaaaa");
+		System.out.println("999999999999999999999999999999");
+		System.out.println(list);
         return list;
     }
 	
 	@RequestMapping(value = "/recieve", method = RequestMethod.POST) 
-	public void recieve( @RequestBody  CreateIncomeInfo createincomeinfo ){
+	public void incomeCreate( @RequestBody  InputHouseholdInfo inputhouseholdinfo ){
 		
-		System.out.println(createincomeinfo.getAmount());
-		System.out.println(createincomeinfo.getBalanceDate());
+		System.out.println(inputhouseholdinfo.getAmount());
+		System.out.println(inputhouseholdinfo.getIncomeDate());
 		System.out.println("aaaaaaaaaaaa");
 		
-		createincomeinfo.setIncomeNo("I240400001");
-		createincomeinfo.setInitialCreateDateAndTime(new Date());
-		createincomeinfo.setLastUpdateDateAndTime(new Date());
-		createincomeinfo.setInitialCreateUserCode("a");
-		createincomeinfo.setLastUpdateUserCode("a");
-		createincomeinfo.setVersion(0);
+		//createincomeinfo.setIncomeNo("I240400001");
+		//createincomeinfo.setInitialCreateDateAndTime(new Date());
+		//createincomeinfo.setLastUpdateDateAndTime(new Date());
+		//createincomeinfo.setInitialCreateUserCode("a");
+		//createincomeinfo.setLastUpdateUserCode("a");
+		//createincomeinfo.setVersion(0);
 		
-		System.out.println(createincomeinfo.getInitialCreateDateAndTime());
+		//System.out.println(income.getInitialCreateDateAndTime());
 		
 		
-		householdServices.postCreateIncomeInfo(createincomeinfo);
+		householdServices.postCreateIncomeInfo(inputhouseholdinfo);
+		System.out.println("iiiiiiiiiiiiiiiiiiiiiiii");
+	}
+	
+	@RequestMapping(value = "/expenditure", method = RequestMethod.POST) 
+	public void expenditure( @RequestBody  InputHouseholdInfo inputhouseholdinfo ){
+		
+		System.out.println(inputhouseholdinfo.getAmount());
+		System.out.println(inputhouseholdinfo.getIncomeDate());
+		System.out.println("aaaaaaaaaaaa");
+		
+		//createincomeinfo.setIncomeNo("I240400001");
+		//createincomeinfo.setInitialCreateDateAndTime(new Date());
+		//createincomeinfo.setLastUpdateDateAndTime(new Date());
+		//createincomeinfo.setInitialCreateUserCode("a");
+		//createincomeinfo.setLastUpdateUserCode("a");
+		//createincomeinfo.setVersion(0);
+		
+		//System.out.println(income.getInitialCreateDateAndTime());
+		
+		
+		householdServices.postCreateIncomeInfo(inputhouseholdinfo);
 		System.out.println("iiiiiiiiiiiiiiiiiiiiiiii");
 	}
 
