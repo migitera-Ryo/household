@@ -23,8 +23,8 @@ export default {
     expenditureInfo:{
         expenditureDate:'',
         amount:'',
-        expenditureitemCode: '',
-        expenditureitemName: '',
+        expenditureItemCode: '',
+        expenditureItemName: '',
         note:''
     },
       selectedItem: '収入',
@@ -69,6 +69,11 @@ export default {
 
     send: function(){
 			axios.post('http://localhost:8080/api/recieve', this.incomeInfo).
+				then(response=>{console.log(response)})
+		},
+
+    sendExpenditre: function(){
+			axios.post('http://localhost:8080/api/expenditure', this.expenditureInfo).
 				then(response=>{console.log(response)})
 		},
 
@@ -121,8 +126,8 @@ export default {
 
         <p>
         <label>支出費目：</label>
-        <select v-model="expenditureInfo.expenditureitemName" :disabled="true">
-        <option v-for="expense_item in expenseItems" :value="expense_item.expenditureExpenseItemName" :key="expense_item.expenditureExpenseItemCode">
+        <select v-model="expenditureInfo.expenditureItemCode" :disabled="true">
+        <option v-for="expense_item in expenseItems" :value="expense_item.expenditureExpenseItemCode" :key="expense_item.expenditureExpenseItemCode">
           {{ expense_item.expenditureExpenseItemName }}
         </option>
         </select>
@@ -135,6 +140,10 @@ export default {
           <label>備考：</label>
           <input type="text" class = "search_text" v-model="incomeInfo.note" placeholder="Type here"/>
         </p>
+
+        <button class="modal__btn" @click="send">
+          保存
+        </button>
       </span>
 
 
@@ -153,8 +162,8 @@ export default {
 
         <p>
         <label>支出費目：</label>
-        <select v-model="expenditureInfo.expenditureitemName":disabled="false">
-        <option v-for="expense_item in expenseItems" :value="expense_item.expenditureExpenseItemName" :key="expense_item.expenditureExpenseItemCode">
+        <select v-model="expenditureInfo.expenditureItemCode":disabled="false">
+        <option v-for="expense_item in expenseItems" :value="expense_item.expenditureExpenseItemCode" :key="expense_item.expenditureExpenseItemCode">
           {{ expense_item.expenditureExpenseItemName }}
         </option>
         </select>
@@ -167,12 +176,14 @@ export default {
           <label>備考：</label>
           <input type="text" class = "search_text" v-model="expenditureInfo.note" placeholder="Type here"/>
         </p>
+
+        <button class="modal__btn" @click="sendExpenditre">
+          保存
+        </button>
       </span>
         
 
-        <button class="modal__btn" @click="send">
-          保存
-        </button>
+        
         <button class="modal__btn" @click="returnFalse()">キャンセル</button>
       </div>
       <div id="modal-overlay"></div>

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.householdaccount.entity.ExpenditureItems;
 import com.example.householdaccount.entity.Income;
+import com.example.householdaccount.form.ExpenditureHouseholdInfo;
 import com.example.householdaccount.form.InputHouseholdInfo;
 import com.example.householdaccount.service.HouseholdServices;
 
@@ -31,7 +32,6 @@ public class HouseholeController {
     public List<ExpenditureItems> getUsers() {
 		List<ExpenditureItems> list = householdServices.expenditureItemsInfo();
         // ユーザーリストを返す
-		System.out.println("999999999999999999999999999999");
 		System.out.println(list);
         return list;
     }
@@ -43,25 +43,15 @@ public class HouseholeController {
 		System.out.println(inputhouseholdinfo.getIncomeDate());
 		System.out.println("aaaaaaaaaaaa");
 		
-		//createincomeinfo.setIncomeNo("I240400001");
-		//createincomeinfo.setInitialCreateDateAndTime(new Date());
-		//createincomeinfo.setLastUpdateDateAndTime(new Date());
-		//createincomeinfo.setInitialCreateUserCode("a");
-		//createincomeinfo.setLastUpdateUserCode("a");
-		//createincomeinfo.setVersion(0);
-		
-		//System.out.println(income.getInitialCreateDateAndTime());
-		
-		
 		householdServices.postCreateIncomeInfo(inputhouseholdinfo);
 		System.out.println("iiiiiiiiiiiiiiiiiiiiiiii");
 	}
 	
 	@RequestMapping(value = "/expenditure", method = RequestMethod.POST) 
-	public void expenditure( @RequestBody  InputHouseholdInfo inputhouseholdinfo ){
+	public void expenditure( @RequestBody  ExpenditureHouseholdInfo expenditureHouseholdInfo ){
 		
-		System.out.println(inputhouseholdinfo.getAmount());
-		System.out.println(inputhouseholdinfo.getIncomeDate());
+		System.out.println(expenditureHouseholdInfo.getExpenditureItemCode());
+		System.out.println(expenditureHouseholdInfo.getExpenditureDate());
 		System.out.println("aaaaaaaaaaaa");
 		
 		//createincomeinfo.setIncomeNo("I240400001");
@@ -74,7 +64,7 @@ public class HouseholeController {
 		//System.out.println(income.getInitialCreateDateAndTime());
 		
 		
-		householdServices.postCreateIncomeInfo(inputhouseholdinfo);
+		householdServices.postCreateExpenditureInfo(expenditureHouseholdInfo);
 		System.out.println("iiiiiiiiiiiiiiiiiiiiiiii");
 	}
 

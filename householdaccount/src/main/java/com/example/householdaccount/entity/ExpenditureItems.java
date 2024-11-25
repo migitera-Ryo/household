@@ -14,6 +14,8 @@ import org.jmolecules.ddd.types.Identifier;
 
 import com.example.householdaccount.common.SystemItemVO;
 import com.example.householdaccount.entity.Income.IncomeNoVO;
+import com.example.householdaccount.form.ExpenditureItemInfo;
+import com.example.householdaccount.form.InputHouseholdInfo;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
@@ -37,6 +39,12 @@ public class ExpenditureItems {
 	
 	@Column(nullable = false)
 	private String expenditureExpenseItemNameKana;
+	
+	public ExpenditureItems(ExpenditureItemInfo expenditureiteminfo) {
+		this.expenditureExpenseItemCode = ExpenditureExpenseItemCodeVO.of(expenditureiteminfo.getExpenditureExpenseItemCode());
+		this.expenditureExpenseItemName = expenditureiteminfo.getExpenditureExpenseItemName();
+		this.expenditureExpenseItemNameKana = expenditureiteminfo.getExpenditureExpenseItemNameKana();
+	}
 	
 	
 	@ValueObject
