@@ -4,9 +4,24 @@ import axios from 'axios';
 </script>
 
 <script lang="ts">
+import SearchBalanceRadio from './Molecules/SearchBalanceRadio.vue'
+import SearchBaseDate from './Molecules/SearchBaseDate.vue'
+import SearchBaseAmount from './Molecules/SearchBaseAmount.vue'
+import FormSelect from './Atoms/FormSelect.vue'
+import TextArea from './Atoms/TextArea.vue'
+import Button from './Atoms/button.vue'
+
 export default {
   name: "Modal",
   props: ["message"],
+  components: {
+        //SearchBalanceRadio,
+        // SearchBaseDate,
+        // SearchBaseAmount,
+        // FormSelect,
+        // TextArea,
+        // Button
+    },
   data(){
     return{
       incomeInfo:{
@@ -261,8 +276,16 @@ export default {
 <template>
     <div id="modal">
       <div id="modal-content" class="modal">
+        <SearchBalanceRadio/>
+        <SearchBaseDate/>
+        <SearchBaseAmount/>
+        <FormSelect formSelectName="収入種別" Types={incomeTypes}/>
+        
+        <TextArea/>
+        <Button btname="検索"/>
+
         <p>
-        <label>支出区分：</label>
+        <label>検索です：</label>
         <input type="radio" v-model="selectedRadio" v-on:click="pushedBtn1" id="button1" value="収入" name = "radio"/>
         <label for="button1">収入</label>
 

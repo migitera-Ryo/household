@@ -27,12 +27,6 @@ export default {
       isPush1:true,
       isPush2:true,
       message:null,
-      SystemErrorMessage:'',
-      amountErrorFrag:false,
-      dateErrorFrag:true,
-      expenditureItemErrorFrag:true,
-      incomeTypeErrorFrag:true,
-      noteErrorFrag:true,
 
       incomeTypes: [
         { value: '1', text: '給与' },
@@ -75,24 +69,14 @@ export default {
       }
     },
 
-    sendIncome: function(){
-      try{
-        axios.post('http://localhost:8080/api/income', this.incomeInfo).
-				then(response=>{console.log(response),this.message = response.data, alert(this.message)})
-      }catch(error){
-        alert(error)
-      }
-			
+    send: function(){
+			axios.post('http://localhost:8080/api/recieve', this.incomeInfo).
+				then(response=>{console.log(response),this.message = response.data})
 		},
 
     sendExpenditre: function(){
-      try{
-        axios.post('http://localhost:8080/api/expenditure', this.expenditureInfo).
-				then(response=>{console.log(response),this.message = response.data, alert(this.message)})
-      }catch(error){
-        alert(error)
-      }
-			
+			axios.post('http://localhost:8080/api/expenditure', this.expenditureInfo).
+				then(response=>{console.log(response),this.$emit("execute-method", true)})
 		},
 
     returnFalse() {
@@ -113,45 +97,19 @@ export default {
     },
     
 
-    incomeCreateCheckValidate(){
-      const amount_error_message = this.amonutValidate(this.incomeInfo.amount)
-      const date_error_message = this.dateValidate(this.incomeInfo.incomeDate)
-      const incomeType_error_message = this.incomeTypeValidate(this.incomeInfo.incomeType)
-      const note_error_message = this.noteValidate(this.incomeInfo.note)
-      if(amount_error_message === true && date_error_message === true && incomeType_error_message === true && note_error_message === true){
-        return false;
-      }else{
-        return true;
-      }
-    },
-    expenditureCreateCheckValidate(){
-      const amount_error_message = this.amonutValidate(this.expenditureInfo.amount)
-      const date_error_message = this.dateValidate(this.expenditureInfo.expenditureDate)
-      const expenditureItem_error_message = this.expenditureItemValidate(this.expenditureInfo.expenditureItemCode)
-      const note_error_message = this.noteValidate(this.expenditureInfo.note)
-      if(amount_error_message === true && date_error_message === true && expenditureItem_error_message === true && note_error_message === true){
-        return false;
-      }else{
-        return true;
-      }
-    },
 
     amountCheckValidate() {
-      
       if(this.selectedRadio=='収入'){
         const amount_error_message = this.amonutValidate(this.incomeInfo.amount)
         if(amount_error_message === true) {
           this.validation.incomeAmountResult = '';
-          
          } else {
           this.validation.incomeAmountResult = amount_error_message;
-          
         } 
       }else if(this.selectedRadio=='支出'){
         const amount_error_message = this.amonutValidate(this.expenditureInfo.amount)
         if(amount_error_message === true) {
           this.validation.expenditureAmountResult = '';
-          
          } else {
           this.validation.expenditureAmountResult = amount_error_message;
         } 
@@ -226,7 +184,7 @@ export default {
       }
       const regex = /^[0-9]+(\.[0-9]+)?$/;
       if(!regex.test(amount)) {
-        return '半角の整数で入力してください';
+        return '整数で入力してください';
       }
       if(amount.length > 8) {
         return '8桁以内で入力してください';
@@ -272,7 +230,7 @@ export default {
         
         <span v-if="selectedRadio=='収入'">
         <label>収支日付：</label>
-        <input name = "date" type="date" class = "search_text" v-model="incomeInfo.incomeDate" placeholder="Type here" @blur="dateCheckValidate"/>
+        <input name = "date" type="date" class = "search_text" v-model="incomeInfo.incomeDate" placeholder="Type here" @blur="dateCheckValidate" required/>
         <p>{{ validation.incomeDateResult }}</p>
 
         <p>
@@ -289,7 +247,7 @@ export default {
         <label>支出費目：</label>
         <select v-model="expenditureInfo.expenditureItemCode" :disabled="true">
         <option v-for="expense_item in expenseItems" :value="expense_item.expenditureExpenseItemCode" :key="expense_item.expenditureExpenseItemCode">
-          {{}}
+          {{ expense_item.expenditureExpenseItemName }}
         </option>
         </select>
         </p>
@@ -304,7 +262,9 @@ export default {
           <p>{{ validation.incomeNoteResult }}</p>
         </p>
 
-        <button class="modal__btn" @click="sendIncome" :disabled = "incomeCreateCheckValidate()">
+        <p>{{message}}</p>
+
+        <button class="modal__btn" @click="send">
           保存
         </button>
       </span>
@@ -319,7 +279,7 @@ export default {
         <label>収入種別：</label>
         <select v-model="incomeInfo.incomeType" :disabled="true">
         <option v-for="income_type in incomeTypes" :value="income_type.value" :key="income_type.value">
-          {{}}
+          {{ income_type.text }}
         </option>
         </select>
         </p>
@@ -344,7 +304,7 @@ export default {
           <p>{{ validation.expenditureNoteResult }}</p>
         </p>
 
-        <button class="modal__btn" @click="sendExpenditre" :disabled = "expenditureCreateCheckValidate()">
+        <button class="modal__btn" @click="sendExpenditre">
           保存
         </button>
       </span>
