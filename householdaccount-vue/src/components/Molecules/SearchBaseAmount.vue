@@ -5,14 +5,28 @@ import axios from 'axios'
 
 <script lang="ts">
 import NunberInput from '../Atoms/NumberInput.vue'
+
+export default {
+  data() {
+    return {
+      firstAmount: '',
+      lastAmount: '',
+    }
+  },
+  methods: {
+    setAmount() {
+      this.$emit('execute-method', this.firstAmount, this.lastAmount)
+    },
+  },
+}
 </script>
 
 <template>
   <p>
     <label>金額：</label>
-    <NunberInput />
+    <NunberInput v-model="firstAmount" @execute-method="setAmount" />
     <label>{{ '~' }}</label>
-    <NunberInput />
+    <NunberInput v-model="lastAmount" @execute-method="setAmount" />
   </p>
 </template>
 

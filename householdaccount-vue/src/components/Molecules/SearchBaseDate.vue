@@ -5,14 +5,28 @@ import axios from 'axios'
 
 <script lang="ts">
 import DateInput from '../Atoms/DateInput.vue'
+
+export default {
+  data() {
+    return {
+      firstDate: '',
+      lastDate: '',
+    }
+  },
+  methods: {
+    setDate() {
+      this.$emit('execute-method', this.firstDate, this.lastDate)
+    },
+  },
+}
 </script>
 
 <template>
   <p>
     <label>収支日付：</label>
-    <DateInput />
+    <DateInput v-model="firstDate" @execute-method="setDate" />
     <label>{{ '~' }}</label>
-    <DateInput />
+    <DateInput v-model="lastDate" @execute-method="setDate" />
   </p>
 </template>
 

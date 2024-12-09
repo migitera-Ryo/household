@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import {ref} from 'vue'
-import axios from 'axios';
+import { ref } from 'vue'
+import axios from 'axios'
 </script>
 
 <script lang="ts">
@@ -12,372 +12,362 @@ import TextArea from './Atoms/TextArea.vue'
 import Button from './Atoms/button.vue'
 
 export default {
-  name: "Modal",
-  props: ["message"],
+  name: 'Modal',
+  props: ['message'],
   components: {
-        //SearchBalanceRadio,
-        // SearchBaseDate,
-        // SearchBaseAmount,
-        // FormSelect,
-        // TextArea,
-        // Button
-    },
-  data(){
-    return{
-      incomeInfo:{
-        incomeDate:'',
-        amount:'',
+    //SearchBalanceRadio,
+    // SearchBaseDate,
+    // SearchBaseAmount,
+    // FormSelect,
+    // TextArea,
+    // Button
+  },
+  data() {
+    return {
+      searchInfo: {
+        fromDate: '',
+        toDate: '',
+        fromAmount: '',
+        toAmount: '',
         incomeType: '',
-        note:''
-    },
-    expenditureInfo:{
-        expenditureDate:'',
-        amount:'',
+        expenditureItemName: '',
+        note: '',
+      },
+      detailSearchResultInfo: [
+        {
+          balanceClassification: '',
+          incomeNo: '',
+          incomeDate: '',
+          amount: '',
+          incomeType: '',
+          incomeTypeName: '',
+          note: '',
+        },
+      ],
+      incomeInfo: {
+        incomeDate: '',
+        amount: '',
+        incomeType: '',
+        note: '',
+        incomefromDate: '',
+        incometoDate: '',
+        incomefromAmount: '',
+        incometoAmount: '',
+      },
+      expenditureInfo: {
+        expenditureDate: '',
+        amount: '',
         expenditureItemCode: '',
         expenditureItemName: '',
-        note:''
-    },
+        note: '',
+      },
 
       selectedRadio: '収入',
-      isPush1:true,
-      isPush2:true,
-      message:null,
-      SystemErrorMessage:'',
-      amountErrorFrag:false,
-      dateErrorFrag:true,
-      expenditureItemErrorFrag:true,
-      incomeTypeErrorFrag:true,
-      noteErrorFrag:true,
+      selectedRadio2: '収入',
+      isPush1: true,
+      isPush2: true,
+      message: null,
+      SystemErrorMessage: '',
+      amountErrorFrag: false,
+      dateErrorFrag: true,
+      expenditureItemErrorFrag: true,
+      incomeTypeErrorFrag: true,
+      noteErrorFrag: true,
 
       incomeTypes: [
+        { value: '0', text: '' },
         { value: '1', text: '給与' },
         { value: '2', text: '賞与' },
         { value: '3', text: '副業' },
         { value: '4', text: 'お小遣い' },
         { value: '5', text: '臨時収入' },
-        { value: '6', text: '投資' }
+        { value: '6', text: '投資' },
       ],
-      expenseItems:[
-        {expenditureExpenseItemCode:'',
-          expenditureExpenseItemName:'',
-          expenditureExpenseItemNameKana:'' 
-        }
+      expenseItems: [
+        {
+          expenditureExpenseItemCode: '',
+          expenditureExpenseItemName: '',
+          expenditureExpenseItemNameKana: '',
+        },
+      ],
+
+      expenseItemsSample: [
+        {
+          expenditureExpenseItemCode: 'E0001',
+          expenditureExpenseItemName: '食費',
+          expenditureExpenseItemNameKana: 'ショクヒ',
+        },
+        {
+          expenditureExpenseItemCode: 'E0002',
+          expenditureExpenseItemName: '日用品',
+          expenditureExpenseItemNameKana: 'ニチヨウヒン',
+        },
       ],
 
       validation: {
-        incomeDateResult: '',
-        expenditureDateResult: '',
-        incomeTypeResult: '',
-        expenditureItemResult: '',
-        incomeAmountResult: '',
-        expenditureAmountResult: '',
-        incomeNoteResult: '',
-        expenditureNoteResult: '',
+        dateResult: '',
+        typeResult: '',
+        amountResult: '',
+        noteResult: '',
       },
     }
   },
   mounted() {
-    this.fetchUsers();
+    this.fetchUsers()
   },
   methods: {
     async fetchUsers() {
       try {
-        const response = await axios.get('http://localhost:8080/api/expenseItems');
-        this.expenseItems = response.data;
-               
+        const response = await axios.get('http://localhost:8080/api/expenseItems')
+        this.expenseItems = response.data
       } catch (error) {
-        console.error("There was an error fetching the users!", error);
+        console.error('There was an error fetching the users!', error)
       }
     },
 
-    sendIncome: function(){
-      try{
-        axios.post('http://localhost:8080/api/income', this.incomeInfo).
-				then(response=>{console.log(response),this.message = response.data, alert(this.message)})
-      }catch(error){
-        alert(error)
+    detailSearch: function () {
+      try {
+        axios
+          .get('http://localhost:8080/api/detailsearch', {
+            params: {
+              fromDate: this.searchInfo.fromDate,
+              toDate: this.searchInfo.toDate,
+              fromAmount: this.searchInfo.fromAmount,
+              toAmount: this.searchInfo.toAmount,
+              incomeType: this.searchInfo.incomeType,
+              expenditureItemName: this.searchInfo.expenditureItemName,
+              note: this.searchInfo.note,
+            },
+          })
+          .then((response) => {
+            console.log(response), (this.detailSearchResultInfo = response.data)
+          })
+      } catch (error) {
+        alert('検索できません')
       }
-			
-		},
-
-    sendExpenditre: function(){
-      try{
-        axios.post('http://localhost:8080/api/expenditure', this.expenditureInfo).
-				then(response=>{console.log(response),this.message = response.data, alert(this.message)})
-      }catch(error){
-        alert(error)
-      }
-			
-		},
+    },
 
     returnFalse() {
-      this.$emit("execute-method", false);
+      this.$emit('execute-method', false)
     },
-    returnTrue() {
-      this.$emit("execute-method", true);
-    },
-    pushedBtn1(){
-      this.isPush1 = false;
-      this.isPush2 = true;
-      //this.income_type.text = '';
-    },
-    pushedBtn2() {
-      this.isPush1 = true;
-      this.isPush2 = false;
-      //this.selectedExpenseItem = '';
-    },
-    
+    // returnTrue() {
+    //   this.$emit('execute-method', true)
+    // },
+    // pushedBtn1() {
+    //   this.isPush1 = false
+    //   this.isPush2 = true
+    //   //this.income_type.text = '';
+    // },
+    // pushedBtn2() {
+    //   this.isPush1 = true
+    //   this.isPush2 = false
+    //   //this.selectedExpenseItem = '';
+    // },
 
-    incomeCreateCheckValidate(){
-      const amount_error_message = this.amonutValidate(this.incomeInfo.amount)
-      const date_error_message = this.dateValidate(this.incomeInfo.incomeDate)
-      const incomeType_error_message = this.incomeTypeValidate(this.incomeInfo.incomeType)
-      const note_error_message = this.noteValidate(this.incomeInfo.note)
-      if(amount_error_message === true && date_error_message === true && incomeType_error_message === true && note_error_message === true){
-        return false;
-      }else{
-        return true;
-      }
-    },
-    expenditureCreateCheckValidate(){
-      const amount_error_message = this.amonutValidate(this.expenditureInfo.amount)
-      const date_error_message = this.dateValidate(this.expenditureInfo.expenditureDate)
-      const expenditureItem_error_message = this.expenditureItemValidate(this.expenditureInfo.expenditureItemCode)
-      const note_error_message = this.noteValidate(this.expenditureInfo.note)
-      if(amount_error_message === true && date_error_message === true && expenditureItem_error_message === true && note_error_message === true){
-        return false;
-      }else{
-        return true;
-      }
-    },
+    // incomeCreateCheckValidate() {
+    //   const amount_error_message = this.amonutValidate(
+    //     this.searchInfo.fromAmount,
+    //     this.searchInfo.toAmount,
+    //   )
+    //   const date_error_message = this.dateValidate(this.searchInfo.fromDate, this.searchInfo.toDate)
+    //   const incomeType_error_message = this.incomeTypeValidate(this.searchInfo.incomeType)
+    //   const note_error_message = this.noteValidate(this.searchInfo.note)
+    //   if (
+    //     amount_error_message === true &&
+    //     date_error_message === true &&
+    //     incomeType_error_message === true &&
+    //     note_error_message === true
+    //   ) {
+    //     return false
+    //   } else {
+    //     return true
+    //   }
+    // },
+    // expenditureCreateCheckValidate() {
+    //   const amount_error_message = this.amonutValidate(
+    //     this.searchInfo.fromAmount,
+    //     this.searchInfo.toAmount,
+    //   )
+    //   const date_error_message = this.dateValidate(this.searchInfo.fromDate, this.searchInfo.toDate)
+    //   const expenditureItem_error_message = this.expenditureItemValidate(
+    //     this.expenditureInfo.expenditureItemCode,
+    //   )
+    //   const note_error_message = this.noteValidate(this.searchInfo.note)
+    //   if (
+    //     amount_error_message === true &&
+    //     date_error_message === true &&
+    //     expenditureItem_error_message === true &&
+    //     note_error_message === true
+    //   ) {
+    //     return false
+    //   } else {
+    //     return true
+    //   }
+    // },
 
     amountCheckValidate() {
-      
-      if(this.selectedRadio=='収入'){
-        const amount_error_message = this.amonutValidate(this.incomeInfo.amount)
-        if(amount_error_message === true) {
-          this.validation.incomeAmountResult = '';
-          
-         } else {
-          this.validation.incomeAmountResult = amount_error_message;
-          
-        } 
-      }else if(this.selectedRadio=='支出'){
-        const amount_error_message = this.amonutValidate(this.expenditureInfo.amount)
-        if(amount_error_message === true) {
-          this.validation.expenditureAmountResult = '';
-          
-         } else {
-          this.validation.expenditureAmountResult = amount_error_message;
-        } 
+      const amount_error_message = this.amonutValidate(
+        this.searchInfo.fromAmount,
+        this.searchInfo.toAmount,
+      )
+      if (amount_error_message === true) {
+        this.validation.amountResult = ''
+      } else {
+        this.validation.amountResult = amount_error_message
       }
     },
 
     dateCheckValidate() {
-      if(this.selectedRadio=='収入'){
-        const date_error_message = this.dateValidate(this.incomeInfo.incomeDate)
-        if(date_error_message === true) {
-          this.validation.incomeDateResult = '';
-        } else {
-          this.validation.incomeDateResult = date_error_message;
-        }
-      }else if(this.selectedRadio=='支出'){
-        const date_error_message = this.dateValidate(this.expenditureInfo.expenditureDate)
-        if(date_error_message === true) {
-          this.validation.expenditureDateResult = '';
-        } else {
-          this.validation.expenditureDateResult = date_error_message;
-        }
-      }
-      
-    },
-
-    expenditureItemCheckValidate() {
-      const expenditureItem_error_message = this.expenditureItemValidate(this.expenditureInfo.expenditureItemCode)
-      if(expenditureItem_error_message === true) {
-        this.validation.expenditureItemResult = '';
+      const date_error_message = this.dateValidate(this.searchInfo.fromDate, this.searchInfo.toDate)
+      if (date_error_message === true) {
+        this.validation.dateResult = ''
       } else {
-        this.validation.expenditureItemResult = expenditureItem_error_message;
-      }
-    },
-
-    incomeTypeCheckValidate() {
-      const incomeType_error_message = this.incomeTypeValidate(this.incomeInfo.incomeType)
-      if(incomeType_error_message === true) {
-        this.validation.incomeTypeResult = '';
-      } else {
-        this.validation.incomeTypeResult = incomeType_error_message;
+        this.validation.dateResult = date_error_message
       }
     },
 
     noteCheckValidate() {
-      if(this.selectedRadio=='収入'){
-        const note_error_message = this.noteValidate(this.incomeInfo.note)
-        if(note_error_message === true) {
-          this.validation.incomeNoteResult = '';
-        } else {
-          this.validation.incomeNoteResult = note_error_message;
+      const note_error_message = this.noteValidate(this.searchInfo.note)
+      if (note_error_message === true) {
+        this.validation.noteResult = ''
+      } else {
+        this.validation.noteResult = note_error_message
+      }
+    },
+
+    dateValidate(fromDate: any, toDate: any) {
+      const regex = /^([0-9]{4})-(0[1-9]|1[0-2])-([0-2][0-9]|3[01])$/
+      if (fromDate == '' && toDate == '') {
+        return true
+      } else {
+        if (!fromDate.match(/^([0-9]{4})-(0[1-9]|1[0-2])-([0-2][0-9]|3[01])$/)) {
+          return 'YYYY/MM/DDの形式で入力してください'
         }
-      }else if(this.selectedRadio=='支出'){
-        const note_error_message = this.noteValidate(this.expenditureInfo.note)
-        if(note_error_message === true) {
-          this.validation.expenditureNoteResult = '';
-        } else {
-          this.validation.expenditureNoteResult = note_error_message;
+        return true
+      }
+    },
+
+    amonutValidate(fromAmount: any, toAmount: any) {
+      const regex = /^[0-9]+(\.[0-9]+)?$/
+      if (fromAmount == '' && toAmount == '') {
+        return true
+      } else {
+        if (fromAmount.length > 8 || toAmount.length > 8) {
+          return '8桁以内で入力してください'
         }
+
+        if (fromAmount != '') {
+          if (!regex.test(fromAmount)) {
+            return '金額(from)を半角の整数で入力してください'
+          } else if (toAmount == '') {
+            return true
+          }
+        }
+
+        if (toAmount != '') {
+          if (!regex.test(toAmount)) {
+            return '金額(to)を半角の整数で入力してください'
+          } else if (fromAmount == '') {
+            return true
+          }
+        }
+
+        return true
       }
     },
 
-    dateValidate(date:any) {
-      if(!date.match(/^([0-9]{4})-(0[1-9]|1[0-2])-([0-2][0-9]|3[01])$/)){
-        return 'YYYY/MM/DDの形式で入力してください';
+    incomeTypeValidate(incometype: any) {
+      if (!incometype) {
+        return '選択してください'
       }
-      return true;
+      return true
     },
 
-    amonutValidate(amount:any) {
-      if(!amount) {
-        return '金額を入力してください';
+    expenditureItemValidate(expenditureItem: any) {
+      if (!expenditureItem) {
+        return '選択してください'
       }
-      const regex = /^[0-9]+(\.[0-9]+)?$/;
-      if(!regex.test(amount)) {
-        return '半角の整数で入力してください';
-      }
-      if(amount.length > 8) {
-        return '8桁以内で入力してください';
-      }
-      return true;
+      return true
     },
 
-    incomeTypeValidate(incometype:any) {
-      if(!incometype) {
-        return '選択してください';
+    noteValidate(note: any) {
+      if (note.length > 200) {
+        return '200文字以内で入力してください'
       }
-      return true;
+      return true
     },
 
-    expenditureItemValidate(expenditureItem:any) {
-      if(!expenditureItem) {
-        return '選択してください';
-      }
-      return true;
+    finalSetDate(fromDate: any, toDate: any) {
+      this.searchInfo.fromDate = fromDate
+      this.searchInfo.toDate = toDate
+      this.dateCheckValidate()
     },
 
-    noteValidate(note:any) {
-      if(note.length > 200) {
-        return '200文字以内で入力してください';
+    finalSetNote(finalNote: any) {
+      this.searchInfo.note = finalNote
+      this.noteCheckValidate()
+    },
+
+    finalSetAmount(fromAmount: any, toAmount: any) {
+      this.searchInfo.fromAmount = fromAmount
+      this.searchInfo.toAmount = toAmount
+      this.amountCheckValidate()
+    },
+
+    finalSetType(selectType: any, selectSubType: any) {
+      if (this.selectedRadio2 == '収入') {
+        this.searchInfo.incomeType = selectType
+      } else if (this.selectedRadio2 == '支出') {
+        this.searchInfo.expenditureItemName = selectType
+      } else if (this.selectedRadio2 == '指定なし') {
+        this.searchInfo.incomeType = selectType
+        this.searchInfo.expenditureItemName = selectSubType
       }
-      return true;
-    }
+    },
+
+    finalSetRadioName(finalRadioName: any) {
+      this.selectedRadio2 = finalRadioName
+    },
   },
-};
+}
 </script>
 
 <template>
-    <div id="modal">
-      <div id="modal-content" class="modal">
-        <SearchBalanceRadio/>
-        <SearchBaseDate/>
-        <SearchBaseAmount/>
-        <FormSelect formSelectName="収入種別" Types={incomeTypes}/>
-        
-        <TextArea/>
-        <Button btname="検索"/>
+  <div id="modal">
+    <div id="modal-content" class="modal">
+      <SearchBalanceRadio @execute-method="finalSetRadioName" />
 
-        <p>
-        <label>検索です：</label>
-        <input type="radio" v-model="selectedRadio" v-on:click="pushedBtn1" id="button1" value="収入" name = "radio"/>
-        <label for="button1">収入</label>
+      <SearchBaseDate @execute-method="finalSetDate" />
+      <p>{{ validation.dateResult }}</p>
 
-        <input type="radio" v-model="selectedRadio" v-on:click="pushedBtn2" id="button2" value="支出" name = "radio"/>
-        <label for="button2">支出</label>
-        </p>
-        
-        <span v-if="selectedRadio=='収入'">
-        <label>収支日付：</label>
-        <input name = "date" type="date" class = "search_text" v-model="incomeInfo.incomeDate" placeholder="Type here" @blur="dateCheckValidate"/>
-        <p>{{ validation.incomeDateResult }}</p>
+      <SearchBaseAmount @execute-method="finalSetAmount" />
+      <p>{{ validation.amountResult }}</p>
 
-        <p>
-        <label>収入種別：</label>
-        <select v-model="incomeInfo.incomeType" :disabled="false" @blur="incomeTypeCheckValidate">
-        <option v-for="income_type in incomeTypes" :value="income_type.value" :key="income_type.value">
-          {{ income_type.text }}
-        </option>
-        </select>
-        <p>{{ validation.incomeTypeResult }}</p>
-        </p>
+      <FormSelect
+        :selectedRadioName="selectedRadio2"
+        :expenseItems="expenseItems"
+        :types="incomeTypes"
+        @execute-method="finalSetType"
+      />
 
-        <p>
-        <label>支出費目：</label>
-        <select v-model="expenditureInfo.expenditureItemCode" :disabled="true">
-        <option v-for="expense_item in expenseItems" :value="expense_item.expenditureExpenseItemCode" :key="expense_item.expenditureExpenseItemCode">
-          {{}}
-        </option>
-        </select>
-        </p>
+      <TextArea @execute-method="finalSetNote" />
+      <p>{{ validation.noteResult }}</p>
 
-        <label>金額：</label>
-        <input name = "amount" type="text" class = "search_text" v-model="incomeInfo.amount" placeholder="Type here" @blur="amountCheckValidate"/>
-        <p>{{ validation.incomeAmountResult }}</p>
+      <Button btname="検索" @click="detailSearch" />
 
-        <p>
-          <label>備考：</label>
-          <input type="text" class = "search_text" v-model="incomeInfo.note" placeholder="Type here" @blur="noteCheckValidate"/>
-          <p>{{ validation.incomeNoteResult }}</p>
-        </p>
+      <p>{{ searchInfo.fromDate }}</p>
+      <p>{{ searchInfo.toDate }}</p>
+      <p>{{ searchInfo.fromAmount }}</p>
+      <p>{{ searchInfo.toAmount }}</p>
+      <p>{{ searchInfo.incomeType }}</p>
+      <p>{{ searchInfo.expenditureItemName }}</p>
+      <p>{{ searchInfo.note }}</p>
 
-        <button class="modal__btn" @click="sendIncome" :disabled = "incomeCreateCheckValidate()">
-          保存
-        </button>
-      </span>
-
-
-      <span v-if="selectedRadio=='支出'">
-        <label>収支日付：</label>
-        <input type="date" class = "search_text" v-model="expenditureInfo.expenditureDate" placeholder="Type here" @blur="dateCheckValidate"/>
-        <p>{{ validation.expenditureDateResult }}</p>
-
-        <p>
-        <label>収入種別：</label>
-        <select v-model="incomeInfo.incomeType" :disabled="true">
-        <option v-for="income_type in incomeTypes" :value="income_type.value" :key="income_type.value">
-          {{}}
-        </option>
-        </select>
-        </p>
-
-        <p>
-        <label>支出費目：</label>
-        <select v-model="expenditureInfo.expenditureItemCode":disabled="false" @blur="expenditureItemCheckValidate">
-        <option v-for="expense_item in expenseItems" :value="expense_item.expenditureExpenseItemCode" :key="expense_item.expenditureExpenseItemCode">
-          {{ expense_item.expenditureExpenseItemName }}
-        </option>
-        </select>
-        <p>{{ validation.expenditureItemResult }}</p>
-        </p>
-
-        <label>金額：</label>
-        <input type="text" class = "search_text" v-model="expenditureInfo.amount" placeholder="Type here" @blur="amountCheckValidate"/>
-        <p>{{ validation.expenditureAmountResult }}</p>
-        
-        <p>
-          <label>備考：</label>
-          <input type="text" class = "search_text" v-model="expenditureInfo.note" placeholder="Type here" @blur="noteCheckValidate"/>
-          <p>{{ validation.expenditureNoteResult }}</p>
-        </p>
-
-        <button class="modal__btn" @click="sendExpenditre" :disabled = "expenditureCreateCheckValidate()">
-          保存
-        </button>
-      </span>
-        <button class="modal__btn" @click="returnFalse()">キャンセル</button>
-      </div>
-      <div id="modal-overlay"></div>
+      <button class="modal__btn" @click="returnFalse()">キャンセル</button>
     </div>
-    
-  </template>
-
+    <div id="modal-overlay"></div>
+  </div>
+</template>
 
 <style scoped>
 .modal {
