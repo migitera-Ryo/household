@@ -240,7 +240,7 @@ export default {
       if (fromDate == '' && toDate == '') {
         return true
       } else {
-        if (!fromDate.match(/^([0-9]{4})-(0[1-9]|1[0-2])-([0-2][0-9]|3[01])$/)) {
+        if (!regex.test(fromDate)) {
           return 'YYYY/MM/DDの形式で入力してください'
         }
         return true
