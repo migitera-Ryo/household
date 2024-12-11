@@ -6,6 +6,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -17,7 +18,7 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import com.example.householdaccount.common.SystemItemVO;
-import com.example.householdaccount.form.InputHouseholdInfo;
+import com.example.householdaccount.form.IncomeHouseholdForm;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import org.jmolecules.ddd.annotation.ValueObject;
@@ -35,11 +36,10 @@ import lombok.Value;
 @AllArgsConstructor
 @Table(name = "income")
 public class Income{
-	@Id
+	@EmbeddedId
 	private IncomeNoVO incomeNo;
-	
-	@Column(nullable = false)
-	private int amount;
+
+	@Column(nullable = false) private int amount;
 	
 	@Column(nullable = false)
 	private int incomeType;
@@ -68,7 +68,7 @@ public class Income{
 	@Column(nullable = false)
 	private int version;
 	
-	public Income(String incomeNo, InputHouseholdInfo inputhouseholdinfo) {
+	public Income(String incomeNo, IncomeHouseholdForm inputhouseholdinfo) {
 		//SystemItemVO sytemitemvo = new SystemItemVO();
 		
 		this.incomeNo = IncomeNoVO.of(incomeNo);

@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -14,8 +15,8 @@ import org.jmolecules.ddd.types.Identifier;
 
 import com.example.householdaccount.common.SystemItemVO;
 import com.example.householdaccount.entity.Income.IncomeNoVO;
-import com.example.householdaccount.form.ExpenditureHouseholdInfo;
-import com.example.householdaccount.form.InputHouseholdInfo;
+import com.example.householdaccount.form.ExpenditureHouseholdForm;
+import com.example.householdaccount.form.IncomeHouseholdForm;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
@@ -31,7 +32,7 @@ import lombok.Value;
 @AllArgsConstructor
 @Table(name = "expenditure")
 public class Expenditure {
-	@Id
+	@EmbeddedId
 	private ExpenditureNoVO expenditureNo;
 	
 	@Column(nullable = false)
@@ -67,7 +68,7 @@ public class Expenditure {
 	@Column(nullable = false)
 	private int version;
 	
-	public Expenditure(String expenditureNo, ExpenditureHouseholdInfo expenditureHouseholdInfo) {
+	public Expenditure(String expenditureNo, ExpenditureHouseholdForm expenditureHouseholdInfo) {
 		//SystemItemVO sytemitemvo = new SystemItemVO();
 		
 		this.expenditureNo = ExpenditureNoVO.of(expenditureNo);

@@ -25,17 +25,55 @@ export default {
     return {
       incomeType: '',
       expenditureType: '',
+      incomeTypeResult: '',
+      expenditureTypeResult: '',
     }
   },
   methods: {
     setIncomeType() {
+      this.incomeTypeCheckValidate()
       this.$emit('execute-method', this.incomeType)
     },
     setExpenditureType() {
+      this.expenditureItemCheckValidate()
       this.$emit('execute-method', this.expenditureType)
     },
     setBalanceType() {
+      this.incomeTypeCheckValidate()
+      this.expenditureItemCheckValidate()
       this.$emit('execute-method', this.incomeType, this.expenditureType)
+    },
+
+    incomeTypeValidate(incometype: any) {
+      if (!incometype) {
+        return '選択してください'
+      }
+      return true
+    },
+
+    incomeTypeCheckValidate() {
+      const incomeType_error_message = this.incomeTypeValidate(this.incomeType)
+      if (incomeType_error_message === true) {
+        this.incomeTypeResult = ''
+      } else {
+        this.incomeTypeResult = incomeType_error_message
+      }
+    },
+
+    expenditureItemValidate(expenditureType:any) {
+      if(!expenditureType) {
+        return '選択してください';
+      }
+      return true;
+    },
+
+    expenditureItemCheckValidate() {
+      const expenditureItem_error_message = this.expenditureItemValidate(this.expenditureType)
+      if(expenditureItem_error_message === true) {
+        this.expenditureTypeResult = '';
+      } else {
+        this.expenditureTypeResult = expenditureItem_error_message;
+      }
     },
   },
 }
@@ -50,6 +88,7 @@ export default {
           {{ income_type.text }}
         </option>
       </select>
+      <p>{{ incomeTypeResult }}</p>
     </p>
 
     <p>
@@ -87,6 +126,7 @@ export default {
           {{ expenditure_type.expenditureExpenseItemName }}
         </option>
       </select>
+      <p>{{ expenditureTypeResult }}</p>
     </p>
   </span>
 
@@ -98,6 +138,7 @@ export default {
           {{ income_type.text }}
         </option>
       </select>
+      <p>{{ incomeTypeResult }}</p>
     </p>
 
     <p>
@@ -111,6 +152,7 @@ export default {
           {{ expenditure_type.expenditureExpenseItemName }}
         </option>
       </select>
+      <p>{{ expenditureTypeResult }}</p>
     </p>
   </span>
 </template>

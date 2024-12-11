@@ -205,113 +205,114 @@ export default {
     //   }
     // },
 
-    amountCheckValidate() {
-      const amount_error_message = this.amonutValidate(
-        this.searchInfo.fromAmount,
-        this.searchInfo.toAmount,
-      )
-      if (amount_error_message === true) {
-        this.validation.amountResult = ''
-      } else {
-        this.validation.amountResult = amount_error_message
-      }
-    },
+    // amountCheckValidate() {
+    //   const amount_error_message = this.amonutValidate(
+    //     this.searchInfo.fromAmount,
+    //     this.searchInfo.toAmount,
+    //   )
+    //   if (amount_error_message === true) {
+    //     this.validation.amountResult = ''
+    //   } else {
+    //     this.validation.amountResult = amount_error_message
+    //   }
+    // },
 
-    dateCheckValidate() {
-      const date_error_message = this.dateValidate(this.searchInfo.fromDate, this.searchInfo.toDate)
-      if (date_error_message === true) {
-        this.validation.dateResult = ''
-      } else {
-        this.validation.dateResult = date_error_message
-      }
-    },
+    // dateCheckValidate() {
+    //   const date_error_message = this.dateValidate(this.searchInfo.fromDate, this.searchInfo.toDate)
+    //   if (date_error_message === true) {
+    //     this.validation.dateResult = ''
+    //   } else {
+    //     this.validation.dateResult = date_error_message
+    //   }
+    // },
 
-    noteCheckValidate() {
-      const note_error_message = this.noteValidate(this.searchInfo.note)
-      if (note_error_message === true) {
-        this.validation.noteResult = ''
-      } else {
-        this.validation.noteResult = note_error_message
-      }
-    },
+    // noteCheckValidate() {
+    //   const note_error_message = this.noteValidate(this.searchInfo.note)
+    //   if (note_error_message === true) {
+    //     this.validation.noteResult = ''
+    //   } else {
+    //     this.validation.noteResult = note_error_message
+    //   }
+    // },
 
-    dateValidate(fromDate: any, toDate: any) {
-      const regex = /^([0-9]{4})-(0[1-9]|1[0-2])-([0-2][0-9]|3[01])$/
-      if (fromDate == '' && toDate == '') {
-        return true
-      } else {
-        if (!regex.test(fromDate)) {
-          return 'YYYY/MM/DDの形式で入力してください'
-        }
-        return true
-      }
-    },
+    // dateValidate(fromDate: any, toDate: any) {
+    //   const regex = /^([0-9]{4})-(0[1-9]|1[0-2])-([0-2][0-9]|3[01])$/
+    //   if (fromDate == '' && toDate == '') {
+    //     return true
+    //   } else {
+    //     if (!regex.test(fromDate)) {
+    //       return 'aaaaaaaaaaaaaa'
+    //     }
+    //     return 'YYYY/MM/DDの形式で入力してください'
+    //   }
+    // },
 
-    amonutValidate(fromAmount: any, toAmount: any) {
-      const regex = /^[0-9]+(\.[0-9]+)?$/
-      if (fromAmount == '' && toAmount == '') {
-        return true
-      } else {
-        if (fromAmount.length > 8 || toAmount.length > 8) {
-          return '8桁以内で入力してください'
-        }
+    // amonutValidate(fromAmount: any, toAmount: any) {
+    //   const regex = /^[0-9]+(\.[0-9]+)?$/
+    //   if (fromAmount == '' && toAmount == '') {
+    //     return true
+    //   } else {
+    //     if (fromAmount.length > 8 || toAmount.length > 8) {
+    //       return '8桁以内で入力してください'
+    //     }
 
-        if (fromAmount != '') {
-          if (!regex.test(fromAmount)) {
-            return '金額(from)を半角の整数で入力してください'
-          } else if (toAmount == '') {
-            return true
-          }
-        }
+    //     if (fromAmount != '') {
+    //       if (!regex.test(fromAmount)) {
+    //         return '金額(from)を半角の整数で入力してください'
+    //       } else if (toAmount == '') {
+    //         return true
+    //       }
+    //     }
 
-        if (toAmount != '') {
-          if (!regex.test(toAmount)) {
-            return '金額(to)を半角の整数で入力してください'
-          } else if (fromAmount == '') {
-            return true
-          }
-        }
+    //     if (toAmount != '') {
+    //       if (!regex.test(toAmount)) {
+    //         return '金額(to)を半角の整数で入力してください'
+    //       } else if (fromAmount == '') {
+    //         return true
+    //       }
+    //     }
 
-        return true
-      }
-    },
+    //     return true
+    //   }
+    // },
 
-    incomeTypeValidate(incometype: any) {
-      if (!incometype) {
-        return '選択してください'
-      }
-      return true
-    },
+    // incomeTypeValidate(incometype: any) {
+    //   if (!incometype) {
+    //     return '選択してください'
+    //   }
+    //   return true
+    // },
 
-    expenditureItemValidate(expenditureItem: any) {
-      if (!expenditureItem) {
-        return '選択してください'
-      }
-      return true
-    },
+    // expenditureItemValidate(expenditureItem: any) {
+    //   if (!expenditureItem) {
+    //     return '選択してください'
+    //   }
+    //   return true
+    // },
 
-    noteValidate(note: any) {
-      if (note.length > 200) {
-        return '200文字以内で入力してください'
-      }
-      return true
-    },
+    // noteValidate(note: any) {
+    //   if (note.length > 200) {
+    //     return '200文字以内で入力してください'
+    //   }
+    //   return true
+    // },
 
     finalSetDate(fromDate: any, toDate: any) {
       this.searchInfo.fromDate = fromDate
       this.searchInfo.toDate = toDate
-      this.dateCheckValidate()
+      // this.dateCheckValidate()
     },
 
     finalSetNote(finalNote: any) {
       this.searchInfo.note = finalNote
-      this.noteCheckValidate()
+      //this.noteCheckValidate()
     },
 
     finalSetAmount(fromAmount: any, toAmount: any) {
       this.searchInfo.fromAmount = fromAmount
       this.searchInfo.toAmount = toAmount
-      this.amountCheckValidate()
+      // this.validation.amountResult = amountResult
+      //this.amountCheckValidate()
     },
 
     finalSetType(selectType: any, selectSubType: any) {
@@ -338,10 +339,10 @@ export default {
       <SearchBalanceRadio @execute-method="finalSetRadioName" />
 
       <SearchBaseDate @execute-method="finalSetDate" />
-      <p>{{ validation.dateResult }}</p>
+      <!-- <p>{{ validation.dateResult }}</p> -->
 
       <SearchBaseAmount @execute-method="finalSetAmount" />
-      <p>{{ validation.amountResult }}</p>
+      <!-- <p>{{ validation.amountResult }}</p> -->
 
       <FormSelect
         :selectedRadioName="selectedRadio2"
@@ -351,7 +352,7 @@ export default {
       />
 
       <TextArea @execute-method="finalSetNote" />
-      <p>{{ validation.noteResult }}</p>
+      <!-- <p>{{ validation.noteResult }}</p> -->
 
       <Button btname="検索" @click="detailSearch" />
 
