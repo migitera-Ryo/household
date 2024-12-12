@@ -10,6 +10,7 @@ import SearchBaseAmount from './Molecules/SearchBaseAmount.vue'
 import FormSelect from './Atoms/FormSelect.vue'
 import TextArea from './Atoms/TextArea.vue'
 import Button from './Atoms/button.vue'
+import { number } from 'yup'
 
 export default {
   name: 'Modal',
@@ -25,11 +26,11 @@ export default {
   data() {
     return {
       searchInfo: {
-        fromDate: '',
-        toDate: '',
-        fromAmount: '',
-        toAmount: '',
-        incomeType: '',
+        fromDate: Date,
+        toDate: Date,
+        fromAmount: number,
+        toAmount: number,
+        incomeType: number,
         expenditureItemName: '',
         note: '',
       },
@@ -338,10 +339,10 @@ export default {
     <div id="modal-content" class="modal">
       <SearchBalanceRadio @execute-method="finalSetRadioName" />
 
-      <SearchBaseDate @execute-method="finalSetDate" />
+      <SearchBaseDate @execute-method="finalSetDate" validatedNum="1" />
       <!-- <p>{{ validation.dateResult }}</p> -->
 
-      <SearchBaseAmount @execute-method="finalSetAmount" />
+      <SearchBaseAmount @execute-method="finalSetAmount" validatedNum="1" />
       <!-- <p>{{ validation.amountResult }}</p> -->
 
       <FormSelect
@@ -349,9 +350,10 @@ export default {
         :expenseItems="expenseItems"
         :types="incomeTypes"
         @execute-method="finalSetType"
+        validatedNum="1"
       />
 
-      <TextArea @execute-method="finalSetNote" />
+      <TextArea @execute-method="finalSetNote" validatedNum="1" />
       <!-- <p>{{ validation.noteResult }}</p> -->
 
       <Button btname="検索" @click="detailSearch" />

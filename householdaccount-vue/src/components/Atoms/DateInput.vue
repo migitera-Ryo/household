@@ -5,6 +5,7 @@ import axios from 'axios'
 
 <script lang="ts">
 export default {
+  props: ['validatedNum'],
   data() {
     return {
       date: '',

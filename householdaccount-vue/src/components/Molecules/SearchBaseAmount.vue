@@ -7,6 +7,7 @@ import axios from 'axios'
 import NunberInput from '../Atoms/NumberInput.vue'
 
 export default {
+  props: ['validatedNum'],
   data() {
     return {
       firstAmount: '',
@@ -45,9 +46,9 @@ export default {
 <template>
   <p>
     <label>金額：</label>
-    <NunberInput v-model="firstAmount" @execute-method="setAmount" />
+    <NunberInput v-model="firstAmount" @execute-method="setAmount" :validatedNum = "validatedNum"/>
     <label>{{ '~' }}</label>
-    <NunberInput v-model="lastAmount" @execute-method="setAmount" />
+    <NunberInput v-model="lastAmount" @execute-method="setAmount" :validatedNum = "validatedNum"/>
     <p>{{ amountResult }}</p>
     <p>{{ subAmountResult }}</p>
   </p>

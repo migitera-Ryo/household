@@ -20,6 +20,7 @@ export default {
         expenditureExpenseItemNameKana: String,
       },
     ],
+    validatedNum:String
   },
   data() {
     return {
@@ -45,10 +46,15 @@ export default {
     },
 
     incomeTypeValidate(incometype: any) {
-      if (!incometype) {
+      if (this.validatedNum == '1') {
+        if (!incometype) {
         return '選択してください'
       }
-      return true
+        return true;
+      }else{
+        return true
+      }
+        
     },
 
     incomeTypeCheckValidate() {
@@ -61,10 +67,16 @@ export default {
     },
 
     expenditureItemValidate(expenditureType:any) {
-      if(!expenditureType) {
+      if (this.validatedNum == '1') {
+        if(!expenditureType) {
         return '選択してください';
       }
-      return true;
+        return true;
+      }else{
+        return true;
+      }
+      
+      
     },
 
     expenditureItemCheckValidate() {
@@ -84,10 +96,11 @@ export default {
     <p>
       <label>{{ '収入種別' }}</label>
       <select v-model="incomeType" @blur="setIncomeType">
-        <option v-for="income_type in types" :value="income_type.text" :key="income_type.vaule">
+        <option v-for="income_type in types" :value="income_type.value" :key="income_type.text">
           {{ income_type.text }}
         </option>
       </select>
+      <p>{{ incomeType }}</p>
       <p>{{ incomeTypeResult }}</p>
     </p>
 

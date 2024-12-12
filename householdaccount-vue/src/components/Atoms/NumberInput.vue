@@ -5,6 +5,7 @@ import axios from 'axios'
 
 <script lang="ts">
 export default {
+  props: ['validatedNum'],
   data() {
     return {
       amount: '',
@@ -27,17 +28,32 @@ export default {
     },
 
     amonutValidate(amount: any) {
-      if (!amount) {
-        return '金額を入力してください'
+      if (this.validatedNum == '1') {
+        if (!amount) {
+          return '金額を入力してください'
+        }
+        const regex = /^[0-9]+(\.[0-9]+)?$/
+        if (!regex.test(amount)) {
+          return '半角の整数で入力してください'
+        }
+        if (amount.length > 8) {
+          return '8桁以内で入力してください'
+        }
+        return true
+      } else {
+        if (amount == '') {
+          return true
+        } else {
+          const regex = /^[0-9]+(\.[0-9]+)?$/
+          if (!regex.test(amount)) {
+            return '半角の整数で入力してください'
+          }
+          if (amount.length > 8) {
+            return '8桁以内で入力してください'
+          }
+          return true
+        }
       }
-      const regex = /^[0-9]+(\.[0-9]+)?$/
-      if (!regex.test(amount)) {
-        return '半角の整数で入力してください'
-      }
-      if (amount.length > 8) {
-        return '8桁以内で入力してください'
-      }
-      return true
     },
   },
 }

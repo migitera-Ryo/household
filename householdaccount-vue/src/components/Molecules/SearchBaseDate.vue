@@ -7,6 +7,7 @@ import axios from 'axios'
 import DateInput from '../Atoms/DateInput.vue'
 
 export default {
+  props: ['validatedNum'],
   data() {
     return {
       firstDate: '',
@@ -46,9 +47,9 @@ export default {
 <template>
   <p>
     <label>収支日付：</label>
-    <DateInput v-model="firstDate" @execute-method="setDate" />
+    <DateInput v-model="firstDate" @execute-method="setDate" :validatedNum = "validatedNum" />
     <label>{{ '~' }}</label>
-    <DateInput v-model="lastDate" @execute-method="setDate" />
+    <DateInput v-model="lastDate" @execute-method="setDate" :validatedNum = "validatedNum"/>
     <p>{{ dateResult }}</p>
     <p>{{ subDateResult }}</p>
   </p>
