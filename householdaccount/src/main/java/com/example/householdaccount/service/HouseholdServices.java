@@ -26,6 +26,8 @@ import com.example.householdaccount.repository.IncomeHouseholdRepository;
 import com.example.householdaccount.repository.SearchExpenditureHouseholdRepository;
 import com.example.householdaccount.repository.SearchIncomeHouseholdRepository;
 import com.example.householdaccount.specification.IncomeSpecification;
+import com.example.householdaccount.specification.SearchExpenditureSpecification;
+import com.example.householdaccount.specification.SearchIncomeSpecification;
 
 @Service
 @Transactional
@@ -46,7 +48,10 @@ public class HouseholdServices {
 	private SearchExpenditureHouseholdRepository searchExpenditureHouseholdRepository;
 	
 	@Autowired
-	private IncomeSpecification incomeSpecification;
+	private SearchIncomeSpecification searchIncomeSpecification;
+	
+	@Autowired
+	private SearchExpenditureSpecification searchExpenditureSpecification;
 	
 	
 	
@@ -58,16 +63,28 @@ public class HouseholdServices {
 		return searchIncomeInfoList;
     }
 	
-	public List<SearchResultIncome> getDetailSearchIncomeInfo(Optional<String> incomeFromDate, 
-			Optional<String> incomeToDate, Optional<String> incomeFromAmount, 
-			Optional<String> incomeToAmount, Optional<String> incomeType,
+	public List<SearchResultIncome> getDetailSearchIncomeInfo(Optional<Date> incomeFromDate, 
+			Optional<Date> incomeToDate, Optional<Integer> incomeFromAmount, 
+			Optional<Integer> incomeToAmount, Optional<Integer> incomeType,
 			Optional<String> expenditureItemName, Optional<String> incomeNote) {
-		//System.out.println(balanceCode);
-		List<SearchResultIncome> searchIncomeInfoList = searchIncomeHouseholdRepository.detailFindIncome(incomeSpecification.buildFindAllSpecification(incomeFromDate,incomeToDate,incomeFromAmount,incomeToAmount,incomeType,incomeNote));
+	
+		List<SearchResultIncome> searchIncomeInfoList = searchIncomeHouseholdRepository.findAll(searchIncomeSpecification.buildFindAllSpecification(incomeFromDate,incomeToDate,incomeFromAmount,incomeToAmount,incomeType,incomeNote));
 		System.out.println(searchIncomeInfoList);
 		
 		return searchIncomeInfoList;
     }
+	
+	public List<SearchResultExpenditure> getDetailSearchExpenditureInfo(Optional<Date> expenditureFromDate, 
+			Optional<Date> expenditureToDate, Optional<Integer> expenditureFromAmount, 
+			Optional<Integer> expenditureToAmount, Optional<Integer> incomeType,
+			Optional<String> expenditureItemName, Optional<String> expenditureNote) {
+		
+		List<SearchResultExpenditure> searchExpenditureInfoList = searchExpenditureHouseholdRepository.findAll(searchExpenditureSpecification.buildFindAllSpecification(expenditureFromDate,expenditureToDate,expenditureFromAmount,expenditureToAmount,expenditureItemName,expenditureNote));
+		System.out.println(searchExpenditureInfoList);
+		
+		return searchExpenditureInfoList;
+    }
+	
 	
 	public List<SearchResultExpenditure> getSearchExpenditureInfo(String balanceCode) {
 		System.out.println(balanceCode);

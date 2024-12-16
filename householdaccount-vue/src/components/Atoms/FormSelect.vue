@@ -4,15 +4,10 @@ import axios from 'axios'
 </script>
 
 <script lang="ts">
+
 export default {
   props: {
     selectedRadioName: String,
-    types: [
-      {
-        value: String,
-        text: String,
-      },
-    ],
     expenseItems: [
       {
         expenditureExpenseItemCode: String,
@@ -28,21 +23,30 @@ export default {
       expenditureType: '',
       incomeTypeResult: '',
       expenditureTypeResult: '',
+      types: [
+        // { value: '0', text: '' },
+        { value: '1', text: '給与' },
+        { value: '2', text: '賞与' },
+        { value: '3', text: '副業' },
+        { value: '4', text: 'お小遣い' },
+        { value: '5', text: '臨時収入' },
+        { value: '6', text: '投資' },
+      ],
     }
   },
   methods: {
     setIncomeType() {
       this.incomeTypeCheckValidate()
-      this.$emit('execute-method', this.incomeType)
+      this.$emit('executeIncome-method', this.incomeType, this.incomeTypeResult)
     },
     setExpenditureType() {
       this.expenditureItemCheckValidate()
-      this.$emit('execute-method', this.expenditureType)
+      this.$emit('executeExpenditure-method', this.expenditureType, this.expenditureTypeResult)
     },
     setBalanceType() {
       this.incomeTypeCheckValidate()
       this.expenditureItemCheckValidate()
-      this.$emit('execute-method', this.incomeType, this.expenditureType)
+      this.$emit('executeBalance-method', this.incomeType, this.expenditureType, this.incomeTypeResult, this.expenditureTypeResult)
     },
 
     incomeTypeValidate(incometype: any) {
@@ -75,8 +79,6 @@ export default {
       }else{
         return true;
       }
-      
-      
     },
 
     expenditureItemCheckValidate() {
@@ -95,12 +97,12 @@ export default {
   <span v-if="selectedRadioName == '収入'">
     <p>
       <label>{{ '収入種別' }}</label>
-      <select v-model="incomeType" @blur="setIncomeType">
+      <select v-model="incomeType" @blur="setIncomeType()">
         <option v-for="income_type in types" :value="income_type.value" :key="income_type.text">
           {{ income_type.text }}
         </option>
       </select>
-      <p>{{ incomeType }}</p>
+      <!-- <p>{{ incomeType }}</p> -->
       <p>{{ incomeTypeResult }}</p>
     </p>
 
@@ -147,7 +149,7 @@ export default {
     <p>
       <label>{{ '収入種別' }}</label>
       <select v-model="incomeType" @blur="setBalanceType">
-        <option v-for="income_type in types" :value="income_type.text" :key="income_type.vaule">
+        <option v-for="income_type in types" :value="income_type.value" :key="income_type.text">
           {{ income_type.text }}
         </option>
       </select>
@@ -162,7 +164,6 @@ export default {
           :value="expenditure_type.expenditureExpenseItemName"
           :key="expenditure_type.expenditureExpenseItemCode"
         >
-          {{ expenditure_type.expenditureExpenseItemName }}
         </option>
       </select>
       <p>{{ expenditureTypeResult }}</p>

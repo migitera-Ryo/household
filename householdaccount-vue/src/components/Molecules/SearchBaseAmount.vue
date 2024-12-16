@@ -14,13 +14,15 @@ export default {
       lastAmount: '',
       amountResult: '',
       subAmountResult: '',
+      frag:Boolean,
+      subFrag:Boolean
     }
   },
   methods: {
     setAmount(amountResult: any) {
       this.amountResult = amountResult
       this.amountCheckValidate()
-      this.$emit('execute-method', this.firstAmount, this.lastAmount)
+      this.$emit('execute-method', this.firstAmount, this.lastAmount, this.amountResult, this.subAmountResult)
     },
 
     amountCheckValidate() {

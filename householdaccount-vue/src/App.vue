@@ -4,7 +4,7 @@ import HelloWorld from './components/HelloWorld.vue'
 import { createApp, ref } from 'vue'
 import axios from 'axios'
 
-const incomeHeader = ref([
+const header = ref([
   { text: '収支No' },
   { text: '収支区分' },
   { text: '収支日付' },
@@ -55,7 +55,7 @@ export default {
       ],
       searchResultIncomeInfo: [
         {
-          balanceClassification: '',
+          // balanceClassification: '',
           incomeNo: '',
           incomeDate: '',
           amount: '',
@@ -66,10 +66,22 @@ export default {
       ],
       searchResultExpenditureInfo: [
         {
-          balanceClassification: '',
+          // balanceClassification: '',
           expenditureNo: '',
           expenditureDate: '',
           amount: '',
+          expenditureExpenseItemName: '',
+          note: '',
+        },
+      ],
+      searchResultBalanceInfo: [
+        {
+          balanceCode: '',
+          balanceType: '',
+          amount: '',
+          balanceDate: '',
+          incomeType: '',
+          incomeTypeName: '',
           expenditureExpenseItemName: '',
           note: '',
         },
@@ -78,7 +90,7 @@ export default {
       modal: false,
       searchModal: false,
       searchBalanceCode: '',
-      i: '',
+      searchFrag: false,
     }
   },
   props: {
@@ -86,59 +98,75 @@ export default {
   },
   methods: {
     searchResultChangeFormat() {
-      for (let i = 0; i < this.searchResultIncomeInfo.length; i++) {
-        if (this.searchResultIncomeInfo[i].incomeType == '1') {
-          this.searchResultIncomeInfo[i].incomeTypeName = '給与'
-        } else if (this.searchResultIncomeInfo[i].incomeType == '2') {
-          this.searchResultIncomeInfo[i].incomeTypeName = '賞与'
-        } else if (this.searchResultIncomeInfo[i].incomeType == '3') {
-          this.searchResultIncomeInfo[i].incomeTypeName = '副業'
-        } else if (this.searchResultIncomeInfo[i].incomeType == '4') {
-          this.searchResultIncomeInfo[i].incomeTypeName = 'お小遣い'
-        } else if (this.searchResultIncomeInfo[i].incomeType == '5') {
-          this.searchResultIncomeInfo[i].incomeTypeName = '臨時収入'
-        } else if (this.searchResultIncomeInfo[i].incomeType == '6') {
-          this.searchResultIncomeInfo[i].incomeTypeName = '投資'
-        }
-        const incomeYYYY = this.searchResultIncomeInfo[i].incomeDate.substring(0, 4)
-        const incomeMM = this.searchResultIncomeInfo[i].incomeDate.substring(5, 7)
-        const incomeDD = this.searchResultIncomeInfo[i].incomeDate.substring(8, 10)
-        this.searchResultIncomeInfo[i].incomeDate = [incomeYYYY, incomeMM, incomeDD].join('/')
+      if (this.searchResultBalanceInfo.length === 0) {
+        this.searchFrag = false
+      } else {
+        this.searchFrag = true
       }
 
-      for (let i = 0; i < this.searchResultExpenditureInfo.length; i++) {
-        const expenditureYYYY = this.searchResultExpenditureInfo[i].expenditureDate.substring(0, 4)
-        const expenditureMM = this.searchResultExpenditureInfo[i].expenditureDate.substring(5, 7)
-        const expenditureDD = this.searchResultExpenditureInfo[i].expenditureDate.substring(8, 10)
-        this.searchResultExpenditureInfo[i].expenditureDate = [
-          expenditureYYYY,
-          expenditureMM,
-          expenditureDD,
-        ].join('/')
+      for (let i = 0; i < this.searchResultBalanceInfo.length; i++) {
+        if (this.searchResultBalanceInfo[i].incomeType == '1') {
+          this.searchResultBalanceInfo[i].incomeTypeName = '給与'
+        } else if (this.searchResultBalanceInfo[i].incomeType == '2') {
+          this.searchResultBalanceInfo[i].incomeTypeName = '賞与'
+        } else if (this.searchResultBalanceInfo[i].incomeType == '3') {
+          this.searchResultBalanceInfo[i].incomeTypeName = '副業'
+        } else if (this.searchResultBalanceInfo[i].incomeType == '4') {
+          this.searchResultBalanceInfo[i].incomeTypeName = 'お小遣い'
+        } else if (this.searchResultBalanceInfo[i].incomeType == '5') {
+          this.searchResultBalanceInfo[i].incomeTypeName = '臨時収入'
+        } else if (this.searchResultBalanceInfo[i].incomeType == '6') {
+          this.searchResultBalanceInfo[i].incomeTypeName = '投資'
+        }
+        const incomeYYYY = this.searchResultBalanceInfo[i].balanceDate.substring(0, 4)
+        const incomeMM = this.searchResultBalanceInfo[i].balanceDate.substring(5, 7)
+        const incomeDD = this.searchResultBalanceInfo[i].balanceDate.substring(8, 10)
+        this.searchResultBalanceInfo[i].balanceDate = [incomeYYYY, incomeMM, incomeDD].join('/')
       }
+
+      // for (let i = 0; i < this.searchResultExpenditureInfo.length; i++) {
+      //   const expenditureYYYY = this.searchResultExpenditureInfo[i].expenditureDate.substring(0, 4)
+      //   const expenditureMM = this.searchResultExpenditureInfo[i].expenditureDate.substring(5, 7)
+      //   const expenditureDD = this.searchResultExpenditureInfo[i].expenditureDate.substring(8, 10)
+      //   this.searchResultExpenditureInfo[i].expenditureDate = [
+      //     expenditureYYYY,
+      //     expenditureMM,
+      //     expenditureDD,
+      //   ].join('/')
+      // }
     },
     moment: function (date: any) {
       return moment(date).format('l')
     },
     searchBalanceInfo: function () {
       try {
-        axios
-          .get('http://localhost:8080/api/searchIncome/', {
-            params: { ID: this.searchBalanceCode },
-          })
-          .then((response) => {
-            console.log(response),
-              (this.searchResultIncomeInfo = response.data),
-              this.searchResultChangeFormat()
-          })
+        // axios
+        //   .get('http://localhost:8080/api/searchIncome/', {
+        //     params: { ID: this.searchBalanceCode },
+        //   })
+        //   .then((response) => {
+        //     console.log(response),
+        //       (this.searchResultIncomeInfo = response.data),
+        //       this.searchResultChangeFormat()
+        //   })
+
+        // axios
+        //   .get('http://localhost:8080/api/searchExpenditure/', {
+        //     params: { ID: this.searchBalanceCode },
+        //   })
+        //   .then((response) => {
+        //     console.log(response),
+        //       (this.searchResultExpenditureInfo = response.data),
+        //       this.searchResultChangeFormat()
+        //   })
 
         axios
-          .get('http://localhost:8080/api/searchExpenditure/', {
+          .get('http://localhost:8080/api/searchBalance/', {
             params: { ID: this.searchBalanceCode },
           })
           .then((response) => {
             console.log(response),
-              (this.searchResultExpenditureInfo = response.data),
+              (this.searchResultBalanceInfo = response.data),
               this.searchResultChangeFormat()
           })
       } catch (error) {
@@ -161,9 +189,17 @@ export default {
         alert('登録されました')
       }
     },
-    executeSearchMethod(yes: any) {
+    executeSearchMethod(incomeDetailSearchResult: any) {
       // モーダルを非表示にして、モーダルでの選択結果によって処理を変える
+
       this.searchModal = false
+    },
+
+    executeSearchResultSetMethod(DetailSearchResult: any) {
+      // モーダルを非表示にして、モーダルでの選択結果によって処理を変える
+
+      this.searchResultBalanceInfo = DetailSearchResult
+      this.searchResultChangeFormat()
     },
   },
 }
@@ -194,43 +230,35 @@ export default {
       </div>
 
       <Button @click="showSearchModal()" btname="検索" />
-      <SearchModal v-show="searchModal" @execute-method="executeSearchMethod"></SearchModal>
-
-      <div
-        class="table_box"
-        v-if="searchResultIncomeInfo.length > 1 || searchResultExpenditureInfo.length > 1"
-      >
+      <SearchModal
+        v-show="searchModal"
+        @execute-method1="executeSearchMethod"
+        @execute-method2="executeSearchResultSetMethod"
+      ></SearchModal>
+      <div class="table_box" v-if="searchFrag == true">
         <table class="table_style">
           <thead>
             <tr>
-              <th class="sticky" v-for="(label, key) in incomeHeader" :key="key">
+              <th class="sticky" v-for="(label, key) in header" :key="key">
                 {{ label.text }}
               </th>
             </tr>
           </thead>
-          <tbody>
-            <tr
-              v-if="searchResultIncomeInfo.length > 1"
-              v-for="balancedata in searchResultIncomeInfo"
-              :key="balancedata.incomeNo"
-            >
-              <td>{{ balancedata.incomeNo }}</td>
-              <td>{{ '収入' }}</td>
-              <td>{{ balancedata.incomeDate }}</td>
+          <tbody v-for="balancedata in searchResultBalanceInfo" :key="balancedata.balanceCode">
+            <tr v-if="balancedata.balanceType == '収入'">
+              <td>{{ balancedata.balanceCode }}</td>
+              <td>{{ balancedata.balanceType }}</td>
+              <td>{{ balancedata.balanceDate }}</td>
               <td>{{ balancedata.incomeTypeName }}</td>
               <td>{{ balancedata.amount }}</td>
               <td>{{ balancedata.note }}</td>
               <td><button>編集</button></td>
               <td><button>削除</button></td>
             </tr>
-            <tr
-              v-if="searchResultExpenditureInfo.length > 1"
-              v-for="balancedata in searchResultExpenditureInfo"
-              :key="balancedata.expenditureNo"
-            >
-              <td>{{ balancedata.expenditureNo }}</td>
-              <td>{{ '支出' }}</td>
-              <td>{{ balancedata.expenditureDate }}</td>
+            <tr v-if="balancedata.balanceType == '支出'">
+              <td>{{ balancedata.balanceCode }}</td>
+              <td>{{ balancedata.balanceType }}</td>
+              <td>{{ balancedata.balanceDate }}</td>
               <td>{{ balancedata.expenditureExpenseItemName }}</td>
               <td>{{ balancedata.amount }}</td>
               <td>{{ balancedata.note }}</td>
@@ -240,7 +268,7 @@ export default {
           </tbody>
         </table>
       </div>
-      <div v-if="searchResultIncomeInfo.length < 1 && searchResultExpenditureInfo.length < 1">
+      <div v-if="searchResultBalanceInfo.length === 0">
         <img src="./assets/1.png" class="logo" width="125" height="125" />
         <p class="logo">{{ '検索結果が見つかりません' }}</p>
       </div>

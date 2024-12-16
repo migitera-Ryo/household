@@ -20,7 +20,7 @@ export default {
     setDate(dateResult:any) {
       this.dateResult = dateResult
       this.dateCheckValidate()
-      this.$emit('execute-method', this.firstDate, this.lastDate)
+      this.$emit('execute-method', this.firstDate, this.lastDate,this.dateResult,this.subDateResult)
     },
 
     dateCheckValidate() {

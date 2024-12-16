@@ -26,17 +26,16 @@ export default {
   data() {
     return {
       searchInfo: {
-        fromDate: Date,
-        toDate: Date,
-        fromAmount: number,
-        toAmount: number,
-        incomeType: number,
+        fromDate: '',
+        toDate: '',
+        fromAmount: '',
+        toAmount: '',
+        incomeType: '',
         expenditureItemName: '',
         note: '',
       },
-      detailSearchResultInfo: [
+      searchResultIncomeInfo: [
         {
-          balanceClassification: '',
           incomeNo: '',
           incomeDate: '',
           amount: '',
@@ -45,6 +44,28 @@ export default {
           note: '',
         },
       ],
+      searchResultExpenditureInfo: [
+        {
+          expenditureNo: '',
+          expenditureDate: '',
+          amount: '',
+          expenditureExpenseItemName: '',
+          note: '',
+        },
+      ],
+      searchResultBalanceInfo: [
+        {
+          balanceCode: '',
+          balanceType: '',
+          amount: '',
+          balanceDate: '',
+          incomeType: '',
+          incomeTypeName: '',
+          expenditureExpenseItemName: '',
+          note: '',
+        },
+      ],
+
       incomeInfo: {
         incomeDate: '',
         amount: '',
@@ -64,16 +85,11 @@ export default {
       },
 
       selectedRadio: '収入',
-      selectedRadio2: '収入',
       isPush1: true,
       isPush2: true,
       message: null,
       SystemErrorMessage: '',
-      amountErrorFrag: false,
-      dateErrorFrag: true,
-      expenditureItemErrorFrag: true,
-      incomeTypeErrorFrag: true,
-      noteErrorFrag: true,
+      validationFrag: true,
 
       incomeTypes: [
         { value: '0', text: '' },
@@ -107,8 +123,11 @@ export default {
 
       validation: {
         dateResult: '',
-        typeResult: '',
+        subDateResult: '',
+        incomeTypeResult: '',
+        expenditureTypeResult: '',
         amountResult: '',
+        subAmountResult: '',
         noteResult: '',
       },
     }
@@ -126,10 +145,10 @@ export default {
       }
     },
 
-    detailSearch: function () {
+    detailSearchIncome: function () {
       try {
         axios
-          .get('http://localhost:8080/api/detailsearch', {
+          .get('http://localhost:8080/api/detailSearchIncome', {
             params: {
               fromDate: this.searchInfo.fromDate,
               toDate: this.searchInfo.toDate,
@@ -141,7 +160,57 @@ export default {
             },
           })
           .then((response) => {
-            console.log(response), (this.detailSearchResultInfo = response.data)
+            console.log(response),
+              (this.searchResultBalanceInfo = response.data),
+              this.$emit('execute-method2', this.searchResultBalanceInfo)
+          })
+      } catch (error) {
+        alert('検索できません')
+      }
+    },
+
+    detailSearchExpenditure: function () {
+      try {
+        axios
+          .get('http://localhost:8080/api/detailSearchExpenditure', {
+            params: {
+              fromDate: this.searchInfo.fromDate,
+              toDate: this.searchInfo.toDate,
+              fromAmount: this.searchInfo.fromAmount,
+              toAmount: this.searchInfo.toAmount,
+              incomeType: this.searchInfo.incomeType,
+              expenditureItemName: this.searchInfo.expenditureItemName,
+              note: this.searchInfo.note,
+            },
+          })
+          .then((response) => {
+            console.log(response),
+              (this.searchResultBalanceInfo = response.data),
+              this.$emit('execute-method2', this.searchResultBalanceInfo)
+          })
+      } catch (error) {
+        alert('検索できません')
+      }
+    },
+
+    detailSearchBalance: function () {
+      try {
+        axios
+          .get('http://localhost:8080/api/detailSearchBalance', {
+            params: {
+              fromDate: this.searchInfo.fromDate,
+              toDate: this.searchInfo.toDate,
+              fromAmount: this.searchInfo.fromAmount,
+              toAmount: this.searchInfo.toAmount,
+              incomeType: this.searchInfo.incomeType,
+              expenditureItemName: this.searchInfo.expenditureItemName,
+              note: this.searchInfo.note,
+            },
+          })
+          .then((response) => {
+            console.log(response),
+              (this.searchResultBalanceInfo = response.data),
+              this.$emit('execute-method2', this.searchResultBalanceInfo)
           })
       } catch (error) {
         alert('検索できません')
@@ -149,186 +218,113 @@ export default {
     },
 
     returnFalse() {
-      this.$emit('execute-method', false)
+      this.$emit('execute-method1', false)
     },
-    // returnTrue() {
-    //   this.$emit('execute-method', true)
-    // },
-    // pushedBtn1() {
-    //   this.isPush1 = false
-    //   this.isPush2 = true
-    //   //this.income_type.text = '';
-    // },
-    // pushedBtn2() {
-    //   this.isPush1 = true
-    //   this.isPush2 = false
-    //   //this.selectedExpenseItem = '';
-    // },
 
-    // incomeCreateCheckValidate() {
-    //   const amount_error_message = this.amonutValidate(
-    //     this.searchInfo.fromAmount,
-    //     this.searchInfo.toAmount,
-    //   )
-    //   const date_error_message = this.dateValidate(this.searchInfo.fromDate, this.searchInfo.toDate)
-    //   const incomeType_error_message = this.incomeTypeValidate(this.searchInfo.incomeType)
-    //   const note_error_message = this.noteValidate(this.searchInfo.note)
-    //   if (
-    //     amount_error_message === true &&
-    //     date_error_message === true &&
-    //     incomeType_error_message === true &&
-    //     note_error_message === true
-    //   ) {
-    //     return false
-    //   } else {
-    //     return true
-    //   }
-    // },
-    // expenditureCreateCheckValidate() {
-    //   const amount_error_message = this.amonutValidate(
-    //     this.searchInfo.fromAmount,
-    //     this.searchInfo.toAmount,
-    //   )
-    //   const date_error_message = this.dateValidate(this.searchInfo.fromDate, this.searchInfo.toDate)
-    //   const expenditureItem_error_message = this.expenditureItemValidate(
-    //     this.expenditureInfo.expenditureItemCode,
-    //   )
-    //   const note_error_message = this.noteValidate(this.searchInfo.note)
-    //   if (
-    //     amount_error_message === true &&
-    //     date_error_message === true &&
-    //     expenditureItem_error_message === true &&
-    //     note_error_message === true
-    //   ) {
-    //     return false
-    //   } else {
-    //     return true
-    //   }
-    // },
-
-    // amountCheckValidate() {
-    //   const amount_error_message = this.amonutValidate(
-    //     this.searchInfo.fromAmount,
-    //     this.searchInfo.toAmount,
-    //   )
-    //   if (amount_error_message === true) {
-    //     this.validation.amountResult = ''
-    //   } else {
-    //     this.validation.amountResult = amount_error_message
-    //   }
-    // },
-
-    // dateCheckValidate() {
-    //   const date_error_message = this.dateValidate(this.searchInfo.fromDate, this.searchInfo.toDate)
-    //   if (date_error_message === true) {
-    //     this.validation.dateResult = ''
-    //   } else {
-    //     this.validation.dateResult = date_error_message
-    //   }
-    // },
-
-    // noteCheckValidate() {
-    //   const note_error_message = this.noteValidate(this.searchInfo.note)
-    //   if (note_error_message === true) {
-    //     this.validation.noteResult = ''
-    //   } else {
-    //     this.validation.noteResult = note_error_message
-    //   }
-    // },
-
-    // dateValidate(fromDate: any, toDate: any) {
-    //   const regex = /^([0-9]{4})-(0[1-9]|1[0-2])-([0-2][0-9]|3[01])$/
-    //   if (fromDate == '' && toDate == '') {
-    //     return true
-    //   } else {
-    //     if (!regex.test(fromDate)) {
-    //       return 'aaaaaaaaaaaaaa'
-    //     }
-    //     return 'YYYY/MM/DDの形式で入力してください'
-    //   }
-    // },
-
-    // amonutValidate(fromAmount: any, toAmount: any) {
-    //   const regex = /^[0-9]+(\.[0-9]+)?$/
-    //   if (fromAmount == '' && toAmount == '') {
-    //     return true
-    //   } else {
-    //     if (fromAmount.length > 8 || toAmount.length > 8) {
-    //       return '8桁以内で入力してください'
-    //     }
-
-    //     if (fromAmount != '') {
-    //       if (!regex.test(fromAmount)) {
-    //         return '金額(from)を半角の整数で入力してください'
-    //       } else if (toAmount == '') {
-    //         return true
-    //       }
-    //     }
-
-    //     if (toAmount != '') {
-    //       if (!regex.test(toAmount)) {
-    //         return '金額(to)を半角の整数で入力してください'
-    //       } else if (fromAmount == '') {
-    //         return true
-    //       }
-    //     }
-
-    //     return true
-    //   }
-    // },
-
-    // incomeTypeValidate(incometype: any) {
-    //   if (!incometype) {
-    //     return '選択してください'
-    //   }
-    //   return true
-    // },
-
-    // expenditureItemValidate(expenditureItem: any) {
-    //   if (!expenditureItem) {
-    //     return '選択してください'
-    //   }
-    //   return true
-    // },
-
-    // noteValidate(note: any) {
-    //   if (note.length > 200) {
-    //     return '200文字以内で入力してください'
-    //   }
-    //   return true
-    // },
-
-    finalSetDate(fromDate: any, toDate: any) {
+    finalSetDate(fromDate: any, toDate: any, dateResult: any, subDateResult: any) {
       this.searchInfo.fromDate = fromDate
       this.searchInfo.toDate = toDate
-      // this.dateCheckValidate()
+
+      this.validation.dateResult = dateResult
+      this.validation.subDateResult = subDateResult
+
+      this.validationCheck()
     },
 
-    finalSetNote(finalNote: any) {
+    finalSetNote(finalNote: any, noteResult: any) {
       this.searchInfo.note = finalNote
-      //this.noteCheckValidate()
+      this.validation.noteResult = noteResult
+      this.validationCheck()
     },
 
-    finalSetAmount(fromAmount: any, toAmount: any) {
+    finalSetAmount(fromAmount: any, toAmount: any, amountResult: any, subAmountResult: any) {
       this.searchInfo.fromAmount = fromAmount
       this.searchInfo.toAmount = toAmount
-      // this.validation.amountResult = amountResult
-      //this.amountCheckValidate()
+
+      this.validation.amountResult = amountResult
+      this.validation.subAmountResult = subAmountResult
+
+      this.validationCheck()
     },
 
-    finalSetType(selectType: any, selectSubType: any) {
-      if (this.selectedRadio2 == '収入') {
-        this.searchInfo.incomeType = selectType
-      } else if (this.selectedRadio2 == '支出') {
-        this.searchInfo.expenditureItemName = selectType
-      } else if (this.selectedRadio2 == '指定なし') {
-        this.searchInfo.incomeType = selectType
-        this.searchInfo.expenditureItemName = selectSubType
-      }
+    finalSetIncomeType(selectType: any, incomeType: any) {
+      this.searchInfo.incomeType = selectType
+      this.validation.incomeTypeResult = incomeType
+
+      this.validationCheck()
+    },
+
+    finalSetExpenditureType(selectType: any, expenditureTypeResult: any) {
+      this.searchInfo.expenditureItemName = selectType
+      this.validation.expenditureTypeResult = expenditureTypeResult
+
+      this.validationCheck()
+    },
+
+    finalSetBalanceType(
+      selectType: any,
+      selectSubType: any,
+      incomeType: any,
+      expenditureTypeResult: any,
+    ) {
+      this.searchInfo.incomeType = selectType
+      this.searchInfo.expenditureItemName = selectSubType
+      this.validation.incomeTypeResult = incomeType
+      this.validation.expenditureTypeResult = expenditureTypeResult
+
+      this.validationCheck()
     },
 
     finalSetRadioName(finalRadioName: any) {
-      this.selectedRadio2 = finalRadioName
+      this.selectedRadio = finalRadioName
+    },
+
+    validationCheck() {
+      if (this.selectedRadio == '収入') {
+        if (
+          this.validation.dateResult ||
+          this.validation.subDateResult ||
+          this.validation.amountResult ||
+          this.validation.subAmountResult ||
+          this.validation.incomeTypeResult ||
+          this.validation.noteResult
+        ) {
+          this.validationFrag = true
+        } else {
+          this.validationFrag = false
+        }
+      } else if (this.selectedRadio == '支出') {
+        if (
+          this.validation.dateResult ||
+          this.validation.subDateResult ||
+          this.validation.amountResult ||
+          this.validation.subAmountResult ||
+          this.validation.expenditureTypeResult ||
+          this.validation.noteResult
+        ) {
+          this.validationFrag = true
+        } else {
+          this.validationFrag = false
+        }
+      } else if (this.selectedRadio == '指定なし') {
+        if (
+          this.validation.dateResult ||
+          this.validation.subDateResult ||
+          this.validation.amountResult ||
+          this.validation.subAmountResult ||
+          this.validation.incomeTypeResult ||
+          this.validation.expenditureTypeResult ||
+          this.validation.noteResult
+        ) {
+          this.validationFrag = true
+        } else {
+          this.validationFrag = false
+        }
+      }
+
+      if (!this.searchInfo) {
+        this.validationFrag = true
+      }
     },
   },
 }
@@ -339,36 +335,34 @@ export default {
     <div id="modal-content" class="modal">
       <SearchBalanceRadio @execute-method="finalSetRadioName" />
 
-      <SearchBaseDate @execute-method="finalSetDate" validatedNum="1" />
-      <!-- <p>{{ validation.dateResult }}</p> -->
+      <SearchBaseDate @execute-method="finalSetDate" validatedNum="0" />
 
-      <SearchBaseAmount @execute-method="finalSetAmount" validatedNum="1" />
-      <!-- <p>{{ validation.amountResult }}</p> -->
+      <SearchBaseAmount @execute-method="finalSetAmount" validatedNum="0" />
 
       <FormSelect
-        :selectedRadioName="selectedRadio2"
+        :selectedRadioName="selectedRadio"
         :expenseItems="expenseItems"
         :types="incomeTypes"
-        @execute-method="finalSetType"
+        @executeIncome-method="finalSetIncomeType"
+        @executeExpenditure-method="finalSetExpenditureType"
+        @executeBalance-method="finalSetBalanceType"
         validatedNum="1"
       />
 
-      <TextArea @execute-method="finalSetNote" validatedNum="1" />
-      <!-- <p>{{ validation.noteResult }}</p> -->
+      <TextArea @execute-method="finalSetNote" validatedNum="0" />
+      <span v-if="selectedRadio == '収入'">
+        <Button btname="検索" @click="detailSearchIncome" :disabled="validationFrag" />
+      </span>
 
-      <Button btname="検索" @click="detailSearch" />
+      <span v-if="selectedRadio == '支出'">
+        <Button btname="検索" @click="detailSearchExpenditure" :disabled="validationFrag" />
+      </span>
 
-      <p>{{ searchInfo.fromDate }}</p>
-      <p>{{ searchInfo.toDate }}</p>
-      <p>{{ searchInfo.fromAmount }}</p>
-      <p>{{ searchInfo.toAmount }}</p>
-      <p>{{ searchInfo.incomeType }}</p>
-      <p>{{ searchInfo.expenditureItemName }}</p>
-      <p>{{ searchInfo.note }}</p>
-
-      <button class="modal__btn" @click="returnFalse()">キャンセル</button>
+      <span v-if="selectedRadio == '指定なし'">
+        <Button btname="検索" @click="detailSearchBalance" :disabled="validationFrag" />
+      </span>
     </div>
-    <div id="modal-overlay"></div>
+    <div id="modal-overlay" @click.self="returnFalse()"></div>
   </div>
 </template>
 

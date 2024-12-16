@@ -14,7 +14,7 @@ export default {
   },
   methods: {
     setNote() {
-      this.$emit('execute-method', this.note)
+      this.$emit('execute-method', this.note, this.noteResult)
     },
 
     noteCheckValidate() {

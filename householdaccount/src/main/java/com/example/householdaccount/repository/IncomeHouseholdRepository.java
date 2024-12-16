@@ -13,5 +13,7 @@ import com.example.householdaccount.entity.Income.IncomeNoVO;
 import com.example.householdaccount.entity.SearchResultIncome;
 
 public interface IncomeHouseholdRepository extends JpaRepository<Income,IncomeNoVO>{
+
+	List<Income> findAll(Specification<Income> findAllSpecification);
 	
 }
