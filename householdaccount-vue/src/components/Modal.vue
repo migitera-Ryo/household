@@ -263,10 +263,10 @@ export default {
       <div id="modal-content" class="modal">
         <p>
         <label>支出区分：</label>
-        <input type="radio" v-model="selectedRadio" v-on:click="pushedBtn1" id="button1" value="収入" name = "radio"/>
+        <input type="radio" v-model="selectedRadio" v-on:click="pushedBtn1" id="button1" value="収入" name = "createRadio"/>
         <label for="button1">収入</label>
 
-        <input type="radio" v-model="selectedRadio" v-on:click="pushedBtn2" id="button2" value="支出" name = "radio"/>
+        <input type="radio" v-model="selectedRadio" v-on:click="pushedBtn2" id="button2" value="支出" name = "createRadio"/>
         <label for="button2">支出</label>
         </p>
         

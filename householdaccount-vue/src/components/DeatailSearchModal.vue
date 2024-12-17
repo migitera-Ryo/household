@@ -280,7 +280,7 @@ export default {
 <template>
   <div id="modal">
     <div id="modal-content" class="modal">
-      <SearchBalanceRadio @execute-method="finalSetRadioName" />
+      <SearchBalanceRadio @execute-method="finalSetRadioName" radioName="searchRadio" />
       <p>{{ selectedRadio }}</p>
 
       <SearchBaseDate @execute-method="finalSetDate" validatedNull="false" />

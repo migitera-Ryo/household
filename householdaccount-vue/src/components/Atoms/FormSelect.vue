@@ -9,6 +9,7 @@ export default {
   props: {
     validatedNull:String,
     selectedRadioName: String,
+    incomeType:String,
     expenseItems: [
       {
         expenditureExpenseItemCode: String,
@@ -19,7 +20,7 @@ export default {
   },
   data() {
     return {
-      incomeType: '',
+      incomeType: this.incomeType,
       expenditureType: '',
       incomeTypeResult: '',
       expenditureTypeResult: '',
@@ -105,6 +106,8 @@ export default {
       <!-- <p>{{ incomeType }}</p> -->
       <p>{{ incomeTypeResult }}</p>
     </p>
+
+    <p>{{incomeType}}</p>
 
     <p>
       <label>{{ '支出費目' }}</label>

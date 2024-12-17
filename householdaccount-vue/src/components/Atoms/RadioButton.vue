@@ -7,7 +7,15 @@ import axios from 'axios'
 export default {
   props: {
     radioname: String,
-    state: String,
+    radioName: String,
+    setedRadioName: String,
+  },
+  data() {
+    return {
+      selectRadio: null,
+      frag: true,
+      frag2: false,
+    }
   },
   methods: {
     setRadioName() {
@@ -18,13 +26,13 @@ export default {
 </script>
 
 <template>
-  <span v-if="radioname == '収入'">
-    <input type="radio" name="radio" @change="setRadioName" checked />
+  <span v-if="setedRadioName == radioname || (!setedRadioName && radioname == '収入')">
+    <input type="radio" :name="radioName" @change="setRadioName" checked />
     <label for="button1">{{ radioname }}</label>
   </span>
 
   <span v-else>
-    <input type="radio" name="radio" @change="setRadioName" />
+    <input type="radio" :name="radioName" @change="setRadioName" />
     <label for="button1">{{ radioname }}</label>
   </span>
 </template>

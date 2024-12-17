@@ -7,6 +7,7 @@ import axios from 'axios'
 import RadioButton from '../Atoms/RadioButton.vue'
 
 export default {
+  props: ['radioName', 'balanceType'],
   data() {
     return {
       selectedRadioName: '',
@@ -27,8 +28,20 @@ export default {
 
 <template>
   <label>支出区分：</label>
-  <RadioButton v-model="selectedRadioName" radioname="収入" @execute-method="setRadioIncome" />
-  <RadioButton v-model="selectedRadioName" radioname="支出" @execute-method="setRadioExpenditure" />
+  <RadioButton
+    v-model="selectedRadioName"
+    radioname="収入"
+    :radioName="radioName"
+    :setedRadioName="balanceType"
+    @execute-method="setRadioIncome"
+  />
+  <RadioButton
+    v-model="selectedRadioName"
+    radioname="支出"
+    :radioName="radioName"
+    :setedRadioName="balanceType"
+    @execute-method="setRadioExpenditure"
+  />
 </template>
 
 <style scoped></style>

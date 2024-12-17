@@ -52,7 +52,8 @@ export default {
     <DateInput v-model="lastDate" @execute-method="setDate" :validatedNull = "validatedNull" id = "toid"/>
     <p>{{ dateResult }}</p>
     <p>{{ subDateResult }}</p>
-   
+    <p>{{ firstDate }}</p>
+    <p>{{ lastDate }}</p>
   </p>
 </template>
 

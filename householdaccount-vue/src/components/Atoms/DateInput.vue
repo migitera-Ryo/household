@@ -5,10 +5,10 @@ import axios from 'axios'
 
 <script lang="ts">
 export default {
-  props: ['validatedNull', 'id'],
+  props: ['validatedNull', 'id', 'balanceDate'],
   data() {
     return {
-      date: '',
+      date: this.balanceDate,
       dateResult: '',
     }
   },

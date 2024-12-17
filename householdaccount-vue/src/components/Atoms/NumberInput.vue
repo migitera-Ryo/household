@@ -5,10 +5,10 @@ import axios from 'axios'
 
 <script lang="ts">
 export default {
-  props: ['validatedNull'],
+  props: ['validatedNull', 'balanceAmount'],
   data() {
     return {
-      amount: '',
+      amount: this.balanceAmount,
       amountResult: '',
     }
   },

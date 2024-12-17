@@ -56,7 +56,7 @@ export default {
 
       balanceType: '収入',
       amount: '111',
-      balanceDate: '2024/11/19',
+      balanceDate: '2024-11-19',
       incomeType: '1',
       incomeTypeName: '給与',
       expenditureExpenseItemName: '食費',
@@ -185,13 +185,8 @@ export default {
       this.$emit('execute-method1', false)
     },
 
-    finalSetDate(fromDate: any, toDate: any, dateResult: any, subDateResult: any) {
-      this.searchInfo.fromDate = fromDate
-      this.searchInfo.toDate = toDate
-
+    finalSetDate(dateResult: any) {
       this.validation.dateResult = dateResult
-      this.validation.subDateResult = subDateResult
-
       this.validationCheck()
     },
 
@@ -201,13 +196,8 @@ export default {
       this.validationCheck()
     },
 
-    finalSetAmount(fromAmount: any, toAmount: any, amountResult: any, subAmountResult: any) {
-      this.searchInfo.fromAmount = fromAmount
-      this.searchInfo.toAmount = toAmount
-
+    finalSetAmount(amountResult: any) {
       this.validation.amountResult = amountResult
-      this.validation.subAmountResult = subAmountResult
-
       this.validationCheck()
     },
 
@@ -305,29 +295,58 @@ export default {
 <template>
   <div id="modal">
     <div id="modal-content" class="modal">
-      <BalanceRadio @execute-method="finalSetRadioName" />
+      <BalanceRadio
+        @execute-method="finalSetRadioName"
+        radioName="editRadio"
+        :balanceType="balanceType"
+      />
+      <p>{{ selectedRadio }}</p>
 
       <p>
         {{ '収支日付：' }}
-        <DateInput @execute-method="finalSetDate" validatedNull="false" />
+        <DateInput
+          @execute-method="finalSetDate"
+          v-model="searchInfo.toDate"
+          validatedNull="true"
+          id="dateid"
+          :balanceDate="balanceDate"
+        />
       </p>
+
+      <p>{{ searchInfo.toDate }}</p>
+      <p>{{ validation.dateResult }}</p>
 
       <p>
         {{ '金額：' }}
-        <NunberInput @execute-method="finalSetAmount" validatedNull="false" />
+        <NunberInput
+          @execute-method="finalSetAmount"
+          v-model="searchInfo.toAmount"
+          validatedNull="true"
+          :balanceAmount="amount"
+        />
       </p>
+
+      <p>{{ searchInfo.toAmount }}</p>
+      <p>{{ validation.amountResult }}</p>
 
       <FormSelect
         :selectedRadioName="selectedRadio"
         :expenseItems="expenseItems"
         :types="incomeTypes"
+        :incomeType="incomeType"
         @executeIncome-method="finalSetIncomeType"
         @executeExpenditure-method="finalSetExpenditureType"
         @executeBalance-method="finalSetBalanceType"
-        validatedNull="false"
+        validatedNull="true"
       />
 
-      <TextArea @execute-method="finalSetNote" validatedNull="false" />
+      <p>{{ searchInfo.incomeType }}</p>
+      <p>{{ validation.incomeTypeResult }}</p>
+
+      <TextArea @execute-method="finalSetNote" :balanceNote="note" validatedNull="false" />
+      <p>{{ searchInfo.note }}</p>
+      <p>{{ validation.noteResult }}</p>
+
       <span v-if="selectedRadio == '収入'">
         <Button btname="検索" @click="detailSearchIncome" :disabled="validationFrag" />
       </span>
