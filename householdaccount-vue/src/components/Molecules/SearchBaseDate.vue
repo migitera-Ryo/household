@@ -7,7 +7,7 @@ import axios from 'axios'
 import DateInput from '../Atoms/DateInput.vue'
 
 export default {
-  props: ['validatedNum'],
+  props: ['validatedNull'],
   data() {
     return {
       firstDate: '',
@@ -33,7 +33,7 @@ export default {
     },
 
     dateCompareValidate(firstDate: any, lastDate:any) {
-      if (firstDate != '' && lastDate != '') {
+      if (firstDate && lastDate) {
         if(firstDate > lastDate){
           return 'from日付 < to日付に修正してください'
         }
@@ -47,11 +47,12 @@ export default {
 <template>
   <p>
     <label>収支日付：</label>
-    <DateInput v-model="firstDate" @execute-method="setDate" :validatedNum = "validatedNum" />
+    <DateInput v-model="firstDate" @execute-method="setDate" :validatedNull = "validatedNull" id = "fromid"/>
     <label>{{ '~' }}</label>
-    <DateInput v-model="lastDate" @execute-method="setDate" :validatedNum = "validatedNum"/>
+    <DateInput v-model="lastDate" @execute-method="setDate" :validatedNull = "validatedNull" id = "toid"/>
     <p>{{ dateResult }}</p>
     <p>{{ subDateResult }}</p>
+   
   </p>
 </template>
 

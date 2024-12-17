@@ -7,6 +7,7 @@ import axios from 'axios'
 
 export default {
   props: {
+    validatedNull:String,
     selectedRadioName: String,
     expenseItems: [
       {
@@ -15,7 +16,6 @@ export default {
         expenditureExpenseItemNameKana: String,
       },
     ],
-    validatedNum:String
   },
   data() {
     return {
@@ -50,7 +50,7 @@ export default {
     },
 
     incomeTypeValidate(incometype: any) {
-      if (this.validatedNum == '1') {
+      if (this.validatedNull == 'true') {
         if (!incometype) {
         return '選択してください'
       }
@@ -71,7 +71,7 @@ export default {
     },
 
     expenditureItemValidate(expenditureType:any) {
-      if (this.validatedNum == '1') {
+      if (this.validatedNull == 'true') {
         if(!expenditureType) {
         return '選択してください';
       }
@@ -164,6 +164,7 @@ export default {
           :value="expenditure_type.expenditureExpenseItemName"
           :key="expenditure_type.expenditureExpenseItemCode"
         >
+        {{ expenditure_type.expenditureExpenseItemName }}
         </option>
       </select>
       <p>{{ expenditureTypeResult }}</p>

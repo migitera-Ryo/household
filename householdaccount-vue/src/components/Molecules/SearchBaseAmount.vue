@@ -7,7 +7,7 @@ import axios from 'axios'
 import NunberInput from '../Atoms/NumberInput.vue'
 
 export default {
-  props: ['validatedNum'],
+  props: ['validatedNull'],
   data() {
     return {
       firstAmount: '',
@@ -35,7 +35,7 @@ export default {
     },
 
     amonutCompareValidate(firstAmount: any,lastAmount:any) {
-      if (firstAmount > 0 && lastAmount > 0) {
+      if (firstAmount && lastAmount) {
         if(firstAmount > lastAmount)
         return 'from金額 < to金額に修正してください'
       }
@@ -48,9 +48,9 @@ export default {
 <template>
   <p>
     <label>金額：</label>
-    <NunberInput v-model="firstAmount" @execute-method="setAmount" :validatedNum = "validatedNum"/>
+    <NunberInput v-model="firstAmount" @execute-method="setAmount" :validatedNull = "validatedNull"/>
     <label>{{ '~' }}</label>
-    <NunberInput v-model="lastAmount" @execute-method="setAmount" :validatedNum = "validatedNum"/>
+    <NunberInput v-model="lastAmount" @execute-method="setAmount" :validatedNull = "validatedNull"/>
     <p>{{ amountResult }}</p>
     <p>{{ subAmountResult }}</p>
   </p>

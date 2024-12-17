@@ -5,7 +5,7 @@ import axios from 'axios'
 
 <script lang="ts">
 export default {
-  props: ['validatedNum'],
+  props: ['validatedNull'],
   data() {
     return {
       note: '',

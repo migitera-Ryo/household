@@ -24,6 +24,7 @@ const dataes = [
 <script lang="ts">
 import Modal from './components/Modal.vue'
 import SearchModal from './components/DeatailSearchModal.vue'
+import EditModal from './components/Organisms/CreateEditForm.vue'
 import Button from './components/Atoms/button.vue'
 import moment from 'moment'
 
@@ -89,6 +90,7 @@ export default {
       message: '登録画面',
       modal: false,
       searchModal: false,
+      editModal: false,
       searchBalanceCode: '',
       searchFrag: false,
     }
@@ -182,6 +184,10 @@ export default {
       // モーダル表示する際の処理が必要ならここに書く
       this.searchModal = true
     },
+    showEditModal() {
+      // モーダル表示する際の処理が必要ならここに書く
+      this.editModal = true
+    },
     executeMethod(yes: any) {
       // モーダルを非表示にして、モーダルでの選択結果によって処理を変える
       this.modal = false
@@ -189,10 +195,17 @@ export default {
         alert('登録されました')
       }
     },
+
     executeSearchMethod(incomeDetailSearchResult: any) {
       // モーダルを非表示にして、モーダルでの選択結果によって処理を変える
 
       this.searchModal = false
+    },
+
+    executeEditMethod(incomeDetailSearchResult: any) {
+      // モーダルを非表示にして、モーダルでの選択結果によって処理を変える
+
+      this.editModal = false
     },
 
     executeSearchResultSetMethod(DetailSearchResult: any) {
@@ -235,6 +248,13 @@ export default {
         @execute-method1="executeSearchMethod"
         @execute-method2="executeSearchResultSetMethod"
       ></SearchModal>
+
+      <EditModal
+        v-show="editModal"
+        @execute-method1="executeEditMethod"
+        @execute-method2="executeSearchResultSetMethod"
+      ></EditModal>
+
       <div class="table_box" v-if="searchFrag == true">
         <table class="table_style">
           <thead>
@@ -252,7 +272,7 @@ export default {
               <td>{{ balancedata.incomeTypeName }}</td>
               <td>{{ balancedata.amount }}</td>
               <td>{{ balancedata.note }}</td>
-              <td><button>編集</button></td>
+              <td><button @click="showEditModal()">編集</button></td>
               <td><button>削除</button></td>
             </tr>
             <tr v-if="balancedata.balanceType == '支出'">
@@ -262,7 +282,7 @@ export default {
               <td>{{ balancedata.expenditureExpenseItemName }}</td>
               <td>{{ balancedata.amount }}</td>
               <td>{{ balancedata.note }}</td>
-              <td><button>編集</button></td>
+              <td><button @click="showEditModal()">編集</button></td>
               <td><button>削除</button></td>
             </tr>
           </tbody>

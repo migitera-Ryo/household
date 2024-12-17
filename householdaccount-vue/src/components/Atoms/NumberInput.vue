@@ -5,7 +5,7 @@ import axios from 'axios'
 
 <script lang="ts">
 export default {
-  props: ['validatedNum'],
+  props: ['validatedNull'],
   data() {
     return {
       amount: '',
@@ -28,7 +28,7 @@ export default {
     },
 
     amonutValidate(amount: any) {
-      if (this.validatedNum == '1') {
+      if (this.validatedNull == 'true') {
         if (!amount) {
           return '金額を入力してください'
         }
@@ -61,7 +61,6 @@ export default {
 
 <template>
   <input type="text" v-model="amount" placeholder="Type here" @blur="setAmount" />
-  <!-- <p>{{ amountResult }}</p> -->
 </template>
 
 <style scoped></style>

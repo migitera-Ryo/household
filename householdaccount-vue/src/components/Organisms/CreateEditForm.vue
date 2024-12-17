@@ -4,16 +4,19 @@ import axios from 'axios'
 </script>
 
 <script lang="ts">
-import SearchBalanceRadio from './Molecules/SearchBalanceRadio.vue'
-import SearchBaseDate from './Molecules/SearchBaseDate.vue'
-import SearchBaseAmount from './Molecules/SearchBaseAmount.vue'
-import FormSelect from './Atoms/FormSelect.vue'
-import TextArea from './Atoms/TextArea.vue'
-import Button from './Atoms/button.vue'
+import BalanceRadio from '../Molecules/BalanceRadio.vue'
+import DateInput from '../Atoms/DateInput.vue'
+import SearchBaseDate from '../Molecules/SearchBaseDate.vue'
+import NunberInput from '../Atoms/NumberInput.vue'
+import SearchBaseAmount from '../Molecules/SearchBaseAmount.vue'
+import FormSelect from '../Atoms/FormSelect.vue'
+import TextArea from '../Atoms/TextArea.vue'
+import Button from '../Atoms/button.vue'
 import { number } from 'yup'
 
 export default {
   name: 'Modal',
+  props: ['message'],
   data() {
     return {
       searchInfo: {
@@ -37,6 +40,28 @@ export default {
           note: '',
         },
       ],
+
+      searchResultBalanceInfoSample: [
+        {
+          balanceCode: 'I240400001',
+          balanceType: '収入',
+          amount: '111',
+          balanceDate: '2024/11/19',
+          incomeType: '1',
+          incomeTypeName: '給与',
+          expenditureExpenseItemName: '食費',
+          note: 'あああ',
+        },
+      ],
+
+      balanceType: '収入',
+      amount: '111',
+      balanceDate: '2024/11/19',
+      incomeType: '1',
+      incomeTypeName: '給与',
+      expenditureExpenseItemName: '食費',
+      note: 'あああ',
+
       selectedRadio: '収入',
       NullFrag: true,
       NotNullFrag: false,
@@ -280,13 +305,17 @@ export default {
 <template>
   <div id="modal">
     <div id="modal-content" class="modal">
-      <SearchBalanceRadio @execute-method="finalSetRadioName" />
-      <p>{{ selectedRadio }}</p>
+      <BalanceRadio @execute-method="finalSetRadioName" />
 
-      <SearchBaseDate @execute-method="finalSetDate" validatedNull="false" />
-      <p>{{ validation.subDateResult }}</p>
+      <p>
+        {{ '収支日付：' }}
+        <DateInput @execute-method="finalSetDate" validatedNull="false" />
+      </p>
 
-      <SearchBaseAmount @execute-method="finalSetAmount" validatedNull="false" />
+      <p>
+        {{ '金額：' }}
+        <NunberInput @execute-method="finalSetAmount" validatedNull="false" />
+      </p>
 
       <FormSelect
         :selectedRadioName="selectedRadio"
@@ -299,7 +328,6 @@ export default {
       />
 
       <TextArea @execute-method="finalSetNote" validatedNull="false" />
-
       <span v-if="selectedRadio == '収入'">
         <Button btname="検索" @click="detailSearchIncome" :disabled="validationFrag" />
       </span>
@@ -311,6 +339,8 @@ export default {
       <span v-if="selectedRadio == '指定なし'">
         <Button btname="検索" @click="detailSearchBalance" :disabled="validationFrag" />
       </span>
+
+      <Button @click="returnFalse()" btname="キャンセル" />
     </div>
     <div id="modal-overlay" @click.self="returnFalse()"></div>
   </div>
