@@ -8,9 +8,17 @@ export default {
   props: ['validatedNull','balanceNote'],
   data() {
     return {
-      note: this.balanceNote,
+      note: '',
       noteResult: '',
     }
+  },
+
+  beforeUpdate: function () {
+    this.note = this.balanceNote
+  },
+
+  mounted(){
+    this.note = this.balanceNote
   },
   methods: {
     setNote() {

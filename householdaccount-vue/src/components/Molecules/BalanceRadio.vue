@@ -13,6 +13,11 @@ export default {
       selectedRadioName: '',
     }
   },
+
+  // beforeUpdate: function () {
+  //   this.selectedRadioName = this.balanceType
+  // },
+
   methods: {
     setRadioIncome() {
       this.selectedRadioName = '収入'

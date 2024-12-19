@@ -16,6 +16,9 @@ import com.example.householdaccount.entity.SearchResultIncome;
 public interface SearchIncomeHouseholdRepository extends JpaRepository<SearchResultIncome, IncomeNoVO>{
 	@Query(value = "SELECT i.INCOME_NO, i.INCOME_DATE, i.INCOME_TYPE, i.AMOUNT, i.NOTE FROM INCOME AS i WHERE i.INCOME_NO LIKE %:balanceCode% ORDER BY i.INCOME_NO ASC", nativeQuery = true)
 	public List<SearchResultIncome> findIncomeByBalanceCode(String balanceCode);
+	
+	@Query(value = "SELECT i.INCOME_NO, i.INCOME_DATE, i.INCOME_TYPE, i.AMOUNT, i.NOTE FROM INCOME AS i WHERE i.INCOME_NO = :balanceCode ORDER BY i.INCOME_NO ASC", nativeQuery = true)
+	public SearchResultIncome findIncomeByBalanceCode2(String balanceCode);
 
 	public List<SearchResultIncome> findAll(Specification<SearchResultIncome> findAllSpecification);
 

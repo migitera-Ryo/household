@@ -8,65 +8,59 @@ import BalanceRadio from '../Molecules/BalanceRadio.vue'
 import DateInput from '../Atoms/DateInput.vue'
 import SearchBaseDate from '../Molecules/SearchBaseDate.vue'
 import NunberInput from '../Atoms/NumberInput.vue'
-import SearchBaseAmount from '../Molecules/SearchBaseAmount.vue'
+import ButtonGroup from '../Molecules/ButtonGroup.vue'
 import FormSelect from '../Atoms/FormSelect.vue'
 import TextArea from '../Atoms/TextArea.vue'
-import Button from '../Atoms/button.vue'
+import Button from '../Atoms/Button.vue'
 import { number } from 'yup'
 
 export default {
   name: 'Modal',
-  props: ['message'],
+  props: ['editInfor'],
   data() {
     return {
       searchInfo: {
-        fromDate: '',
-        toDate: '',
-        fromAmount: '',
-        toAmount: '',
+        balanceType: '',
+        balanceDate: '',
+        amount: '',
         incomeType: '',
         expenditureItemName: '',
         note: '',
       },
-      searchResultBalanceInfo: [
-        {
-          balanceCode: '',
-          balanceType: '',
-          amount: '',
-          balanceDate: '',
-          incomeType: '',
-          incomeTypeName: '',
-          expenditureExpenseItemName: '',
-          note: '',
-        },
-      ],
+      editToSearchInfo: {
+        balanceCode: '',
+        balanceType: '',
+        amount: '',
+        balanceDate: '',
+        incomeType: '',
+        expenditureExpenseItemName: '',
+        note: '',
+      },
 
-      searchResultBalanceInfoSample: [
-        {
-          balanceCode: 'I240400001',
-          balanceType: '収入',
-          amount: '111',
-          balanceDate: '2024/11/19',
-          incomeType: '1',
-          incomeTypeName: '給与',
-          expenditureExpenseItemName: '食費',
-          note: 'あああ',
-        },
-      ],
+      searchResultBalanceInfoSample: {
+        balanceCode: 'I240400001',
+        balanceType: '収入',
+        amount: '111',
+        balanceDate: '2024/11/19',
+        incomeType: '1',
+        incomeTypeName: '給与',
+        expenditureExpenseItemName: '食費',
+        note: 'あああ',
+      },
 
-      balanceType: '収入',
-      amount: '111',
+      balanceType: '支出',
+      amount: '',
       balanceDate: '2024-11-19',
       incomeType: '1',
       incomeTypeName: '給与',
       expenditureExpenseItemName: '食費',
       note: 'あああ',
 
-      selectedRadio: '収入',
+      selectedRadio: '収入', //balanceTypeに値があればbalanceTypeを入れる
       NullFrag: true,
       NotNullFrag: false,
       SystemErrorMessage: '',
-      validationFrag: true,
+      validationFrag: false,
 
       incomeTypes: [
         { value: '0', text: '' },
@@ -99,9 +93,25 @@ export default {
   mounted() {
     this.fetchUsers()
   },
+  beforeUpdate: function () {
+    this.searchResultChangeFormat()
+
+    this.editToSearchInfo.balanceCode = this.editInfor.balanceCode
+    this.editToSearchInfo.balanceType = this.editInfor.balanceType
+    this.editToSearchInfo.amount = this.editInfor.amount
+    this.editToSearchInfo.balanceDate = this.editInfor.balanceDate
+    this.editToSearchInfo.incomeType = this.editInfor.incomeType
+    this.editToSearchInfo.expenditureExpenseItemName = this.editInfor.expenditureExpenseItemName
+    this.editToSearchInfo.note = this.editInfor.note
+
+    if (this.editInfor.balanceType) {
+      this.selectedRadio = this.editInfor.balanceType
+    }
+  },
   methods: {
     async fetchUsers() {
       try {
+        //支出費目を取得
         const response = await axios.get('http://localhost:8080/api/expenseItems')
         this.expenseItems = response.data
       } catch (error) {
@@ -109,75 +119,12 @@ export default {
       }
     },
 
-    detailSearchIncome: function () {
-      try {
-        axios
-          .get('http://localhost:8080/api/detailSearchIncome', {
-            params: {
-              fromDate: this.searchInfo.fromDate,
-              toDate: this.searchInfo.toDate,
-              fromAmount: this.searchInfo.fromAmount,
-              toAmount: this.searchInfo.toAmount,
-              incomeType: this.searchInfo.incomeType,
-              expenditureItemName: this.searchInfo.expenditureItemName,
-              note: this.searchInfo.note,
-            },
-          })
-          .then((response) => {
-            console.log(response),
-              (this.searchResultBalanceInfo = response.data),
-              this.$emit('execute-method2', this.searchResultBalanceInfo)
-          })
-      } catch (error) {
-        alert('検索できません')
-      }
-    },
-
-    detailSearchExpenditure: function () {
-      try {
-        axios
-          .get('http://localhost:8080/api/detailSearchExpenditure', {
-            params: {
-              fromDate: this.searchInfo.fromDate,
-              toDate: this.searchInfo.toDate,
-              fromAmount: this.searchInfo.fromAmount,
-              toAmount: this.searchInfo.toAmount,
-              incomeType: this.searchInfo.incomeType,
-              expenditureItemName: this.searchInfo.expenditureItemName,
-              note: this.searchInfo.note,
-            },
-          })
-          .then((response) => {
-            console.log(response),
-              (this.searchResultBalanceInfo = response.data),
-              this.$emit('execute-method2', this.searchResultBalanceInfo)
-          })
-      } catch (error) {
-        alert('検索できません')
-      }
-    },
-
-    detailSearchBalance: function () {
-      try {
-        axios
-          .get('http://localhost:8080/api/detailSearchBalance', {
-            params: {
-              fromDate: this.searchInfo.fromDate,
-              toDate: this.searchInfo.toDate,
-              fromAmount: this.searchInfo.fromAmount,
-              toAmount: this.searchInfo.toAmount,
-              incomeType: this.searchInfo.incomeType,
-              expenditureItemName: this.searchInfo.expenditureItemName,
-              note: this.searchInfo.note,
-            },
-          })
-          .then((response) => {
-            console.log(response),
-              (this.searchResultBalanceInfo = response.data),
-              this.$emit('execute-method2', this.searchResultBalanceInfo)
-          })
-      } catch (error) {
-        alert('検索できません')
+    searchResultChangeFormat() {
+      if (this.editInfor) {
+        const incomeYYYY = this.editInfor.balanceDate.substring(0, 4)
+        const incomeMM = this.editInfor.balanceDate.substring(5, 7)
+        const incomeDD = this.editInfor.balanceDate.substring(8, 10)
+        this.editInfor.balanceDate = [incomeYYYY, incomeMM, incomeDD].join('-')
       }
     },
 
@@ -201,9 +148,9 @@ export default {
       this.validationCheck()
     },
 
-    finalSetIncomeType(selectType: any, incomeType: any) {
+    finalSetIncomeType(selectType: any, incomeTypeResult: any) {
       this.searchInfo.incomeType = selectType
-      this.validation.incomeTypeResult = incomeType
+      this.validation.incomeTypeResult = incomeTypeResult
 
       this.validationCheck()
     },
@@ -275,18 +222,6 @@ export default {
           this.validationFrag = false
         }
       }
-
-      if (
-        !this.searchInfo.fromAmount &&
-        !this.searchInfo.toAmount &&
-        !this.searchInfo.fromDate &&
-        !this.searchInfo.toDate &&
-        !this.searchInfo.incomeType &&
-        !this.searchInfo.expenditureItemName &&
-        !this.searchInfo.note
-      ) {
-        this.validationFrag = true
-      }
     },
   },
 }
@@ -295,59 +230,67 @@ export default {
 <template>
   <div id="modal">
     <div id="modal-content" class="modal">
+      <p>aaa{{ editToSearchInfo }}</p>
+
       <BalanceRadio
         @execute-method="finalSetRadioName"
         radioName="editRadio"
-        :balanceType="balanceType"
+        :balanceType="editInfor.balanceType"
       />
-      <p>{{ selectedRadio }}</p>
+      <!-- <p>{{ selectedRadio }}</p> -->
 
       <p>
         {{ '収支日付：' }}
         <DateInput
           @execute-method="finalSetDate"
-          v-model="searchInfo.toDate"
+          v-model="balanceDate"
           validatedNull="true"
           id="dateid"
-          :balanceDate="balanceDate"
+          :balanceDate="editInfor.balanceDate"
         />
       </p>
 
-      <p>{{ searchInfo.toDate }}</p>
+      <p>{{ editInfor.balanceDate }}</p>
       <p>{{ validation.dateResult }}</p>
 
       <p>
         {{ '金額：' }}
         <NunberInput
           @execute-method="finalSetAmount"
-          v-model="searchInfo.toAmount"
+          v-model="amount"
           validatedNull="true"
-          :balanceAmount="amount"
+          :balanceAmount="editToSearchInfo.amount"
+          :firstCheckFrag="amount"
         />
       </p>
 
-      <p>{{ searchInfo.toAmount }}</p>
-      <p>{{ validation.amountResult }}</p>
+      <p>editInfor1 {{ editInfor.amount }}</p>
+      <p>editInfor2 {{ validation.amountResult }}</p>
 
       <FormSelect
         :selectedRadioName="selectedRadio"
         :expenseItems="expenseItems"
         :types="incomeTypes"
-        :incomeType="incomeType"
+        :selectedIncomeType="editInfor.incomeType"
+        :selectedExpenditureType="editInfor.expenditureExpenseItemName"
         @executeIncome-method="finalSetIncomeType"
         @executeExpenditure-method="finalSetExpenditureType"
         @executeBalance-method="finalSetBalanceType"
         validatedNull="true"
       />
 
-      <p>{{ searchInfo.incomeType }}</p>
+      <p>{{ editInfor.incomeType }}</p>
       <p>{{ validation.incomeTypeResult }}</p>
 
-      <TextArea @execute-method="finalSetNote" :balanceNote="note" validatedNull="false" />
-      <p>{{ searchInfo.note }}</p>
+      <TextArea
+        @execute-method="finalSetNote"
+        :balanceNote="editInfor.note"
+        validatedNull="false"
+      />
+      <p>{{ note }}</p>
       <p>{{ validation.noteResult }}</p>
 
-      <span v-if="selectedRadio == '収入'">
+      <!-- <span v-if="selectedRadio == '収入'">
         <Button btname="検索" @click="detailSearchIncome" :disabled="validationFrag" />
       </span>
 
@@ -357,11 +300,16 @@ export default {
 
       <span v-if="selectedRadio == '指定なし'">
         <Button btname="検索" @click="detailSearchBalance" :disabled="validationFrag" />
-      </span>
+      </span> -->
 
-      <Button @click="returnFalse()" btname="キャンセル" />
+      <ButtonGroup
+        btname1="保存"
+        btname2="キャンセル"
+        :disabledFrag="validationFrag"
+        @execute-cancelMethod="returnFalse"
+      />
     </div>
-    <div id="modal-overlay" @click.self="returnFalse()"></div>
+    <div id="modal-overlay"></div>
   </div>
 </template>
 

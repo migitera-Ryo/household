@@ -15,5 +15,9 @@ public interface SearchExpenditureHouseholdRepository extends JpaRepository<Sear
 	@Query(value = "SELECT e.EXPENDITURE_NO, e.EXPENDITURE_DATE, e.EXPENDITURE_EXPENSE_ITEM_NAME, e.AMOUNT, e.NOTE FROM EXPENDITURE AS e WHERE e.EXPENDITURE_NO LIKE %:balanceCode% ORDER BY e.EXPENDITURE_NO ASC", nativeQuery = true)
 	public List<SearchResultExpenditure> findExpenditureByBalanceCode(String balanceCode);
 	
+	//試作
+	@Query(value = "SELECT e.EXPENDITURE_NO, e.EXPENDITURE_DATE, e.EXPENDITURE_EXPENSE_ITEM_NAME, e.AMOUNT, e.NOTE FROM EXPENDITURE AS e WHERE e.EXPENDITURE_NO = :balanceCode ORDER BY e.EXPENDITURE_NO ASC", nativeQuery = true)
+	public SearchResultExpenditure findExpenditureByBalanceCode2(String balanceCode);
+	
 	public List<SearchResultExpenditure> findAll(Specification<SearchResultExpenditure> findAllSpecification);
 }

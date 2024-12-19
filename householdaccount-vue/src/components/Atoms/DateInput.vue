@@ -12,6 +12,11 @@ export default {
       dateResult: '',
     }
   },
+
+  beforeUpdate: function () {
+    this.date = this.balanceDate
+  },
+
   methods: {
     setDate() {
       console.log(this.date)

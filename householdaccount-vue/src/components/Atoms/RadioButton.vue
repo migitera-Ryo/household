@@ -10,6 +10,7 @@ export default {
     radioName: String,
     setedRadioName: String,
   },
+
   data() {
     return {
       selectRadio: null,
@@ -35,6 +36,8 @@ export default {
     <input type="radio" :name="radioName" @change="setRadioName" />
     <label for="button1">{{ radioname }}</label>
   </span>
+
+  <p>{{ setedRadioName }}</p>
 </template>
 
 <style scoped></style>

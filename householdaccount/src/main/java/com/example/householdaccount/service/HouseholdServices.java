@@ -62,6 +62,14 @@ public class HouseholdServices {
 		
 		return searchIncomeInfoList;
     }
+	//試作
+	public SearchResultIncome getSearchIncomeInfo2(String balanceCode) {
+		System.out.println(balanceCode);
+		SearchResultIncome searchIncomeInfoList = searchIncomeHouseholdRepository.findIncomeByBalanceCode2(balanceCode);
+		System.out.println(searchIncomeInfoList);
+		
+		return searchIncomeInfoList;
+    }
 	
 	public List<SearchResultIncome> getDetailSearchIncomeInfo(Optional<Date> incomeFromDate, 
 			Optional<Date> incomeToDate, Optional<Integer> incomeFromAmount, 
@@ -89,6 +97,15 @@ public class HouseholdServices {
 	public List<SearchResultExpenditure> getSearchExpenditureInfo(String balanceCode) {
 		System.out.println(balanceCode);
 		List<SearchResultExpenditure> searchExpenditureInfoList = searchExpenditureHouseholdRepository.findExpenditureByBalanceCode(balanceCode);
+		System.out.println(searchExpenditureInfoList);
+		
+		return searchExpenditureInfoList;
+    }
+	
+	//試作
+	public SearchResultExpenditure getSearchExpenditureInfo2(String balanceCode) {
+		System.out.println(balanceCode);
+		SearchResultExpenditure searchExpenditureInfoList = searchExpenditureHouseholdRepository.findExpenditureByBalanceCode2(balanceCode);
 		System.out.println(searchExpenditureInfoList);
 		
 		return searchExpenditureInfoList;

@@ -5,13 +5,21 @@ import axios from 'axios'
 
 <script lang="ts">
 export default {
-  props: ['validatedNull', 'balanceAmount'],
+  props: ['validatedNull', 'balanceAmount', 'firstCheckFrag'],
   data() {
     return {
-      amount: this.balanceAmount,
+      amount: this.firstCheckFrag,
       amountResult: '',
+      frag: '',
     }
   },
+
+  beforeUpdate: function () {
+    if (this.balanceAmount && !this.amount) {
+      this.amount = this.balanceAmount
+    }
+  },
+
   methods: {
     setAmount() {
       this.amountCheckValidate()

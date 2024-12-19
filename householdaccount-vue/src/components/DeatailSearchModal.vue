@@ -9,7 +9,7 @@ import SearchBaseDate from './Molecules/SearchBaseDate.vue'
 import SearchBaseAmount from './Molecules/SearchBaseAmount.vue'
 import FormSelect from './Atoms/FormSelect.vue'
 import TextArea from './Atoms/TextArea.vue'
-import Button from './Atoms/button.vue'
+import Button from './Atoms/Button.vue'
 import { number } from 'yup'
 
 export default {

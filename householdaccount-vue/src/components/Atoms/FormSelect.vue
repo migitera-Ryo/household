@@ -9,7 +9,8 @@ export default {
   props: {
     validatedNull:String,
     selectedRadioName: String,
-    incomeType:String,
+    selectedIncomeType:String,
+    selectedExpenditureType:String,
     expenseItems: [
       {
         expenditureExpenseItemCode: String,
@@ -20,7 +21,7 @@ export default {
   },
   data() {
     return {
-      incomeType: this.incomeType,
+      incomeType:'',
       expenditureType: '',
       incomeTypeResult: '',
       expenditureTypeResult: '',
@@ -35,6 +36,12 @@ export default {
       ],
     }
   },
+
+  beforeUpdate: function () {
+    this.incomeType = this.selectedIncomeType
+    this.expenditureType = this.selectedExpenditureType
+  },
+
   methods: {
     setIncomeType() {
       this.incomeTypeCheckValidate()
@@ -103,11 +110,11 @@ export default {
           {{ income_type.text }}
         </option>
       </select>
-      <!-- <p>{{ incomeType }}</p> -->
+      <p>ppp{{ incomeType }}</p>
+      <p>www{{ selectedIncomeType }}</p>
       <p>{{ incomeTypeResult }}</p>
     </p>
 
-    <p>{{incomeType}}</p>
 
     <p>
       <label>{{ '支出費目' }}</label>
@@ -127,7 +134,7 @@ export default {
     <p>
       <label>{{ '収入種別' }}</label>
       <select v-model="incomeType" @blur="setIncomeType" :disabled="true">
-        <option v-for="income_type in types" :value="income_type.text" :key="income_type.vaule">
+        <option v-for="income_type in types" :value="income_type.value" :key="income_type.text">
           {{}}
         </option>
       </select>

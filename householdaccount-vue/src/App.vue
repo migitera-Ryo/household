@@ -25,7 +25,7 @@ const dataes = [
 import Modal from './components/Modal.vue'
 import SearchModal from './components/DeatailSearchModal.vue'
 import EditModal from './components/Organisms/CreateEditForm.vue'
-import Button from './components/Atoms/button.vue'
+import Button from './components/Atoms/Button.vue'
 import moment from 'moment'
 
 export default {
@@ -36,24 +36,7 @@ export default {
   },
   data() {
     return {
-      grades: [
-        {
-          no: 'I240400001',
-          balance: '収入',
-          balance_date: '2024/4/20',
-          type: '貯金',
-          amount: 200000,
-          note: '',
-        },
-        {
-          no: 'E240400001',
-          balance: '支出',
-          balance_date: '2024/4/20',
-          type: '食費',
-          amount: 1000,
-          note: 'あああ',
-        },
-      ],
+      targetCode: '',
       searchResultIncomeInfo: [
         {
           // balanceClassification: '',
@@ -75,6 +58,29 @@ export default {
           note: '',
         },
       ],
+      searchResultBalanceInfoForEdit: [
+        {
+          balanceCode: '',
+          balanceType: '',
+          amount: '',
+          balanceDate: '',
+          incomeType: '',
+          incomeTypeName: '',
+          expenditureExpenseItemName: '',
+          note: '',
+        },
+      ],
+      searchResultBalanceInfoForEdit2: {
+        balanceCode: '',
+        balanceType: '',
+        amount: '',
+        balanceDate: '',
+        incomeType: '',
+        incomeTypeName: '',
+        expenditureExpenseItemName: '',
+        note: '',
+      },
+
       searchResultBalanceInfo: [
         {
           balanceCode: '',
@@ -87,7 +93,7 @@ export default {
           note: '',
         },
       ],
-      message: '登録画面',
+      message: '111',
       modal: false,
       searchModal: false,
       editModal: false,
@@ -125,17 +131,6 @@ export default {
         const incomeDD = this.searchResultBalanceInfo[i].balanceDate.substring(8, 10)
         this.searchResultBalanceInfo[i].balanceDate = [incomeYYYY, incomeMM, incomeDD].join('/')
       }
-
-      // for (let i = 0; i < this.searchResultExpenditureInfo.length; i++) {
-      //   const expenditureYYYY = this.searchResultExpenditureInfo[i].expenditureDate.substring(0, 4)
-      //   const expenditureMM = this.searchResultExpenditureInfo[i].expenditureDate.substring(5, 7)
-      //   const expenditureDD = this.searchResultExpenditureInfo[i].expenditureDate.substring(8, 10)
-      //   this.searchResultExpenditureInfo[i].expenditureDate = [
-      //     expenditureYYYY,
-      //     expenditureMM,
-      //     expenditureDD,
-      //   ].join('/')
-      // }
     },
     moment: function (date: any) {
       return moment(date).format('l')
@@ -184,8 +179,27 @@ export default {
       // モーダル表示する際の処理が必要ならここに書く
       this.searchModal = true
     },
-    showEditModal() {
+    showEditModal(balanceCode: any) {
       // モーダル表示する際の処理が必要ならここに書く
+      axios
+        .get('http://localhost:8080/api/searchBalance/', {
+          params: { ID: balanceCode },
+        })
+        .then((response) => {
+          console.log(response),
+            (this.searchResultBalanceInfoForEdit = response.data),
+            this.searchResultChangeFormat()
+        })
+
+      axios
+        .get('http://localhost:8080/api/sisaku/', {
+          params: { ID: balanceCode },
+        })
+        .then((response) => {
+          console.log(response),
+            (this.searchResultBalanceInfoForEdit2 = response.data),
+            this.searchResultChangeFormat()
+        })
       this.editModal = true
     },
     executeMethod(yes: any) {
@@ -253,6 +267,7 @@ export default {
         v-show="editModal"
         @execute-method1="executeEditMethod"
         @execute-method2="executeSearchResultSetMethod"
+        :editInfor="searchResultBalanceInfoForEdit2"
       ></EditModal>
 
       <div class="table_box" v-if="searchFrag == true">
@@ -272,7 +287,7 @@ export default {
               <td>{{ balancedata.incomeTypeName }}</td>
               <td>{{ balancedata.amount }}</td>
               <td>{{ balancedata.note }}</td>
-              <td><button @click="showEditModal()">編集</button></td>
+              <td><button @click="showEditModal(balancedata.balanceCode)">編集</button></td>
               <td><button>削除</button></td>
             </tr>
             <tr v-if="balancedata.balanceType == '支出'">
@@ -282,7 +297,7 @@ export default {
               <td>{{ balancedata.expenditureExpenseItemName }}</td>
               <td>{{ balancedata.amount }}</td>
               <td>{{ balancedata.note }}</td>
-              <td><button @click="showEditModal()">編集</button></td>
+              <td><button @click="showEditModal(balancedata.balanceCode)">編集</button></td>
               <td><button>削除</button></td>
             </tr>
           </tbody>

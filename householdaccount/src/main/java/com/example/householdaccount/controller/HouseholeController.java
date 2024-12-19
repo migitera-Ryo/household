@@ -104,6 +104,44 @@ public class HouseholeController {
         return searchBalanceResult;
     }
 	
+	
+	//sisaku
+	//収入データと支出データを同時に検索して、同時に結果を返す
+		@GetMapping("/sisaku")
+	    public SearchResultBalanceForm getSearchBalance2(@RequestParam("ID") String balanceCode) {
+			System.out.println("99999999999999999999999999999");
+			System.out.println(balanceCode);
+			SearchResultIncome searchIncomeResult = householdServices.getSearchIncomeInfo2(balanceCode);
+			SearchResultExpenditure searchExpenditureResult = householdServices.getSearchExpenditureInfo2(balanceCode);
+			
+			SearchResultBalanceForm searchResultBalanceForm = new SearchResultBalanceForm();
+			
+			if(searchIncomeResult != null) {
+				String code = String.valueOf(searchIncomeResult.getIncomeNo());
+				
+				searchResultBalanceForm.setBalanceType("収入");
+				searchResultBalanceForm.setBalanceCode(code);
+				searchResultBalanceForm.setAmount(searchIncomeResult.getAmount());
+				searchResultBalanceForm.setBalanceDate(searchIncomeResult.getIncomeDate());
+				searchResultBalanceForm.setIncomeType(searchIncomeResult.getIncomeType());
+				searchResultBalanceForm.setNote(searchIncomeResult.getNote());
+			}else {
+				String code2 = String.valueOf(searchExpenditureResult.getExpenditureNo());
+				
+				searchResultBalanceForm.setBalanceType("支出");
+				searchResultBalanceForm.setBalanceCode(code2);
+				searchResultBalanceForm.setAmount(searchExpenditureResult.getAmount());
+				searchResultBalanceForm.setBalanceDate(searchExpenditureResult.getExpenditureDate());
+				searchResultBalanceForm.setExpenditureExpenseItemName(searchExpenditureResult.getExpenditureExpenseItemName());
+				searchResultBalanceForm.setNote(searchExpenditureResult.getNote());
+			}
+	
+	        // ユーザーリストを返す
+			System.out.println("jjjjjjjjjjjjjjjjjjjj");
+			System.out.println(searchResultBalanceForm);
+	        return searchResultBalanceForm;
+	    }
+	
 	//収入データを詳細検索して結果を返す
 	@GetMapping("/detailSearchIncome")
     public List<SearchResultBalanceForm> getDetailSearchIncome(@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate,
@@ -309,7 +347,7 @@ public class HouseholeController {
     public List<ExpenditureItem> getExpenseItem() {
 		List<ExpenditureItem> expenditureItemList = householdServices.expenditureItemsInfo();
         // ユーザーリストを返す
-		System.out.println(expenditureItemList);
+		System.out.println("22222222222222222222222222222222222222222222222");
         return expenditureItemList;
     }
 	
