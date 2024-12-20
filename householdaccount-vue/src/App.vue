@@ -3,6 +3,11 @@ import { RouterLink, RouterView } from 'vue-router'
 import HelloWorld from './components/HelloWorld.vue'
 import { createApp, ref } from 'vue'
 import axios from 'axios'
+import Modal from './components/Modal.vue'
+import SearchModal from './components/DeatailSearchModal.vue'
+import EditModal from './components/Organisms/CreateEditForm.vue'
+import Button from './components/Atoms/Button.vue'
+import moment from 'moment'
 
 const header = ref([
   { text: '収支No' },
@@ -14,25 +19,14 @@ const header = ref([
   { text: '編集' },
   { text: '削除' },
 ])
-
-const dataes = [
-  { no: 1, name: 'Daiki', email: 'daiki@hoge.net' },
-  { no: 2, name: 'Naoki', email: 'naoki@hoge.net' },
-]
 </script>
 
 <script lang="ts">
-import Modal from './components/Modal.vue'
-import SearchModal from './components/DeatailSearchModal.vue'
-import EditModal from './components/Organisms/CreateEditForm.vue'
-import Button from './components/Atoms/Button.vue'
-import moment from 'moment'
-
 export default {
-  name: 'HollowWorld',
   components: {
     Modal,
     SearchModal,
+    EditModal,
   },
   data() {
     return {
@@ -70,7 +64,7 @@ export default {
           note: '',
         },
       ],
-      searchResultBalanceInfoForEdit2: {
+      searchResultBalanceInfoForEdit2: ref({
         balanceCode: '',
         balanceType: '',
         amount: '',
@@ -79,7 +73,7 @@ export default {
         incomeTypeName: '',
         expenditureExpenseItemName: '',
         note: '',
-      },
+      }),
 
       searchResultBalanceInfo: [
         {
@@ -93,12 +87,13 @@ export default {
           note: '',
         },
       ],
-      message: '111',
+      balanceCodeEorEdit: '',
       modal: false,
       searchModal: false,
-      editModal: false,
+      editModalShowFrag: false,
       searchBalanceCode: '',
       searchFrag: false,
+      edit: createApp(EditModal),
     }
   },
   props: {
@@ -181,26 +176,13 @@ export default {
     },
     showEditModal(balanceCode: any) {
       // モーダル表示する際の処理が必要ならここに書く
-      axios
-        .get('http://localhost:8080/api/searchBalance/', {
-          params: { ID: balanceCode },
-        })
-        .then((response) => {
-          console.log(response),
-            (this.searchResultBalanceInfoForEdit = response.data),
-            this.searchResultChangeFormat()
-        })
+      this.balanceCodeEorEdit = balanceCode
+      if (this.searchResultBalanceInfoForEdit2) {
+        const edit = createApp(EditModal)
+        edit.mount('#showEditModal')
+      }
 
-      axios
-        .get('http://localhost:8080/api/sisaku/', {
-          params: { ID: balanceCode },
-        })
-        .then((response) => {
-          console.log(response),
-            (this.searchResultBalanceInfoForEdit2 = response.data),
-            this.searchResultChangeFormat()
-        })
-      this.editModal = true
+      this.editModalShowFrag = true
     },
     executeMethod(yes: any) {
       // モーダルを非表示にして、モーダルでの選択結果によって処理を変える
@@ -218,8 +200,8 @@ export default {
 
     executeEditMethod(incomeDetailSearchResult: any) {
       // モーダルを非表示にして、モーダルでの選択結果によって処理を変える
-
-      this.editModal = false
+      this.edit.unmount()
+      this.editModalShowFrag = false
     },
 
     executeSearchResultSetMethod(DetailSearchResult: any) {
@@ -263,12 +245,19 @@ export default {
         @execute-method2="executeSearchResultSetMethod"
       ></SearchModal>
 
-      <EditModal
-        v-show="editModal"
+      <!-- <EditModal
+        v-show="editModalShowFrag"
         @execute-method1="executeEditMethod"
         @execute-method2="executeSearchResultSetMethod"
         :editInfor="searchResultBalanceInfoForEdit2"
-      ></EditModal>
+      /> -->
+      <div id="showEditModal" v-if="editModalShowFrag == true">
+        <EditModal
+          @execute-method1="executeEditMethod"
+          @execute-method2="executeSearchResultSetMethod"
+          :balanceCode="balanceCodeEorEdit"
+        />
+      </div>
 
       <div class="table_box" v-if="searchFrag == true">
         <table class="table_style">

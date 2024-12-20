@@ -5,20 +5,36 @@ import axios from 'axios'
 
 <script lang="ts">
 export default {
-  props: ['validatedNull', 'balanceAmount', 'firstCheckFrag'],
+  props: ['validatedNull', 'balanceAmount'],
   data() {
     return {
-      amount: this.firstCheckFrag,
+      amount: this.balanceAmount,
       amountResult: '',
-      frag: '',
     }
   },
-
-  beforeUpdate: function () {
-    if (this.balanceAmount && !this.amount) {
+  create() {
+    if (this.balanceAmount) {
       this.amount = this.balanceAmount
     }
   },
+
+  beforeCreate() {
+    if (this.balanceAmount) {
+      this.amount = this.balanceAmount
+    }
+  },
+  // beforeUpdate() {
+  //   if (this.frag == 'true') {
+  //     if (this.balanceAmount) {
+  //       this.amount = this.balanceAmount
+  //     }
+  //   }
+
+  //   this.frag = 'false'
+  // },
+  // mounted() {
+  //   this.frag = this.firstCheckFrag
+  // },
 
   methods: {
     setAmount() {
@@ -68,7 +84,15 @@ export default {
 </script>
 
 <template>
-  <input type="text" v-model="amount" placeholder="Type here" @blur="setAmount" />
+  <input
+    type="text"
+    v-model="amount"
+    placeholder="Type here"
+    :key="balanceAmount"
+    @blur="setAmount"
+  />
+  <p>iii{{ amount }}</p>
+  <p>ppp{{ balanceAmount }}</p>
 </template>
 
 <style scoped></style>

@@ -16,7 +16,7 @@ import { number } from 'yup'
 
 export default {
   name: 'Modal',
-  props: ['editInfor'],
+  props: ['balanceCode'],
   data() {
     return {
       searchInfo: {
@@ -27,6 +27,7 @@ export default {
         expenditureItemName: '',
         note: '',
       },
+
       editToSearchInfo: {
         balanceCode: '',
         balanceType: '',
@@ -49,7 +50,7 @@ export default {
       },
 
       balanceType: '支出',
-      amount: '',
+      amount: '111',
       balanceDate: '2024-11-19',
       incomeType: '1',
       incomeTypeName: '給与',
@@ -90,26 +91,38 @@ export default {
       },
     }
   },
+  created() {
+    axios
+      .get('http://localhost:8080/api/sisaku/', {
+        params: { ID: this.balanceCode },
+      })
+      .then((response) => {
+        console.log(response),
+          (this.editToSearchInfo = response.data),
+          this.searchResultChangeFormat()
+      })
+    // this.editToSearchInfo.balanceCode = this.editInfor.balanceCode
+    // this.editToSearchInfo.balanceType = this.editInfor.balanceType
+    // this.editToSearchInfo.amount = this.editInfor.amount
+    // this.editToSearchInfo.balanceDate = this.editInfor.balanceDate
+    // this.editToSearchInfo.incomeType = this.editInfor.incomeType
+    // this.editToSearchInfo.expenditureExpenseItemName = this.editInfor.expenditureExpenseItemName
+    // this.editToSearchInfo.note = this.editInfor.note
+  },
   mounted() {
-    this.fetchUsers()
+    this.fetchExpenseItems()
   },
-  beforeUpdate: function () {
-    this.searchResultChangeFormat()
 
-    this.editToSearchInfo.balanceCode = this.editInfor.balanceCode
-    this.editToSearchInfo.balanceType = this.editInfor.balanceType
-    this.editToSearchInfo.amount = this.editInfor.amount
-    this.editToSearchInfo.balanceDate = this.editInfor.balanceDate
-    this.editToSearchInfo.incomeType = this.editInfor.incomeType
-    this.editToSearchInfo.expenditureExpenseItemName = this.editInfor.expenditureExpenseItemName
-    this.editToSearchInfo.note = this.editInfor.note
+  // beforeUpdate: function () {
+  //   this.searchResultChangeFormat()
 
-    if (this.editInfor.balanceType) {
-      this.selectedRadio = this.editInfor.balanceType
-    }
-  },
+  //   if (this.editInfor.balanceType) {
+  //     this.selectedRadio = this.editInfor.balanceType
+  //   }
+  // },
+
   methods: {
-    async fetchUsers() {
+    async fetchExpenseItems() {
       try {
         //支出費目を取得
         const response = await axios.get('http://localhost:8080/api/expenseItems')
@@ -120,11 +133,11 @@ export default {
     },
 
     searchResultChangeFormat() {
-      if (this.editInfor) {
-        const incomeYYYY = this.editInfor.balanceDate.substring(0, 4)
-        const incomeMM = this.editInfor.balanceDate.substring(5, 7)
-        const incomeDD = this.editInfor.balanceDate.substring(8, 10)
-        this.editInfor.balanceDate = [incomeYYYY, incomeMM, incomeDD].join('-')
+      if (this.editToSearchInfo) {
+        const incomeYYYY = this.editToSearchInfo.balanceDate.substring(0, 4)
+        const incomeMM = this.editToSearchInfo.balanceDate.substring(5, 7)
+        const incomeDD = this.editToSearchInfo.balanceDate.substring(8, 10)
+        this.editToSearchInfo.balanceDate = [incomeYYYY, incomeMM, incomeDD].join('-')
       }
     },
 
@@ -231,11 +244,12 @@ export default {
   <div id="modal">
     <div id="modal-content" class="modal">
       <p>aaa{{ editToSearchInfo }}</p>
+      <p>bbb{{ balanceCode }}</p>
 
       <BalanceRadio
         @execute-method="finalSetRadioName"
         radioName="editRadio"
-        :balanceType="editInfor.balanceType"
+        :balanceType="editToSearchInfo.balanceType"
       />
       <!-- <p>{{ selectedRadio }}</p> -->
 
@@ -246,11 +260,11 @@ export default {
           v-model="balanceDate"
           validatedNull="true"
           id="dateid"
-          :balanceDate="editInfor.balanceDate"
+          :balanceDate="editToSearchInfo.balanceDate"
         />
       </p>
 
-      <p>{{ editInfor.balanceDate }}</p>
+      <p>{{ editToSearchInfo.balanceDate }}</p>
       <p>{{ validation.dateResult }}</p>
 
       <p>
@@ -260,34 +274,35 @@ export default {
           v-model="amount"
           validatedNull="true"
           :balanceAmount="editToSearchInfo.amount"
-          :firstCheckFrag="amount"
+          firstCheckFrag="true"
+          :key="editToSearchInfo.amount"
         />
       </p>
 
-      <p>editInfor1 {{ editInfor.amount }}</p>
+      <p>editInfor1 {{ editToSearchInfo.amount }}</p>
       <p>editInfor2 {{ validation.amountResult }}</p>
 
       <FormSelect
         :selectedRadioName="selectedRadio"
         :expenseItems="expenseItems"
         :types="incomeTypes"
-        :selectedIncomeType="editInfor.incomeType"
-        :selectedExpenditureType="editInfor.expenditureExpenseItemName"
+        :selectedIncomeType="editToSearchInfo.incomeType"
+        :selectedExpenditureType="editToSearchInfo.expenditureExpenseItemName"
         @executeIncome-method="finalSetIncomeType"
         @executeExpenditure-method="finalSetExpenditureType"
         @executeBalance-method="finalSetBalanceType"
         validatedNull="true"
       />
 
-      <p>{{ editInfor.incomeType }}</p>
+      <p>{{ editToSearchInfo.incomeType }}</p>
       <p>{{ validation.incomeTypeResult }}</p>
 
       <TextArea
         @execute-method="finalSetNote"
-        :balanceNote="editInfor.note"
+        :balanceNote="editToSearchInfo.note"
         validatedNull="false"
       />
-      <p>{{ note }}</p>
+      <p>{{ editToSearchInfo.note }}</p>
       <p>{{ validation.noteResult }}</p>
 
       <!-- <span v-if="selectedRadio == '収入'">

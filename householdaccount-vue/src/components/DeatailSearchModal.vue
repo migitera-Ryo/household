@@ -72,10 +72,10 @@ export default {
     }
   },
   mounted() {
-    this.fetchUsers()
+    this.fetchExpenseItems()
   },
   methods: {
-    async fetchUsers() {
+    async fetchExpenseItems() {
       try {
         const response = await axios.get('http://localhost:8080/api/expenseItems')
         this.expenseItems = response.data

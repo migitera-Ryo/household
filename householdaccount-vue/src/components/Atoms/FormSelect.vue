@@ -110,8 +110,6 @@ export default {
           {{ income_type.text }}
         </option>
       </select>
-      <p>ppp{{ incomeType }}</p>
-      <p>www{{ selectedIncomeType }}</p>
       <p>{{ incomeTypeResult }}</p>
     </p>
 
@@ -148,7 +146,7 @@ export default {
           :value="expenditure_type.expenditureExpenseItemName"
           :key="expenditure_type.expenditureExpenseItemCode"
         >
-          {{ expenditure_type.expenditureExpenseItemName }}
+          
         </option>
       </select>
       <p>{{ expenditureTypeResult }}</p>
