@@ -135,28 +135,8 @@ export default {
     },
     searchBalanceInfo: function () {
       try {
-        // axios
-        //   .get('http://localhost:8080/api/searchIncome/', {
-        //     params: { ID: this.searchBalanceCode },
-        //   })
-        //   .then((response) => {
-        //     console.log(response),
-        //       (this.searchResultIncomeInfo = response.data),
-        //       this.searchResultChangeFormat()
-        //   })
-
-        // axios
-        //   .get('http://localhost:8080/api/searchExpenditure/', {
-        //     params: { ID: this.searchBalanceCode },
-        //   })
-        //   .then((response) => {
-        //     console.log(response),
-        //       (this.searchResultExpenditureInfo = response.data),
-        //       this.searchResultChangeFormat()
-        //   })
-
         axios
-          .get('http://localhost:8080/api/searchBalance/', {
+          .get('http://localhost:8080/api/searchBalanceList/', {
             params: { ID: this.searchBalanceCode },
           })
           .then((response) => {

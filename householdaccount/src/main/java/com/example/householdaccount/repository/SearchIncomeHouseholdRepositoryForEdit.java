@@ -5,9 +5,9 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.example.householdaccount.entity.Income.IncomeNoVO;
 import com.example.householdaccount.entity.SearchResultIncome;
-import com.example.householdaccount.entity.SearchResultIncomeForEdit;
+import com.example.householdaccount.entity.SearchResultIncomeForEditAndDelete;
 
-public interface SearchIncomeHouseholdRepositoryForEdit extends JpaRepository<SearchResultIncomeForEdit, IncomeNoVO> {
+public interface SearchIncomeHouseholdRepositoryForEdit extends JpaRepository<SearchResultIncomeForEditAndDelete, IncomeNoVO> {
 	@Query(value = "SELECT i.INCOME_NO, i.INCOME_DATE, i.INCOME_TYPE, i.AMOUNT, i.NOTE ,i.VERSION FROM INCOME AS i WHERE i.INCOME_NO = :balanceCode ORDER BY i.INCOME_NO ASC", nativeQuery = true)
-	public SearchResultIncomeForEdit findIncomeByBalanceCode(String balanceCode);
+	public SearchResultIncomeForEditAndDelete findIncomeByBalanceCode(String balanceCode);
 }

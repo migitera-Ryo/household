@@ -27,14 +27,14 @@ import com.example.householdaccount.entity.Income;
 import com.example.householdaccount.entity.Income.IncomeNoVO;
 import com.example.householdaccount.entity.SearchResultExpenditure;
 import com.example.householdaccount.entity.SearchResultIncome;
-import com.example.householdaccount.entity.SearchResultIncomeForEdit;
-import com.example.householdaccount.entity.SearchResultExpenditureForEdit;
+import com.example.householdaccount.entity.SearchResultIncomeForEditAndDelete;
+import com.example.householdaccount.entity.SearchResultExpenditureForEditAndDelete;
 import com.example.householdaccount.form.DetailSearchForm;
 import com.example.householdaccount.form.ExpenditureHouseholdForm;
 import com.example.householdaccount.form.IncomeHouseholdForm;
 import com.example.householdaccount.form.SearchResultBalanceForm;
 import com.example.householdaccount.form.SearchResultBalanceFormForEditAndDelete;
-import com.example.householdaccount.form.SendFrontBalanceResultFormForEdit;
+import com.example.householdaccount.form.SendFrontBalanceResultFormForEditAndDelete;
 import com.example.householdaccount.service.HouseholdServices;
 
 @RestController
@@ -44,33 +44,10 @@ public class HouseholeController {
 	@Autowired
 	HouseholdServices householdServices;
 	
-	//収入データを検索して、結果を返す
-	@GetMapping("/searchIncome")
-    public List<SearchResultIncome> getSearchIncome(@RequestParam("ID") String balanceCode) {
-		System.out.println("0000000000000000000000000000000000000");
-		System.out.println(balanceCode);
-		List<SearchResultIncome> searchBalanceResult = householdServices.getSearchIncomeInfoList(balanceCode);
-        // ユーザーリストを返す
-		System.out.println(searchBalanceResult);
-        return searchBalanceResult;
-    }
-	
-	//支出データを検索して、結果を返す
-	@GetMapping("/searchExpenditure")
-    public List<SearchResultExpenditure> getSearchExpenditure(@RequestParam("ID") String balanceCode) {
-		System.out.println("0000000000000000000000000000000000000");
-		System.out.println(balanceCode);
-		List<SearchResultExpenditure> searchBalanceResult = householdServices.getSearchExpenditureInfoList(balanceCode);
-        // ユーザーリストを返す
-		System.out.println(searchBalanceResult);
-        return searchBalanceResult;
-    }
-	
 	//収入データと支出データを同時に検索して、同時に結果を返す
-	@GetMapping("/searchBalance")
+	@GetMapping("/searchBalanceList")
     public List<SearchResultBalanceForm> getSearchBalance(@RequestParam("ID") String balanceCode) {
-		System.out.println("0000000000000000000000000000000000000");
-		System.out.println(balanceCode);
+		
 		List<SearchResultIncome> searchIncomeResult = householdServices.getSearchIncomeInfoList(balanceCode);
 		List<SearchResultExpenditure> searchExpenditureResult = householdServices.getSearchExpenditureInfoList(balanceCode);
 		
@@ -104,24 +81,20 @@ public class HouseholeController {
 			searchResultBalanceForm.setNote(searchExpenditureResult.get(i).getNote());
 			searchBalanceResult.add(searchResultBalanceForm);
 		}
-        // ユーザーリストを返す
-		System.out.println("ppppppppppppppppppppppppppppppppppppppppp");
-		System.out.println(searchBalanceResult);
+        
         return searchBalanceResult;
     }
 	
 	
 	//sisaku
 	//収入データと支出データを同時に検索して、同時に結果を返す
-		@GetMapping("/sisaku")
-	    public SendFrontBalanceResultFormForEdit getSearchBalanceForEdit(@RequestParam("ID") String balanceCode) {
-			System.out.println("99999999999999999999999999999");
-			System.out.println(balanceCode);
+		@GetMapping("/searchBalance")
+	    public SendFrontBalanceResultFormForEditAndDelete getSearchBalanceForEditAndDelete(@RequestParam("ID") String balanceCode) {
 			
-			SearchResultIncomeForEdit searchResultIncomeForEdit = householdServices.getSearchIncomeInfo(balanceCode);
-			SearchResultExpenditureForEdit searchResultExpenditureForEdit = householdServices.getSearchExpenditureInfo(balanceCode);
+			SearchResultIncomeForEditAndDelete searchResultIncomeForEdit = householdServices.getSearchIncomeInfo(balanceCode);
+			SearchResultExpenditureForEditAndDelete searchResultExpenditureForEdit = householdServices.getSearchExpenditureInfo(balanceCode);
 			
-			SendFrontBalanceResultFormForEdit searchResultBalanceFormForEdit = new SendFrontBalanceResultFormForEdit();
+			SendFrontBalanceResultFormForEditAndDelete searchResultBalanceFormForEdit = new SendFrontBalanceResultFormForEditAndDelete();
 			
 			if(searchResultIncomeForEdit != null) {
 				String code = String.valueOf(searchResultIncomeForEdit.getIncomeNo());
@@ -147,9 +120,6 @@ public class HouseholeController {
 				searchResultBalanceFormForEdit.setVersion(searchResultExpenditureForEdit.getVersion());
 			}
 	
-	        // ユーザーリストを返す
-			System.out.println("jjjjjjjjjjjjjjjjjjjj");
-			System.out.println(searchResultBalanceFormForEdit);
 	        return searchResultBalanceFormForEdit;
 	    }
 		
@@ -179,16 +149,6 @@ public class HouseholeController {
 			incomeToDate = Optional.ofNullable(sqlDate);
 		}
 		
-		System.out.println("0000000000000000000000000000000000000");
-		System.out.println(fromDate);
-		System.out.println(toDate);
-		System.out.println(incomeFromDate);
-		System.out.println(incomeToDate);
-		System.out.println(fromAmount);
-		System.out.println(toAmount);
-		System.out.println(incomeType);
-		System.out.println(expenditureItemName);
-		System.out.println(note);
 		
 		List<SearchResultIncome> searchIncomeResult = householdServices.getDetailSearchIncomeInfo(incomeFromDate,incomeToDate,
 				fromAmount,toAmount,incomeType,expenditureItemName,note,deleteFlag);
@@ -208,9 +168,7 @@ public class HouseholeController {
 			searchResultBalanceForm.setNote(searchIncomeResult.get(i).getNote());
 			searchBalanceResult.add(searchResultBalanceForm);
 		}
-        // ユーザーリストを返す
-		System.out.println("888888888888888888888888888888888888888");
-		System.out.println(searchBalanceResult);
+        
         return searchBalanceResult;
     }
 	
@@ -224,7 +182,7 @@ public class HouseholeController {
 			Optional<Date> expenditureFromDate;
 			Optional<Date> expenditureToDate;
 			Optional<String> optionalExpenditureItemName;
-			
+			Optional<Boolean> deleteFlag = Optional.ofNullable(false);
 			
 			//string型をoptional<>に変換
 			if(fromDate.isEmpty()) {
@@ -249,7 +207,7 @@ public class HouseholeController {
 			
 			//詳細検索
 			List<SearchResultExpenditure> searchExpenditureResult = householdServices.getDetailSearchExpenditureInfo(expenditureFromDate,expenditureToDate,
-					fromAmount,toAmount,incomeType,optionalExpenditureItemName,note);
+					fromAmount,toAmount,incomeType,optionalExpenditureItemName,note,deleteFlag);
 			
 			//詳細検索結果を格納するリスト
 			List<SearchResultBalanceForm> searchBalanceResult = new ArrayList<SearchResultBalanceForm>();
@@ -268,10 +226,6 @@ public class HouseholeController {
 				searchResultBalanceForm.setNote(searchExpenditureResult.get(i).getNote());
 				searchBalanceResult.add(searchResultBalanceForm);
 			}
-			
-	        // ユーザーリストを返す
-			System.out.println("詳細検索の結果です");
-			System.out.println(searchBalanceResult);
 	        return searchBalanceResult;
 	    }
 		
@@ -323,7 +277,7 @@ public class HouseholeController {
 			
 			//詳細検索
 			List<SearchResultExpenditure> searchExpenditureResult = householdServices.getDetailSearchExpenditureInfo(expenditureFromDate,expenditureToDate,
-					fromAmount,toAmount,incomeType,optionalExpenditureItemName,note);
+					fromAmount,toAmount,incomeType,optionalExpenditureItemName,note,deleteFlag);
 			
 			
 			//詳細検索結果を格納するリスト
@@ -360,36 +314,31 @@ public class HouseholeController {
 			}
 			
 	        // ユーザーリストを返す
-			System.out.println("詳細検索の結果です");
-			System.out.println(searchBalanceResult);
+			
 	        return searchBalanceResult;
 	    }
 	
+	//支出費目を取得
 	@GetMapping("/expenseItems")
     public List<ExpenditureItem> getExpenseItem() {
 		List<ExpenditureItem> expenditureItemList = householdServices.expenditureItemsInfo();
-        // ユーザーリストを返す
-		System.out.println("22222222222222222222222222222222222222222222222");
+        
         return expenditureItemList;
     }
 	
+	//登録(収入)
 	@RequestMapping(value = "/income", method = RequestMethod.POST) 
 	public String incomeCreate( @RequestBody @Validated IncomeHouseholdForm incomeCommmand,BindingResult result){
 		
 		if(result.hasErrors()) {
 		     return "登録できません";
 		    }
-		System.out.println(incomeCommmand.getAmount());
-		System.out.println(incomeCommmand.getIncomeDate());
-		System.out.println(incomeCommmand.getIncomeType());
-		System.out.println(incomeCommmand.getNote());
-		
 		
 		householdServices.postCreateIncomeInfo(incomeCommmand);
-		System.out.println("iiiiiiiiiiiiiiiiiiiiiiii");
 		return "登録しました";
 	}
 	
+	//登録(支出)
 	@RequestMapping(value = "/expenditure", method = RequestMethod.POST) 
 	public String expenditure( @RequestBody @Validated ExpenditureHouseholdForm expenditureCommand, BindingResult result){
 		
@@ -397,24 +346,19 @@ public class HouseholeController {
 		     return "登録できません";
 		    }
 		
-		System.out.println(expenditureCommand.getExpenditureItemCode());
-		System.out.println(expenditureCommand.getExpenditureDate());
-		System.out.println("aaaaaaaaaaaa");
 		
 		householdServices.postCreateExpenditureInfo(expenditureCommand);
-		System.out.println("iiiiiiiiiiiiiiiiiiiiiiii");
+		
 		return "登録しました";
 	}
 	
+	//編集
 	@RequestMapping(value = "/edit", method = RequestMethod.POST) 
 	public String eidt( @RequestBody @Validated SearchResultBalanceFormForEditAndDelete editCommand, BindingResult result){
 		
 		if(result.hasErrors()) {
 		     return "編集できません";
 		    }
-		
-		System.out.println(editCommand.getBalanceType());
-		System.out.println("aaaaaaaaaaaa");
 		
 		if(editCommand.getBalanceType().equals("収入")) {
 			System.out.println("収入の編集です");
@@ -426,11 +370,11 @@ public class HouseholeController {
 			householdServices.postEditExpenditureInfo(editCommand);
 		}
 		
-		//
 		
 		return "編集しました、再度検索してください";
 	}
 	
+	//削除
 	@RequestMapping(value = "/delete", method = RequestMethod.POST) 
 	public String delete( @RequestBody @Validated SearchResultBalanceFormForEditAndDelete deleteCommand, BindingResult result){
 		
@@ -438,37 +382,28 @@ public class HouseholeController {
 		     return "削除できません";
 		    }
 		
-		System.out.println(deleteCommand.getBalanceType());
-		System.out.println("aaaaaaaaaaaa");
-		System.out.println(deleteCommand);
-		
 		if(deleteCommand.getBalanceType().equals("収入")) {
-			System.out.println("収入の編集です");
 			householdServices.postDeleteIncomeInfo(deleteCommand);
 		}
 		
 		if(deleteCommand.getBalanceType().equals("支出")) {
-			System.out.println("支出の編集です");
 			householdServices.postDeleteExpenditureInfo(deleteCommand);
 		}
 		
-		//
 		
-		return "削除しました";
+		
+		return "削除しました,再度検索してください";
 	}
 	
 	
-//	@ExceptionHandler(DataAccessException.class)
-//    public String dataAccessExceptionHandler(DataAccessException e) {
-//		System.out.println("lllllllllllllllllllllllllllllllllll");
-//        return "'exclusive_error':システム管理者に連絡してください";
-//    }
+	@ExceptionHandler(DataAccessException.class)
+    public String dataAccessExceptionHandler(DataAccessException e) {
+        return "'exclusive_error':システム管理者に連絡してください";
+    }
 
-//    @ExceptionHandler(Exception.class)
-//    public String exceptionHandler(Exception e) {
-//    	
-//    	System.out.println("ppppppppppppppppppppppppppppppppppp");
-//        return "'exclusive_error':システム管理者に連絡してください";
-//    }
+    @ExceptionHandler(Exception.class)
+    public String exceptionHandler(Exception e) {
+        return "'exclusive_error':システム管理者に連絡してください";
+    }
 
 }

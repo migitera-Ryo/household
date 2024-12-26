@@ -61,7 +61,7 @@ export default {
   },
   created() {
     axios
-      .get('http://localhost:8080/api/sisaku/', {
+      .get('http://localhost:8080/api/searchBalance/', {
         params: { ID: this.balanceCode },
       })
       .then((response) => {
@@ -121,8 +121,6 @@ export default {
 <template>
   <div id="modal">
     <div id="modal-content" class="modal">
-      <p>aaa{{ DeleteInfo }}</p>
-
       <h1>1件のデータを削除します。よろしいですか?</h1>
 
       <ButtonGroup

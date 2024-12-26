@@ -22,7 +22,6 @@ public class SearchIncomeSpecification {
                 .and(incomeFromAmount.map(this::byIncomeFromAmount).orElse(null))
                 .and(incomeToAmount.map(this::byIncomeToAmount).orElse(null))
                 .and(incomeType.map(this::byIncomeType).orElse(null))
-//                .and(expenditureItemName.map(this::byExpenditureItemName).orElse(null))
                 .and(incomeNote.map(this::byIncomeNote).orElse(null))
                 .and(deleteFrag.map(this::byDeleteFrag).orElse(null));
     }
@@ -64,12 +63,6 @@ public class SearchIncomeSpecification {
         };
     }
     
-//    private Specification<SearchResultIncome> byExpenditureItemName(String expenditureItemName) {
-//        return (root, query, builder) -> {
-//            return builder.equal(root.get("EXPENDITURE_EXPENSE_ITEM_NAME"), expenditureItemName);
-//        };
-//    }
-    
     private Specification<SearchResultIncome> byIncomeNote(String incomeNote) {
         return (root, query, builder) -> {
             return builder.like(root.get("note"), "%" + incomeNote + "%");
@@ -79,6 +72,8 @@ public class SearchIncomeSpecification {
     private Specification<SearchResultIncome> byDeleteFrag(Boolean deleteFrag) {
         return (root, query, builder) -> {
             return builder.equal(root.get("deleteFrag"), deleteFrag);
+            
         };
     }
+    
 }

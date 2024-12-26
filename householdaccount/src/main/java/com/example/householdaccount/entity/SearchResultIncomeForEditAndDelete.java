@@ -6,30 +6,28 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import com.example.householdaccount.entity.Expenditure.ExpenditureNoVO;
 import com.example.householdaccount.entity.Income.IncomeNoVO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "expenditure")
-public class SearchResultExpenditure {
+@Table(name = "income")
+public class SearchResultIncomeForEditAndDelete {
 	@EmbeddedId
-	private ExpenditureNoVO expenditureNo;
+	private IncomeNoVO incomeNo;
 	
-	private Date expenditureDate;
+	private Date incomeDate;
 	
 	private Integer amount;
 	
-	private String expenditureExpenseItemName;
+	private Integer incomeType;
 	
 	private String note;
 	
-	private Boolean deleteFrag;
+	private Integer version;
 }

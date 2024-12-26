@@ -3,6 +3,7 @@ package com.example.householdaccount.service;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -17,9 +18,9 @@ import com.example.householdaccount.entity.ExpenditureItem.ExpenditureExpenseIte
 import com.example.householdaccount.entity.Income;
 import com.example.householdaccount.entity.Income.IncomeNoVO;
 import com.example.householdaccount.entity.SearchResultExpenditure;
-import com.example.householdaccount.entity.SearchResultExpenditureForEdit;
+import com.example.householdaccount.entity.SearchResultExpenditureForEditAndDelete;
 import com.example.householdaccount.entity.SearchResultIncome;
-import com.example.householdaccount.entity.SearchResultIncomeForEdit;
+import com.example.householdaccount.entity.SearchResultIncomeForEditAndDelete;
 import com.example.householdaccount.form.ExpenditureHouseholdForm;
 import com.example.householdaccount.form.IncomeHouseholdForm;
 import com.example.householdaccount.form.SearchResultBalanceForm;
@@ -77,9 +78,9 @@ public class HouseholdServices {
     }
 	
 	//試作
-	public SearchResultIncomeForEdit getSearchIncomeInfo(String balanceCode) {
+	public SearchResultIncomeForEditAndDelete getSearchIncomeInfo(String balanceCode) {
 		System.out.println(balanceCode);
-		SearchResultIncomeForEdit searchIncomeInfo = searchIncomeHouseholdRepositoryForEdit.findIncomeByBalanceCode(balanceCode);
+		SearchResultIncomeForEditAndDelete searchIncomeInfo = searchIncomeHouseholdRepositoryForEdit.findIncomeByBalanceCode(balanceCode);
 		System.out.println(searchIncomeInfo);
 		
 		return searchIncomeInfo;
@@ -94,6 +95,9 @@ public class HouseholdServices {
 		
 		
 		System.out.println("2222222222222222222222222222222222222222222");
+		
+
+		searchIncomeInfoList.sort(null);
 		System.out.println(searchIncomeInfoList);
 		
 		return searchIncomeInfoList;
@@ -102,10 +106,10 @@ public class HouseholdServices {
 	public List<SearchResultExpenditure> getDetailSearchExpenditureInfo(Optional<Date> expenditureFromDate, 
 			Optional<Date> expenditureToDate, Optional<Integer> expenditureFromAmount, 
 			Optional<Integer> expenditureToAmount, Optional<Integer> incomeType,
-			Optional<String> expenditureItemName, Optional<String> expenditureNote) {
+			Optional<String> expenditureItemName, Optional<String> expenditureNote, Optional<Boolean> deleteFlag) {
 		
-		List<SearchResultExpenditure> searchExpenditureInfoList = searchExpenditureHouseholdRepository.findAll(searchExpenditureSpecification.buildFindAllSpecification(expenditureFromDate,expenditureToDate,expenditureFromAmount,expenditureToAmount,expenditureItemName,expenditureNote));
-		System.out.println(searchExpenditureInfoList);
+		List<SearchResultExpenditure> searchExpenditureInfoList = searchExpenditureHouseholdRepository.findAll(searchExpenditureSpecification.buildFindAllSpecification(expenditureFromDate,expenditureToDate,expenditureFromAmount,expenditureToAmount,expenditureItemName,expenditureNote,deleteFlag));
+		
 		
 		return searchExpenditureInfoList;
     }
@@ -120,9 +124,9 @@ public class HouseholdServices {
     }
 	
 	//試作
-	public SearchResultExpenditureForEdit getSearchExpenditureInfo(String balanceCode) {
+	public SearchResultExpenditureForEditAndDelete getSearchExpenditureInfo(String balanceCode) {
 		System.out.println(balanceCode);
-		SearchResultExpenditureForEdit searchExpenditureInfo = searchExpenditureHouseholdRepositoryForEdit.findExpenditureByBalanceCode(balanceCode);
+		SearchResultExpenditureForEditAndDelete searchExpenditureInfo = searchExpenditureHouseholdRepositoryForEdit.findExpenditureByBalanceCode(balanceCode);
 		System.out.println(searchExpenditureInfo);
 		
 		return searchExpenditureInfo;

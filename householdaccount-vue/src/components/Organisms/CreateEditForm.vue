@@ -68,7 +68,7 @@ export default {
   },
   created() {
     axios
-      .get('http://localhost:8080/api/sisaku/', {
+      .get('http://localhost:8080/api/searchBalance/', {
         params: { ID: this.balanceCode },
       })
       .then((response) => {

@@ -13,15 +13,15 @@ import com.example.householdaccount.entity.SearchResultIncome;
 public class SearchExpenditureSpecification {
 	public Specification<SearchResultExpenditure> buildFindAllSpecification(Optional<Date> expenditureFromDate, Optional<Date> expenditureToDate,  Optional<Integer> expenditureFromAmount, 
 			Optional<Integer> expenditureToAmount, Optional<String> expenditureItemName,
-			Optional<String> expenditureNote) {
+			Optional<String> expenditureNote, Optional<Boolean> deleteFrag) {
         return Specification.where(join())
                 .and(expenditureFromDate.map(this::byExpenditureFromDate).orElse(null))
                 .and(expenditureToDate.map(this::byExpenditureToDate).orElse(null))
                 .and(expenditureFromAmount.map(this::byExpenditureFromAmount).orElse(null))
                 .and(expenditureToAmount.map(this::byExpenditureToAmount).orElse(null))
-//                .and(incomeType.map(this::byIncomeType).orElse(null))
                 .and(expenditureItemName.map(this::byExpenditureItemName).orElse(null))
-                .and(expenditureNote.map(this::byExpenditureNote).orElse(null));
+                .and(expenditureNote.map(this::byExpenditureNote).orElse(null))
+                .and(deleteFrag.map(this::byDeleteFrag).orElse(null));
     }
 
     private Specification<SearchResultExpenditure> join() {
@@ -55,12 +55,6 @@ public class SearchExpenditureSpecification {
         };
     }
     
-//    private Specification<SearchResultExpenditure> byIncomeType(Integer incomeType) {
-//        return (root, query, builder) -> {
-//            return builder.equal(root.get("incomeType"), incomeType);
-//        };
-//    }
-    
     private Specification<SearchResultExpenditure> byExpenditureItemName(String expenditureItemName) {
         return (root, query, builder) -> {
             return builder.equal(root.get("expenditureExpenseItemName"), expenditureItemName);
@@ -70,6 +64,12 @@ public class SearchExpenditureSpecification {
     private Specification<SearchResultExpenditure> byExpenditureNote(String expenditureNote) {
         return (root, query, builder) -> {
             return builder.like(root.get("note"), "%" + expenditureNote + "%");
+        };
+    }
+    
+    private Specification<SearchResultExpenditure> byDeleteFrag(Boolean deleteFrag) {
+        return (root, query, builder) -> {
+            return builder.equal(root.get("deleteFrag"), deleteFrag);
         };
     }
 }
