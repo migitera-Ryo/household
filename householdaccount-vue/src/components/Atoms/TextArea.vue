@@ -13,13 +13,6 @@ export default {
     }
   },
 
-  // beforeUpdate: function () {
-  //   this.note = this.balanceNote
-  // },
-
-  mounted(){
-    this.note = this.balanceNote
-  },
   methods: {
     setNote() {
       this.$emit('execute-method', this.note, this.noteResult)

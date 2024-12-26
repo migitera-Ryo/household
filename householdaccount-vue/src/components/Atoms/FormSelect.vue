@@ -21,8 +21,8 @@ export default {
   },
   data() {
     return {
-      incomeType:'',
-      expenditureType: '',
+      incomeType:this.selectedIncomeType,
+      expenditureType: this.selectedExpenditureType,
       incomeTypeResult: '',
       expenditureTypeResult: '',
       types: [
@@ -35,11 +35,6 @@ export default {
         { value: '6', text: '投資' },
       ],
     }
-  },
-
-  beforeUpdate: function () {
-    this.incomeType = this.selectedIncomeType
-    this.expenditureType = this.selectedExpenditureType
   },
 
   methods: {
@@ -146,7 +141,7 @@ export default {
           :value="expenditure_type.expenditureExpenseItemName"
           :key="expenditure_type.expenditureExpenseItemCode"
         >
-          
+        {{ expenditure_type.expenditureExpenseItemName }}
         </option>
       </select>
       <p>{{ expenditureTypeResult }}</p>

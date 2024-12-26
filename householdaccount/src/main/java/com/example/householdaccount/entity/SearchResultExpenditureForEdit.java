@@ -5,11 +5,8 @@ import java.util.Date;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
-import com.example.householdaccount.common.SystemItemVO;
 import com.example.householdaccount.entity.Expenditure.ExpenditureNoVO;
-import com.example.householdaccount.entity.Income.IncomeNoVO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,22 +16,18 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "income")
-public class SearchResultIncome {
-	
-	//private String balanceClassification = "収入";
-	
+@Table(name = "expenditure")
+public class SearchResultExpenditureForEdit {
 	@EmbeddedId
-	private IncomeNoVO incomeNo;
+	private ExpenditureNoVO expenditureNo;
 	
-	private Date incomeDate;
+	private Date expenditureDate;
 	
 	private Integer amount;
 	
-	private Integer incomeType;
+	private String expenditureExpenseItemName;
 	
 	private String note;
 	
-	private Boolean deleteFrag;
-
+	private Integer version;
 }

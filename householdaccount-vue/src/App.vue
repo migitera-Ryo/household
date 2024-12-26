@@ -6,6 +6,7 @@ import axios from 'axios'
 import Modal from './components/Modal.vue'
 import SearchModal from './components/DeatailSearchModal.vue'
 import EditModal from './components/Organisms/CreateEditForm.vue'
+import DeleteModal from './components/Organisms/DeleteForm.vue'
 import Button from './components/Atoms/Button.vue'
 import moment from 'moment'
 
@@ -27,6 +28,7 @@ export default {
     Modal,
     SearchModal,
     EditModal,
+    DeleteModal,
   },
   data() {
     return {
@@ -91,6 +93,7 @@ export default {
       modal: false,
       searchModal: false,
       editModalShowFrag: false,
+      deleteModalShowFrag: false,
       searchBalanceCode: '',
       searchFrag: false,
       edit: createApp(EditModal),
@@ -184,6 +187,16 @@ export default {
 
       this.editModalShowFrag = true
     },
+
+    showDeleteModal(balanceCode: any) {
+      // モーダル表示する際の処理が必要ならここに書く
+      this.balanceCodeEorEdit = balanceCode
+
+      const del = createApp(DeleteModal)
+      del.mount('#showDeleteModal')
+
+      this.deleteModalShowFrag = true
+    },
     executeMethod(yes: any) {
       // モーダルを非表示にして、モーダルでの選択結果によって処理を変える
       this.modal = false
@@ -198,10 +211,23 @@ export default {
       this.searchModal = false
     },
 
-    executeEditMethod(incomeDetailSearchResult: any) {
+    executeEditMethod(editResultMessage: any) {
       // モーダルを非表示にして、モーダルでの選択結果によって処理を変える
       this.edit.unmount()
       this.editModalShowFrag = false
+
+      if (editResultMessage) {
+        alert(editResultMessage)
+      }
+    },
+
+    executeDeleteMethod(deleteResultMessage: any) {
+      // モーダルを非表示にして、モーダルでの選択結果によって処理を変える
+      this.deleteModalShowFrag = false
+
+      if (deleteResultMessage) {
+        alert(deleteResultMessage)
+      }
     },
 
     executeSearchResultSetMethod(DetailSearchResult: any) {
@@ -245,18 +271,19 @@ export default {
         @execute-method2="executeSearchResultSetMethod"
       ></SearchModal>
 
-      <!-- <EditModal
-        v-show="editModalShowFrag"
-        @execute-method1="executeEditMethod"
-        @execute-method2="executeSearchResultSetMethod"
-        :editInfor="searchResultBalanceInfoForEdit2"
-      /> -->
       <div id="showEditModal" v-if="editModalShowFrag == true">
         <EditModal
           @execute-method1="executeEditMethod"
           @execute-method2="executeSearchResultSetMethod"
           :balanceCode="balanceCodeEorEdit"
         />
+      </div>
+
+      <div id="showDeleteModal" v-if="deleteModalShowFrag == true">
+        <DeleteModal
+          @execute-method1="executeDeleteMethod"
+          :balanceCode="balanceCodeEorEdit"
+        ></DeleteModal>
       </div>
 
       <div class="table_box" v-if="searchFrag == true">
@@ -277,7 +304,7 @@ export default {
               <td>{{ balancedata.amount }}</td>
               <td>{{ balancedata.note }}</td>
               <td><button @click="showEditModal(balancedata.balanceCode)">編集</button></td>
-              <td><button>削除</button></td>
+              <td><button @click="showDeleteModal(balancedata.balanceCode)">削除</button></td>
             </tr>
             <tr v-if="balancedata.balanceType == '支出'">
               <td>{{ balancedata.balanceCode }}</td>
@@ -287,7 +314,7 @@ export default {
               <td>{{ balancedata.amount }}</td>
               <td>{{ balancedata.note }}</td>
               <td><button @click="showEditModal(balancedata.balanceCode)">編集</button></td>
-              <td><button>削除</button></td>
+              <td><button @click="showDeleteModal(balancedata.balanceCode)">削除</button></td>
             </tr>
           </tbody>
         </table>

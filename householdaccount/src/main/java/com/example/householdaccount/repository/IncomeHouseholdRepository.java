@@ -16,4 +16,7 @@ public interface IncomeHouseholdRepository extends JpaRepository<Income,IncomeNo
 
 	List<Income> findAll(Specification<Income> findAllSpecification);
 	
+//	@Query(value = "UPDATE INCOME AS i SET i.INCOME_NO = income.incomeNo, i.INCOME_DATE = income.incomeDate, i.INCOME_TYPE = income.incomeType, i.AMOUNT = income.amount, i.NOTE = income.note, i.VERSION= income.version WHERE i.INCOME_NO = :income.incomeNo", nativeQuery = true)
+//	public Income update(Income income);
+	
 }

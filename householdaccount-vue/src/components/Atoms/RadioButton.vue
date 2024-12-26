@@ -9,13 +9,12 @@ export default {
     radioname: String,
     radioName: String,
     setedRadioName: String,
+    frag: Boolean,
   },
 
   data() {
     return {
       selectRadio: null,
-      frag: true,
-      frag2: false,
     }
   },
   methods: {
@@ -28,16 +27,14 @@ export default {
 
 <template>
   <span v-if="setedRadioName == radioname || (!setedRadioName && radioname == '収入')">
-    <input type="radio" :name="radioName" @change="setRadioName" checked />
+    <input type="radio" :name="radioName" @change="setRadioName" :disabled="frag" checked />
     <label for="button1">{{ radioname }}</label>
   </span>
 
   <span v-else>
-    <input type="radio" :name="radioName" @change="setRadioName" />
+    <input type="radio" :name="radioName" @change="setRadioName" :disabled="frag" />
     <label for="button1">{{ radioname }}</label>
   </span>
-
-  <p>{{ setedRadioName }}</p>
 </template>
 
 <style scoped></style>

@@ -39,10 +39,10 @@ public class Income{
 	@EmbeddedId
 	private IncomeNoVO incomeNo;
 
-	@Column(nullable = false) private int amount;
+	@Column(nullable = false) private Integer amount;
 	
 	@Column(nullable = false)
-	private int incomeType;
+	private Integer incomeType;
 	
 	@Column(nullable = false)
 	private Date incomeDate;

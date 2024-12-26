@@ -284,7 +284,6 @@ export default {
       <p>{{ selectedRadio }}</p>
 
       <SearchBaseDate @execute-method="finalSetDate" validatedNull="false" />
-      <p>{{ validation.subDateResult }}</p>
 
       <SearchBaseAmount @execute-method="finalSetAmount" validatedNull="false" />
 

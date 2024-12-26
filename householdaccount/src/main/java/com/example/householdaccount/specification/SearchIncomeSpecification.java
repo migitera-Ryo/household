@@ -3,6 +3,8 @@ package com.example.householdaccount.specification;
 import java.util.Date;
 import java.util.Optional;
 
+import javax.persistence.criteria.CriteriaQuery;
+
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +15,7 @@ import com.example.householdaccount.entity.SearchResultIncome;
 public class SearchIncomeSpecification {
 	public Specification<SearchResultIncome> buildFindAllSpecification(Optional<Date> incomeFromDate, Optional<Date> incomeToDate,  Optional<Integer> incomeFromAmount, 
 			Optional<Integer> incomeToAmount, Optional<Integer> incomeType,
-			Optional<String> incomeNote) {
+			Optional<String> incomeNote, Optional<Boolean> deleteFrag) {
         return Specification.where(join())
                 .and(incomeFromDate.map(this::byIncomeFromDate).orElse(null))
                 .and(incomeToDate.map(this::byIncomeToDate).orElse(null))
@@ -21,7 +23,8 @@ public class SearchIncomeSpecification {
                 .and(incomeToAmount.map(this::byIncomeToAmount).orElse(null))
                 .and(incomeType.map(this::byIncomeType).orElse(null))
 //                .and(expenditureItemName.map(this::byExpenditureItemName).orElse(null))
-                .and(incomeNote.map(this::byIncomeNote).orElse(null));
+                .and(incomeNote.map(this::byIncomeNote).orElse(null))
+                .and(deleteFrag.map(this::byDeleteFrag).orElse(null));
     }
 
     private Specification<SearchResultIncome> join() {
@@ -72,5 +75,10 @@ public class SearchIncomeSpecification {
             return builder.like(root.get("note"), "%" + incomeNote + "%");
         };
     }
-
+    
+    private Specification<SearchResultIncome> byDeleteFrag(Boolean deleteFrag) {
+        return (root, query, builder) -> {
+            return builder.equal(root.get("deleteFrag"), deleteFrag);
+        };
+    }
 }

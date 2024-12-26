@@ -12,7 +12,7 @@ import com.example.householdaccount.entity.Expenditure.ExpenditureNoVO;
 import com.example.householdaccount.entity.SearchResultExpenditure;
 
 public interface SearchExpenditureHouseholdRepository extends JpaRepository<SearchResultExpenditure, ExpenditureNoVO> {
-	@Query(value = "SELECT e.EXPENDITURE_NO, e.EXPENDITURE_DATE, e.EXPENDITURE_EXPENSE_ITEM_NAME, e.AMOUNT, e.NOTE FROM EXPENDITURE AS e WHERE e.EXPENDITURE_NO LIKE %:balanceCode% ORDER BY e.EXPENDITURE_NO ASC", nativeQuery = true)
+	@Query(value = "SELECT e.EXPENDITURE_NO, e.EXPENDITURE_DATE, e.EXPENDITURE_EXPENSE_ITEM_NAME, e.AMOUNT, e.NOTE FROM EXPENDITURE AS e WHERE e.EXPENDITURE_NO LIKE %:balanceCode% and e.DELETE_FRAG != true ORDER BY e.EXPENDITURE_NO ASC", nativeQuery = true)
 	public List<SearchResultExpenditure> findExpenditureByBalanceCode(String balanceCode);
 	
 	//試作

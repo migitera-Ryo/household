@@ -7,10 +7,10 @@ import axios from 'axios'
 import RadioButton from '../Atoms/RadioButton.vue'
 
 export default {
-  props: ['radioName', 'balanceType'],
+  props: ['radioName', 'balanceType', 'disabledFrag'],
   data() {
     return {
-      selectedRadioName: '',
+      selectedRadioName: this.balanceType,
     }
   },
 
@@ -39,6 +39,7 @@ export default {
     :radioName="radioName"
     :setedRadioName="balanceType"
     @execute-method="setRadioIncome"
+    :frag="disabledFrag"
   />
   <RadioButton
     v-model="selectedRadioName"
@@ -46,6 +47,7 @@ export default {
     :radioName="radioName"
     :setedRadioName="balanceType"
     @execute-method="setRadioExpenditure"
+    :frag="disabledFrag"
   />
 </template>
 

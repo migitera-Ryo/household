@@ -17,14 +17,21 @@ import com.example.householdaccount.entity.ExpenditureItem.ExpenditureExpenseIte
 import com.example.householdaccount.entity.Income;
 import com.example.householdaccount.entity.Income.IncomeNoVO;
 import com.example.householdaccount.entity.SearchResultExpenditure;
+import com.example.householdaccount.entity.SearchResultExpenditureForEdit;
 import com.example.householdaccount.entity.SearchResultIncome;
+import com.example.householdaccount.entity.SearchResultIncomeForEdit;
 import com.example.householdaccount.form.ExpenditureHouseholdForm;
 import com.example.householdaccount.form.IncomeHouseholdForm;
+import com.example.householdaccount.form.SearchResultBalanceForm;
+
+import com.example.householdaccount.form.SearchResultBalanceFormForEditAndDelete;
 import com.example.householdaccount.repository.ExpenditureHouseholdRepository;
 import com.example.householdaccount.repository.GetExpenditureItemsRepository;
 import com.example.householdaccount.repository.IncomeHouseholdRepository;
 import com.example.householdaccount.repository.SearchExpenditureHouseholdRepository;
+import com.example.householdaccount.repository.SearchExpenditureHouseholdRepositoryForEdit;
 import com.example.householdaccount.repository.SearchIncomeHouseholdRepository;
+import com.example.householdaccount.repository.SearchIncomeHouseholdRepositoryForEdit;
 import com.example.householdaccount.specification.IncomeSpecification;
 import com.example.householdaccount.specification.SearchExpenditureSpecification;
 import com.example.householdaccount.specification.SearchIncomeSpecification;
@@ -48,6 +55,12 @@ public class HouseholdServices {
 	private SearchExpenditureHouseholdRepository searchExpenditureHouseholdRepository;
 	
 	@Autowired
+	private SearchIncomeHouseholdRepositoryForEdit searchIncomeHouseholdRepositoryForEdit;
+	
+	@Autowired
+	private SearchExpenditureHouseholdRepositoryForEdit searchExpenditureHouseholdRepositoryForEdit;
+	
+	@Autowired
 	private SearchIncomeSpecification searchIncomeSpecification;
 	
 	@Autowired
@@ -55,28 +68,32 @@ public class HouseholdServices {
 	
 	
 	
-	public List<SearchResultIncome> getSearchIncomeInfo(String balanceCode) {
+	public List<SearchResultIncome> getSearchIncomeInfoList(String balanceCode) {
 		System.out.println(balanceCode);
 		List<SearchResultIncome> searchIncomeInfoList = searchIncomeHouseholdRepository.findIncomeByBalanceCode(balanceCode);
 		System.out.println(searchIncomeInfoList);
 		
 		return searchIncomeInfoList;
     }
+	
 	//試作
-	public SearchResultIncome getSearchIncomeInfo2(String balanceCode) {
+	public SearchResultIncomeForEdit getSearchIncomeInfo(String balanceCode) {
 		System.out.println(balanceCode);
-		SearchResultIncome searchIncomeInfoList = searchIncomeHouseholdRepository.findIncomeByBalanceCode2(balanceCode);
-		System.out.println(searchIncomeInfoList);
+		SearchResultIncomeForEdit searchIncomeInfo = searchIncomeHouseholdRepositoryForEdit.findIncomeByBalanceCode(balanceCode);
+		System.out.println(searchIncomeInfo);
 		
-		return searchIncomeInfoList;
+		return searchIncomeInfo;
     }
 	
 	public List<SearchResultIncome> getDetailSearchIncomeInfo(Optional<Date> incomeFromDate, 
 			Optional<Date> incomeToDate, Optional<Integer> incomeFromAmount, 
 			Optional<Integer> incomeToAmount, Optional<Integer> incomeType,
-			Optional<String> expenditureItemName, Optional<String> incomeNote) {
+			Optional<String> expenditureItemName, Optional<String> incomeNote,Optional<Boolean> deleteFlag) {
 	
-		List<SearchResultIncome> searchIncomeInfoList = searchIncomeHouseholdRepository.findAll(searchIncomeSpecification.buildFindAllSpecification(incomeFromDate,incomeToDate,incomeFromAmount,incomeToAmount,incomeType,incomeNote));
+		List<SearchResultIncome> searchIncomeInfoList = searchIncomeHouseholdRepository.findAll(searchIncomeSpecification.buildFindAllSpecification(incomeFromDate,incomeToDate,incomeFromAmount,incomeToAmount,incomeType,incomeNote,deleteFlag));
+		
+		
+		System.out.println("2222222222222222222222222222222222222222222");
 		System.out.println(searchIncomeInfoList);
 		
 		return searchIncomeInfoList;
@@ -94,7 +111,7 @@ public class HouseholdServices {
     }
 	
 	
-	public List<SearchResultExpenditure> getSearchExpenditureInfo(String balanceCode) {
+	public List<SearchResultExpenditure> getSearchExpenditureInfoList(String balanceCode) {
 		System.out.println(balanceCode);
 		List<SearchResultExpenditure> searchExpenditureInfoList = searchExpenditureHouseholdRepository.findExpenditureByBalanceCode(balanceCode);
 		System.out.println(searchExpenditureInfoList);
@@ -103,12 +120,12 @@ public class HouseholdServices {
     }
 	
 	//試作
-	public SearchResultExpenditure getSearchExpenditureInfo2(String balanceCode) {
+	public SearchResultExpenditureForEdit getSearchExpenditureInfo(String balanceCode) {
 		System.out.println(balanceCode);
-		SearchResultExpenditure searchExpenditureInfoList = searchExpenditureHouseholdRepository.findExpenditureByBalanceCode2(balanceCode);
-		System.out.println(searchExpenditureInfoList);
+		SearchResultExpenditureForEdit searchExpenditureInfo = searchExpenditureHouseholdRepositoryForEdit.findExpenditureByBalanceCode(balanceCode);
+		System.out.println(searchExpenditureInfo);
 		
-		return searchExpenditureInfoList;
+		return searchExpenditureInfo;
     }
 	
 	public Income postCreateIncomeInfo(IncomeHouseholdForm incomeCommand) {
@@ -162,6 +179,88 @@ public class HouseholdServices {
 		
         return expenditureHouseholdRepository.save(expenditure);
     }
+	
+	//収入の編集
+	public Income postEditIncomeInfo(SearchResultBalanceFormForEditAndDelete editCommand) {
+		
+		IncomeHouseholdForm incomeHouseholdForm = new IncomeHouseholdForm();
+		incomeHouseholdForm.setAmount(editCommand.getAmount());
+		incomeHouseholdForm.setIncomeType(editCommand.getIncomeType());
+		incomeHouseholdForm.setIncomeDate(editCommand.getBalanceDate());
+		incomeHouseholdForm.setNote(editCommand.getNote());
+		
+		int version = editCommand.getVersion();
+		
+		Income income = new Income(editCommand.getBalanceCode(), incomeHouseholdForm);
+		
+		income.setVersion(version + 1);
+		
+        return incomeHouseholdRepository.save(income);
+    }
+	
+	//支出の編集
+	public Expenditure postEditExpenditureInfo(SearchResultBalanceFormForEditAndDelete editCommand) {
+		
+		ExpenditureItem expenditureItem = getExpenditureItemsRepository.findByExpenditureExpenseItemName(editCommand.getExpenditureExpenseItemName());
+		String expenditureExpenseItemCode= String.valueOf(expenditureItem.getExpenditureExpenseItemCode());
+
+		ExpenditureHouseholdForm expenditureHouseholdForm = new ExpenditureHouseholdForm();
+		expenditureHouseholdForm.setAmount(editCommand.getAmount());
+		expenditureHouseholdForm.setExpenditureDate(editCommand.getBalanceDate());
+		expenditureHouseholdForm.setExpenditureItemCode(expenditureExpenseItemCode);
+		expenditureHouseholdForm.setExpenditureItemName(editCommand.getExpenditureExpenseItemName());
+		expenditureHouseholdForm.setNote(editCommand.getNote());
+		
+		int version = editCommand.getVersion();
+		
+		Expenditure expenditure = new Expenditure(editCommand.getBalanceCode(),expenditureHouseholdForm);
+		expenditure.setVersion(version + 1);
+
+		
+        return expenditureHouseholdRepository.save(expenditure);
+    }
+	
+	//収入の削除
+		public Income postDeleteIncomeInfo(SearchResultBalanceFormForEditAndDelete deleteCommand) {
+			
+			IncomeHouseholdForm incomeHouseholdForm = new IncomeHouseholdForm();
+			incomeHouseholdForm.setAmount(deleteCommand.getAmount());
+			incomeHouseholdForm.setIncomeType(deleteCommand.getIncomeType());
+			incomeHouseholdForm.setIncomeDate(deleteCommand.getBalanceDate());
+			incomeHouseholdForm.setNote(deleteCommand.getNote());
+			
+			int version = deleteCommand.getVersion();
+			
+			Income income = new Income(deleteCommand.getBalanceCode(), incomeHouseholdForm);
+			
+			income.setVersion(version + 1);
+			income.setDeleteFrag(true);
+			
+	        return incomeHouseholdRepository.save(income);
+	    }
+		
+		//支出の削除
+		public Expenditure postDeleteExpenditureInfo(SearchResultBalanceFormForEditAndDelete deleteCommand) {
+			
+			ExpenditureItem expenditureItem = getExpenditureItemsRepository.findByExpenditureExpenseItemName(deleteCommand.getExpenditureExpenseItemName());
+			String expenditureExpenseItemCode= String.valueOf(expenditureItem.getExpenditureExpenseItemCode());
+
+			ExpenditureHouseholdForm expenditureHouseholdForm = new ExpenditureHouseholdForm();
+			expenditureHouseholdForm.setAmount(deleteCommand.getAmount());
+			expenditureHouseholdForm.setExpenditureDate(deleteCommand.getBalanceDate());
+			expenditureHouseholdForm.setExpenditureItemCode(expenditureExpenseItemCode);
+			expenditureHouseholdForm.setExpenditureItemName(deleteCommand.getExpenditureExpenseItemName());
+			expenditureHouseholdForm.setNote(deleteCommand.getNote());
+			
+			int version = deleteCommand.getVersion();
+			
+			Expenditure expenditure = new Expenditure(deleteCommand.getBalanceCode(),expenditureHouseholdForm);
+			expenditure.setVersion(version + 1);
+			expenditure.setDeleteFrag(true);
+
+			
+	        return expenditureHouseholdRepository.save(expenditure);
+	    }
 	
 	
 	public List<ExpenditureItem> expenditureItemsInfo() {

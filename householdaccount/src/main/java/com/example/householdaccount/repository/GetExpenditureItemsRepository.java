@@ -10,5 +10,7 @@ import com.example.householdaccount.entity.ExpenditureItem.ExpenditureExpenseIte
 
 public interface GetExpenditureItemsRepository extends JpaRepository<ExpenditureItem, ExpenditureExpenseItemCodeVO> {
 	public ExpenditureItem findByExpenditureExpenseItemCode(ExpenditureExpenseItemCodeVO Code);
+	
+	public ExpenditureItem findByExpenditureExpenseItemName(String expenditureExpenseItemName);
 
 }

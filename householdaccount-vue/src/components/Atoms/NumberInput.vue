@@ -12,34 +12,11 @@ export default {
       amountResult: '',
     }
   },
-  create() {
-    if (this.balanceAmount) {
-      this.amount = this.balanceAmount
-    }
-  },
-
-  beforeCreate() {
-    if (this.balanceAmount) {
-      this.amount = this.balanceAmount
-    }
-  },
-  // beforeUpdate() {
-  //   if (this.frag == 'true') {
-  //     if (this.balanceAmount) {
-  //       this.amount = this.balanceAmount
-  //     }
-  //   }
-
-  //   this.frag = 'false'
-  // },
-  // mounted() {
-  //   this.frag = this.firstCheckFrag
-  // },
 
   methods: {
     setAmount() {
       this.amountCheckValidate()
-      this.$emit('execute-method', this.amountResult)
+      this.$emit('execute-method', this.amountResult, this.amount)
     },
 
     amountCheckValidate() {
@@ -65,7 +42,7 @@ export default {
         }
         return true
       } else {
-        if (amount == '') {
+        if (!amount) {
           return true
         } else {
           const regex = /^[0-9]+(\.[0-9]+)?$/
@@ -84,15 +61,7 @@ export default {
 </script>
 
 <template>
-  <input
-    type="text"
-    v-model="amount"
-    placeholder="Type here"
-    :key="balanceAmount"
-    @blur="setAmount"
-  />
-  <p>iii{{ amount }}</p>
-  <p>ppp{{ balanceAmount }}</p>
+  <input type="text" v-model="amount" placeholder="Type here" @blur="setAmount" />
 </template>
 
 <style scoped></style>

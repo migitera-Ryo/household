@@ -19,7 +19,7 @@ defineProps<Props>()
   display: inline-block;
   margin: 30px auto;
   text-decoration: none;
-  width: 80px;
+  width: 100px;
   height: 30px;
   text-decoration: none;
   color: #000000;

@@ -7,7 +7,7 @@ import axios from 'axios'
 import Button from '../Atoms/Button.vue'
 
 export default {
-  props: ['btname1', 'btname2', 'disabledFrag'],
+  props: ['btname1', 'btname2', 'disabledFrag', 'deleteBtnPush'],
   data() {
     return {
       selectedRadioName: '',
@@ -25,7 +25,12 @@ export default {
 </script>
 
 <template>
-  <p>
+  <p v-if="deleteBtnPush == true">
+    <Button @click="cancelMethod" :btname="btname2" />
+    <Button @click="actinoMethod" :btname="btname1" :disabled="disabledFrag" />
+  </p>
+
+  <p v-else>
     <Button @click="actinoMethod" :btname="btname1" :disabled="disabledFrag" />
     <Button @click="cancelMethod" :btname="btname2" />
   </p>

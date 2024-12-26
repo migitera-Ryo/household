@@ -13,22 +13,14 @@ import FormSelect from '../Atoms/FormSelect.vue'
 import TextArea from '../Atoms/TextArea.vue'
 import Button from '../Atoms/Button.vue'
 import { number } from 'yup'
+import { create } from 'node_modules/axios/index.cjs'
 
 export default {
   name: 'Modal',
   props: ['balanceCode'],
   data() {
     return {
-      searchInfo: {
-        balanceType: '',
-        balanceDate: '',
-        amount: '',
-        incomeType: '',
-        expenditureItemName: '',
-        note: '',
-      },
-
-      editToSearchInfo: {
+      SearchToEditInfo: {
         balanceCode: '',
         balanceType: '',
         amount: '',
@@ -36,28 +28,11 @@ export default {
         incomeType: '',
         expenditureExpenseItemName: '',
         note: '',
+        version: '',
       },
 
-      searchResultBalanceInfoSample: {
-        balanceCode: 'I240400001',
-        balanceType: '収入',
-        amount: '111',
-        balanceDate: '2024/11/19',
-        incomeType: '1',
-        incomeTypeName: '給与',
-        expenditureExpenseItemName: '食費',
-        note: 'あああ',
-      },
-
-      balanceType: '支出',
-      amount: '111',
-      balanceDate: '2024-11-19',
-      incomeType: '1',
-      incomeTypeName: '給与',
-      expenditureExpenseItemName: '食費',
-      note: 'あああ',
-
-      selectedRadio: '収入', //balanceTypeに値があればbalanceTypeを入れる
+      message: '',
+      statusCode: 0,
       NullFrag: true,
       NotNullFrag: false,
       SystemErrorMessage: '',
@@ -98,16 +73,9 @@ export default {
       })
       .then((response) => {
         console.log(response),
-          (this.editToSearchInfo = response.data),
+          (this.SearchToEditInfo = response.data),
           this.searchResultChangeFormat()
       })
-    // this.editToSearchInfo.balanceCode = this.editInfor.balanceCode
-    // this.editToSearchInfo.balanceType = this.editInfor.balanceType
-    // this.editToSearchInfo.amount = this.editInfor.amount
-    // this.editToSearchInfo.balanceDate = this.editInfor.balanceDate
-    // this.editToSearchInfo.incomeType = this.editInfor.incomeType
-    // this.editToSearchInfo.expenditureExpenseItemName = this.editInfor.expenditureExpenseItemName
-    // this.editToSearchInfo.note = this.editInfor.note
   },
   mounted() {
     this.fetchExpenseItems()
@@ -133,43 +101,64 @@ export default {
     },
 
     searchResultChangeFormat() {
-      if (this.editToSearchInfo) {
-        const incomeYYYY = this.editToSearchInfo.balanceDate.substring(0, 4)
-        const incomeMM = this.editToSearchInfo.balanceDate.substring(5, 7)
-        const incomeDD = this.editToSearchInfo.balanceDate.substring(8, 10)
-        this.editToSearchInfo.balanceDate = [incomeYYYY, incomeMM, incomeDD].join('-')
+      if (this.SearchToEditInfo) {
+        const incomeYYYY = this.SearchToEditInfo.balanceDate.substring(0, 4)
+        const incomeMM = this.SearchToEditInfo.balanceDate.substring(5, 7)
+        const incomeDD = this.SearchToEditInfo.balanceDate.substring(8, 10)
+        this.SearchToEditInfo.balanceDate = [incomeYYYY, incomeMM, incomeDD].join('-')
+      }
+    },
+
+    editAction: function () {
+      try {
+        axios.post('http://localhost:8080/api/edit', this.SearchToEditInfo).then((response) => {
+          console.log(response),
+            (this.message = response.data),
+            (this.statusCode = response.status),
+            this.statusCheck()
+        })
+      } catch (error) {
+        alert(error)
+      }
+    },
+
+    statusCheck() {
+      if (this.statusCode == 200) {
+        this.$emit('execute-method1', this.message)
       }
     },
 
     returnFalse() {
-      this.$emit('execute-method1', false)
+      this.$emit('execute-method1')
     },
 
-    finalSetDate(dateResult: any) {
+    finalSetDate(dateResult: any, finalDate: any) {
       this.validation.dateResult = dateResult
+      this.SearchToEditInfo.balanceDate = finalDate
       this.validationCheck()
     },
 
     finalSetNote(finalNote: any, noteResult: any) {
-      this.searchInfo.note = finalNote
+      this.SearchToEditInfo.note = finalNote
       this.validation.noteResult = noteResult
       this.validationCheck()
     },
 
-    finalSetAmount(amountResult: any) {
+    finalSetAmount(amountResult: any, finalamount: any) {
       this.validation.amountResult = amountResult
+      this.SearchToEditInfo.amount = finalamount
       this.validationCheck()
     },
 
     finalSetIncomeType(selectType: any, incomeTypeResult: any) {
-      this.searchInfo.incomeType = selectType
+      this.SearchToEditInfo.incomeType = selectType
       this.validation.incomeTypeResult = incomeTypeResult
 
       this.validationCheck()
     },
 
     finalSetExpenditureType(selectType: any, expenditureTypeResult: any) {
-      this.searchInfo.expenditureItemName = selectType
+      this.SearchToEditInfo.expenditureExpenseItemName = selectType
       this.validation.expenditureTypeResult = expenditureTypeResult
 
       this.validationCheck()
@@ -181,8 +170,8 @@ export default {
       incomeType: any,
       expenditureTypeResult: any,
     ) {
-      this.searchInfo.incomeType = selectType
-      this.searchInfo.expenditureItemName = selectSubType
+      this.SearchToEditInfo.incomeType = selectType
+      this.SearchToEditInfo.expenditureExpenseItemName = selectSubType
       this.validation.incomeTypeResult = incomeType
       this.validation.expenditureTypeResult = expenditureTypeResult
 
@@ -190,11 +179,11 @@ export default {
     },
 
     finalSetRadioName(finalRadioName: any) {
-      this.selectedRadio = finalRadioName
+      this.SearchToEditInfo.balanceType = finalRadioName
     },
 
     validationCheck() {
-      if (this.selectedRadio == '収入') {
+      if (this.SearchToEditInfo.balanceType == '収入') {
         if (
           this.validation.dateResult ||
           this.validation.subDateResult ||
@@ -207,7 +196,7 @@ export default {
         } else {
           this.validationFrag = false
         }
-      } else if (this.selectedRadio == '支出') {
+      } else if (this.SearchToEditInfo.balanceType == '支出') {
         if (
           this.validation.dateResult ||
           this.validation.subDateResult ||
@@ -220,7 +209,7 @@ export default {
         } else {
           this.validationFrag = false
         }
-      } else if (this.selectedRadio == '指定なし') {
+      } else if (this.SearchToEditInfo.balanceType == '指定なし') {
         if (
           this.validation.dateResult ||
           this.validation.subDateResult ||
@@ -243,66 +232,62 @@ export default {
 <template>
   <div id="modal">
     <div id="modal-content" class="modal">
-      <p>aaa{{ editToSearchInfo }}</p>
-      <p>bbb{{ balanceCode }}</p>
+      <p>aaa{{ SearchToEditInfo }}</p>
+      <p>bbb{{ statusCode }}</p>
 
       <BalanceRadio
         @execute-method="finalSetRadioName"
         radioName="editRadio"
-        :balanceType="editToSearchInfo.balanceType"
+        :balanceType="SearchToEditInfo.balanceType"
+        :disabledFrag="true"
+        :key="SearchToEditInfo.balanceType"
       />
-      <!-- <p>{{ selectedRadio }}</p> -->
 
       <p>
         {{ '収支日付：' }}
         <DateInput
           @execute-method="finalSetDate"
-          v-model="balanceDate"
           validatedNull="true"
           id="dateid"
-          :balanceDate="editToSearchInfo.balanceDate"
+          :balanceDate="SearchToEditInfo.balanceDate"
+          :key="SearchToEditInfo.balanceDate"
         />
       </p>
-
-      <p>{{ editToSearchInfo.balanceDate }}</p>
       <p>{{ validation.dateResult }}</p>
 
       <p>
         {{ '金額：' }}
         <NunberInput
           @execute-method="finalSetAmount"
-          v-model="amount"
           validatedNull="true"
-          :balanceAmount="editToSearchInfo.amount"
+          :balanceAmount="SearchToEditInfo.amount"
           firstCheckFrag="true"
-          :key="editToSearchInfo.amount"
+          :key="SearchToEditInfo.amount"
         />
       </p>
-
-      <p>editInfor1 {{ editToSearchInfo.amount }}</p>
-      <p>editInfor2 {{ validation.amountResult }}</p>
+      <p>{{ validation.amountResult }}</p>
 
       <FormSelect
-        :selectedRadioName="selectedRadio"
+        :selectedRadioName="SearchToEditInfo.balanceType"
         :expenseItems="expenseItems"
         :types="incomeTypes"
-        :selectedIncomeType="editToSearchInfo.incomeType"
-        :selectedExpenditureType="editToSearchInfo.expenditureExpenseItemName"
+        :selectedIncomeType="SearchToEditInfo.incomeType"
+        :selectedExpenditureType="SearchToEditInfo.expenditureExpenseItemName"
+        :key="SearchToEditInfo.incomeType || SearchToEditInfo.expenditureExpenseItemName"
         @executeIncome-method="finalSetIncomeType"
         @executeExpenditure-method="finalSetExpenditureType"
         @executeBalance-method="finalSetBalanceType"
         validatedNull="true"
       />
-
-      <p>{{ editToSearchInfo.incomeType }}</p>
       <p>{{ validation.incomeTypeResult }}</p>
 
       <TextArea
         @execute-method="finalSetNote"
-        :balanceNote="editToSearchInfo.note"
+        :balanceNote="SearchToEditInfo.note"
         validatedNull="false"
+        :key="SearchToEditInfo.note"
       />
-      <p>{{ editToSearchInfo.note }}</p>
+      <p>{{ SearchToEditInfo.note }}</p>
       <p>{{ validation.noteResult }}</p>
 
       <!-- <span v-if="selectedRadio == '収入'">
@@ -321,6 +306,7 @@ export default {
         btname1="保存"
         btname2="キャンセル"
         :disabledFrag="validationFrag"
+        @execute-actionMethod="editAction"
         @execute-cancelMethod="returnFalse"
       />
     </div>

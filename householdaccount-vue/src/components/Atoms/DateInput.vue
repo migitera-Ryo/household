@@ -13,15 +13,11 @@ export default {
     }
   },
 
-  beforeUpdate: function () {
-    this.date = this.balanceDate
-  },
-
   methods: {
     setDate() {
       console.log(this.date)
       this.dateCheckValidate()
-      this.$emit('execute-method', this.dateResult)
+      this.$emit('execute-method', this.dateResult, this.date)
     },
 
     dateCheckValidate() {
@@ -29,7 +25,7 @@ export default {
       if (date_error_message === true) {
         this.dateResult = ''
       } else if (this.validatedNull == 'true') {
-        this.dateResult = 'YYYY/MM/DDの形式で入力してください!!!!!!!!!'
+        this.dateResult = 'YYYY/MM/DDの形式で入力してください'
       }
     },
 

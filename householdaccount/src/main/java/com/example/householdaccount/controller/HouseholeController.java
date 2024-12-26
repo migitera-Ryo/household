@@ -27,10 +27,14 @@ import com.example.householdaccount.entity.Income;
 import com.example.householdaccount.entity.Income.IncomeNoVO;
 import com.example.householdaccount.entity.SearchResultExpenditure;
 import com.example.householdaccount.entity.SearchResultIncome;
+import com.example.householdaccount.entity.SearchResultIncomeForEdit;
+import com.example.householdaccount.entity.SearchResultExpenditureForEdit;
 import com.example.householdaccount.form.DetailSearchForm;
 import com.example.householdaccount.form.ExpenditureHouseholdForm;
 import com.example.householdaccount.form.IncomeHouseholdForm;
 import com.example.householdaccount.form.SearchResultBalanceForm;
+import com.example.householdaccount.form.SearchResultBalanceFormForEditAndDelete;
+import com.example.householdaccount.form.SendFrontBalanceResultFormForEdit;
 import com.example.householdaccount.service.HouseholdServices;
 
 @RestController
@@ -45,7 +49,7 @@ public class HouseholeController {
     public List<SearchResultIncome> getSearchIncome(@RequestParam("ID") String balanceCode) {
 		System.out.println("0000000000000000000000000000000000000");
 		System.out.println(balanceCode);
-		List<SearchResultIncome> searchBalanceResult = householdServices.getSearchIncomeInfo(balanceCode);
+		List<SearchResultIncome> searchBalanceResult = householdServices.getSearchIncomeInfoList(balanceCode);
         // ユーザーリストを返す
 		System.out.println(searchBalanceResult);
         return searchBalanceResult;
@@ -56,7 +60,7 @@ public class HouseholeController {
     public List<SearchResultExpenditure> getSearchExpenditure(@RequestParam("ID") String balanceCode) {
 		System.out.println("0000000000000000000000000000000000000");
 		System.out.println(balanceCode);
-		List<SearchResultExpenditure> searchBalanceResult = householdServices.getSearchExpenditureInfo(balanceCode);
+		List<SearchResultExpenditure> searchBalanceResult = householdServices.getSearchExpenditureInfoList(balanceCode);
         // ユーザーリストを返す
 		System.out.println(searchBalanceResult);
         return searchBalanceResult;
@@ -67,8 +71,8 @@ public class HouseholeController {
     public List<SearchResultBalanceForm> getSearchBalance(@RequestParam("ID") String balanceCode) {
 		System.out.println("0000000000000000000000000000000000000");
 		System.out.println(balanceCode);
-		List<SearchResultIncome> searchIncomeResult = householdServices.getSearchIncomeInfo(balanceCode);
-		List<SearchResultExpenditure> searchExpenditureResult = householdServices.getSearchExpenditureInfo(balanceCode);
+		List<SearchResultIncome> searchIncomeResult = householdServices.getSearchIncomeInfoList(balanceCode);
+		List<SearchResultExpenditure> searchExpenditureResult = householdServices.getSearchExpenditureInfoList(balanceCode);
 		
 		List<SearchResultBalanceForm> searchBalanceResult = new ArrayList<SearchResultBalanceForm>();
 		
@@ -76,11 +80,12 @@ public class HouseholeController {
 		for(int i = 0; i < searchIncomeResult.size(); i++) {
 			SearchResultBalanceForm searchResultBalanceForm = new SearchResultBalanceForm();
 			String code = String.valueOf(searchIncomeResult.get(i).getIncomeNo());
+			String date = new SimpleDateFormat("yyyy-MM-dd").format(searchIncomeResult.get(i).getIncomeDate());
 			
 			searchResultBalanceForm.setBalanceType("収入");
 			searchResultBalanceForm.setBalanceCode(code);
 			searchResultBalanceForm.setAmount(searchIncomeResult.get(i).getAmount());
-			searchResultBalanceForm.setBalanceDate(searchIncomeResult.get(i).getIncomeDate());
+			searchResultBalanceForm.setBalanceDate(date);
 			searchResultBalanceForm.setIncomeType(searchIncomeResult.get(i).getIncomeType());
 			searchResultBalanceForm.setNote(searchIncomeResult.get(i).getNote());
 			searchBalanceResult.add(searchResultBalanceForm);
@@ -89,11 +94,12 @@ public class HouseholeController {
 		for(int i = 0; i < searchExpenditureResult.size(); i++) {
 			SearchResultBalanceForm searchResultBalanceForm = new SearchResultBalanceForm();
 			String code = String.valueOf(searchExpenditureResult.get(i).getExpenditureNo());
+			String date = new SimpleDateFormat("yyyy-MM-dd").format(searchExpenditureResult.get(i).getExpenditureDate());
 			
 			searchResultBalanceForm.setBalanceType("支出");
 			searchResultBalanceForm.setBalanceCode(code);
 			searchResultBalanceForm.setAmount(searchExpenditureResult.get(i).getAmount());
-			searchResultBalanceForm.setBalanceDate(searchExpenditureResult.get(i).getExpenditureDate());
+			searchResultBalanceForm.setBalanceDate(date);
 			searchResultBalanceForm.setExpenditureExpenseItemName(searchExpenditureResult.get(i).getExpenditureExpenseItemName());
 			searchResultBalanceForm.setNote(searchExpenditureResult.get(i).getNote());
 			searchBalanceResult.add(searchResultBalanceForm);
@@ -108,39 +114,45 @@ public class HouseholeController {
 	//sisaku
 	//収入データと支出データを同時に検索して、同時に結果を返す
 		@GetMapping("/sisaku")
-	    public SearchResultBalanceForm getSearchBalance2(@RequestParam("ID") String balanceCode) {
+	    public SendFrontBalanceResultFormForEdit getSearchBalanceForEdit(@RequestParam("ID") String balanceCode) {
 			System.out.println("99999999999999999999999999999");
 			System.out.println(balanceCode);
-			SearchResultIncome searchIncomeResult = householdServices.getSearchIncomeInfo2(balanceCode);
-			SearchResultExpenditure searchExpenditureResult = householdServices.getSearchExpenditureInfo2(balanceCode);
 			
-			SearchResultBalanceForm searchResultBalanceForm = new SearchResultBalanceForm();
+			SearchResultIncomeForEdit searchResultIncomeForEdit = householdServices.getSearchIncomeInfo(balanceCode);
+			SearchResultExpenditureForEdit searchResultExpenditureForEdit = householdServices.getSearchExpenditureInfo(balanceCode);
 			
-			if(searchIncomeResult != null) {
-				String code = String.valueOf(searchIncomeResult.getIncomeNo());
+			SendFrontBalanceResultFormForEdit searchResultBalanceFormForEdit = new SendFrontBalanceResultFormForEdit();
+			
+			if(searchResultIncomeForEdit != null) {
+				String code = String.valueOf(searchResultIncomeForEdit.getIncomeNo());
+	            String date = new SimpleDateFormat("yyyy-MM-dd").format(searchResultIncomeForEdit.getIncomeDate());
 				
-				searchResultBalanceForm.setBalanceType("収入");
-				searchResultBalanceForm.setBalanceCode(code);
-				searchResultBalanceForm.setAmount(searchIncomeResult.getAmount());
-				searchResultBalanceForm.setBalanceDate(searchIncomeResult.getIncomeDate());
-				searchResultBalanceForm.setIncomeType(searchIncomeResult.getIncomeType());
-				searchResultBalanceForm.setNote(searchIncomeResult.getNote());
+				searchResultBalanceFormForEdit.setBalanceType("収入");
+				searchResultBalanceFormForEdit.setBalanceCode(code);
+				searchResultBalanceFormForEdit.setAmount(searchResultIncomeForEdit.getAmount());
+				searchResultBalanceFormForEdit.setBalanceDate(date);
+				searchResultBalanceFormForEdit.setIncomeType(searchResultIncomeForEdit.getIncomeType());
+				searchResultBalanceFormForEdit.setNote(searchResultIncomeForEdit.getNote());
+				searchResultBalanceFormForEdit.setVersion(searchResultIncomeForEdit.getVersion());
 			}else {
-				String code2 = String.valueOf(searchExpenditureResult.getExpenditureNo());
+				String code = String.valueOf(searchResultExpenditureForEdit.getExpenditureNo());
+				String date = new SimpleDateFormat("yyyy-MM-dd").format(searchResultExpenditureForEdit.getExpenditureDate());
 				
-				searchResultBalanceForm.setBalanceType("支出");
-				searchResultBalanceForm.setBalanceCode(code2);
-				searchResultBalanceForm.setAmount(searchExpenditureResult.getAmount());
-				searchResultBalanceForm.setBalanceDate(searchExpenditureResult.getExpenditureDate());
-				searchResultBalanceForm.setExpenditureExpenseItemName(searchExpenditureResult.getExpenditureExpenseItemName());
-				searchResultBalanceForm.setNote(searchExpenditureResult.getNote());
+				searchResultBalanceFormForEdit.setBalanceType("支出");
+				searchResultBalanceFormForEdit.setBalanceCode(code);
+				searchResultBalanceFormForEdit.setAmount(searchResultExpenditureForEdit.getAmount());
+				searchResultBalanceFormForEdit.setBalanceDate(date);
+				searchResultBalanceFormForEdit.setExpenditureExpenseItemName(searchResultExpenditureForEdit.getExpenditureExpenseItemName());
+				searchResultBalanceFormForEdit.setNote(searchResultExpenditureForEdit.getNote());
+				searchResultBalanceFormForEdit.setVersion(searchResultExpenditureForEdit.getVersion());
 			}
 	
 	        // ユーザーリストを返す
 			System.out.println("jjjjjjjjjjjjjjjjjjjj");
-			System.out.println(searchResultBalanceForm);
-	        return searchResultBalanceForm;
+			System.out.println(searchResultBalanceFormForEdit);
+	        return searchResultBalanceFormForEdit;
 	    }
+		
 	
 	//収入データを詳細検索して結果を返す
 	@GetMapping("/detailSearchIncome")
@@ -151,6 +163,7 @@ public class HouseholeController {
 		
 		Optional<Date> incomeFromDate;
 		Optional<Date> incomeToDate;
+		Optional<Boolean> deleteFlag = Optional.ofNullable(false);
 		
 		if(fromDate.isEmpty()) {
 			incomeFromDate = Optional.empty();
@@ -178,23 +191,25 @@ public class HouseholeController {
 		System.out.println(note);
 		
 		List<SearchResultIncome> searchIncomeResult = householdServices.getDetailSearchIncomeInfo(incomeFromDate,incomeToDate,
-				fromAmount,toAmount,incomeType,expenditureItemName,note);
+				fromAmount,toAmount,incomeType,expenditureItemName,note,deleteFlag);
 		
 		List<SearchResultBalanceForm> searchBalanceResult = new ArrayList<SearchResultBalanceForm>();
 		
 		for(int i = 0; i < searchIncomeResult.size(); i++) {
 			SearchResultBalanceForm searchResultBalanceForm = new SearchResultBalanceForm();
 			String code = String.valueOf(searchIncomeResult.get(i).getIncomeNo());
+			String date = new SimpleDateFormat("yyyy-MM-dd").format(searchIncomeResult.get(i).getIncomeDate());
 			
 			searchResultBalanceForm.setBalanceType("収入");
 			searchResultBalanceForm.setBalanceCode(code);
 			searchResultBalanceForm.setAmount(searchIncomeResult.get(i).getAmount());
-			searchResultBalanceForm.setBalanceDate(searchIncomeResult.get(i).getIncomeDate());
+			searchResultBalanceForm.setBalanceDate(date);
 			searchResultBalanceForm.setIncomeType(searchIncomeResult.get(i).getIncomeType());
 			searchResultBalanceForm.setNote(searchIncomeResult.get(i).getNote());
 			searchBalanceResult.add(searchResultBalanceForm);
 		}
         // ユーザーリストを返す
+		System.out.println("888888888888888888888888888888888888888");
 		System.out.println(searchBalanceResult);
         return searchBalanceResult;
     }
@@ -243,22 +258,24 @@ public class HouseholeController {
 			for(int i = 0; i < searchExpenditureResult.size(); i++) {
 				SearchResultBalanceForm searchResultBalanceForm = new SearchResultBalanceForm();
 				String code = String.valueOf(searchExpenditureResult.get(i).getExpenditureNo());
+				String date = new SimpleDateFormat("yyyy-MM-dd").format(searchExpenditureResult.get(i).getExpenditureDate());
 				
 				searchResultBalanceForm.setBalanceType("支出");
 				searchResultBalanceForm.setBalanceCode(code);
 				searchResultBalanceForm.setAmount(searchExpenditureResult.get(i).getAmount());
-				searchResultBalanceForm.setBalanceDate(searchExpenditureResult.get(i).getExpenditureDate());
+				searchResultBalanceForm.setBalanceDate(date);
 				searchResultBalanceForm.setExpenditureExpenseItemName(searchExpenditureResult.get(i).getExpenditureExpenseItemName());
 				searchResultBalanceForm.setNote(searchExpenditureResult.get(i).getNote());
 				searchBalanceResult.add(searchResultBalanceForm);
 			}
 			
 	        // ユーザーリストを返す
+			System.out.println("詳細検索の結果です");
 			System.out.println(searchBalanceResult);
 	        return searchBalanceResult;
 	    }
 		
-		//収入データを詳細検索して結果を返す
+		//収支データを詳細検索して結果を返す
 		@GetMapping("/detailSearchBalance")
 	    public List<SearchResultBalanceForm> getDetailSearchBalance(@RequestParam("fromDate") String fromDate, @RequestParam("toDate") String toDate,
 	    		@RequestParam("fromAmount") Optional<Integer> fromAmount,@RequestParam("toAmount") Optional<Integer> toAmount,
@@ -272,6 +289,8 @@ public class HouseholeController {
 			Optional<Date> expenditureToDate;
 			
 			Optional<String> optionalExpenditureItemName;
+			
+			Optional<Boolean> deleteFlag = Optional.ofNullable(false);
 			
 			//string型をoptional<string>に変換
 			if(fromDate.isEmpty()) {
@@ -300,7 +319,7 @@ public class HouseholeController {
 			
 			//詳細検索
 			List<SearchResultIncome> searchIncomeResult = householdServices.getDetailSearchIncomeInfo(incomeFromDate,incomeToDate,
-					fromAmount,toAmount,incomeType,optionalExpenditureItemName,note);
+					fromAmount,toAmount,incomeType,optionalExpenditureItemName,note,deleteFlag);
 			
 			//詳細検索
 			List<SearchResultExpenditure> searchExpenditureResult = householdServices.getDetailSearchExpenditureInfo(expenditureFromDate,expenditureToDate,
@@ -314,11 +333,12 @@ public class HouseholeController {
 			for(int i = 0; i < searchIncomeResult.size(); i++) {
 				SearchResultBalanceForm searchResultBalanceForm = new SearchResultBalanceForm();
 				String code = String.valueOf(searchIncomeResult.get(i).getIncomeNo());
+				String date = new SimpleDateFormat("yyyy-MM-dd").format(searchIncomeResult.get(i).getIncomeDate());
 				
 				searchResultBalanceForm.setBalanceType("収入");
 				searchResultBalanceForm.setBalanceCode(code);
 				searchResultBalanceForm.setAmount(searchIncomeResult.get(i).getAmount());
-				searchResultBalanceForm.setBalanceDate(searchIncomeResult.get(i).getIncomeDate());
+				searchResultBalanceForm.setBalanceDate(date);
 				searchResultBalanceForm.setIncomeType(searchIncomeResult.get(i).getIncomeType());
 				searchResultBalanceForm.setNote(searchIncomeResult.get(i).getNote());
 				searchBalanceResult.add(searchResultBalanceForm);
@@ -328,17 +348,19 @@ public class HouseholeController {
 			for(int i = 0; i < searchExpenditureResult.size(); i++) {
 				SearchResultBalanceForm searchResultBalanceForm = new SearchResultBalanceForm();
 				String code = String.valueOf(searchExpenditureResult.get(i).getExpenditureNo());
+				String date = new SimpleDateFormat("yyyy-MM-dd").format(searchExpenditureResult.get(i).getExpenditureDate());
 				
 				searchResultBalanceForm.setBalanceType("支出");
 				searchResultBalanceForm.setBalanceCode(code);
 				searchResultBalanceForm.setAmount(searchExpenditureResult.get(i).getAmount());
-				searchResultBalanceForm.setBalanceDate(searchExpenditureResult.get(i).getExpenditureDate());
+				searchResultBalanceForm.setBalanceDate(date);
 				searchResultBalanceForm.setExpenditureExpenseItemName(searchExpenditureResult.get(i).getExpenditureExpenseItemName());
 				searchResultBalanceForm.setNote(searchExpenditureResult.get(i).getNote());
 				searchBalanceResult.add(searchResultBalanceForm);
 			}
 			
 	        // ユーザーリストを返す
+			System.out.println("詳細検索の結果です");
 			System.out.println(searchBalanceResult);
 	        return searchBalanceResult;
 	    }
@@ -379,19 +401,60 @@ public class HouseholeController {
 		System.out.println(expenditureCommand.getExpenditureDate());
 		System.out.println("aaaaaaaaaaaa");
 		
-		//createincomeinfo.setIncomeNo("I240400001");
-		//createincomeinfo.setInitialCreateDateAndTime(new Date());
-		//createincomeinfo.setLastUpdateDateAndTime(new Date());
-		//createincomeinfo.setInitialCreateUserCode("a");
-		//createincomeinfo.setLastUpdateUserCode("a");
-		//createincomeinfo.setVersion(0);
-		
-		//System.out.println(income.getInitialCreateDateAndTime());
-		
-		
 		householdServices.postCreateExpenditureInfo(expenditureCommand);
 		System.out.println("iiiiiiiiiiiiiiiiiiiiiiii");
 		return "登録しました";
+	}
+	
+	@RequestMapping(value = "/edit", method = RequestMethod.POST) 
+	public String eidt( @RequestBody @Validated SearchResultBalanceFormForEditAndDelete editCommand, BindingResult result){
+		
+		if(result.hasErrors()) {
+		     return "編集できません";
+		    }
+		
+		System.out.println(editCommand.getBalanceType());
+		System.out.println("aaaaaaaaaaaa");
+		
+		if(editCommand.getBalanceType().equals("収入")) {
+			System.out.println("収入の編集です");
+			householdServices.postEditIncomeInfo(editCommand);
+		}
+		
+		if(editCommand.getBalanceType().equals("支出")) {
+			System.out.println("支出の編集です");
+			householdServices.postEditExpenditureInfo(editCommand);
+		}
+		
+		//
+		
+		return "編集しました、再度検索してください";
+	}
+	
+	@RequestMapping(value = "/delete", method = RequestMethod.POST) 
+	public String delete( @RequestBody @Validated SearchResultBalanceFormForEditAndDelete deleteCommand, BindingResult result){
+		
+		if(result.hasErrors()) {
+		     return "削除できません";
+		    }
+		
+		System.out.println(deleteCommand.getBalanceType());
+		System.out.println("aaaaaaaaaaaa");
+		System.out.println(deleteCommand);
+		
+		if(deleteCommand.getBalanceType().equals("収入")) {
+			System.out.println("収入の編集です");
+			householdServices.postDeleteIncomeInfo(deleteCommand);
+		}
+		
+		if(deleteCommand.getBalanceType().equals("支出")) {
+			System.out.println("支出の編集です");
+			householdServices.postDeleteExpenditureInfo(deleteCommand);
+		}
+		
+		//
+		
+		return "削除しました";
 	}
 	
 	
