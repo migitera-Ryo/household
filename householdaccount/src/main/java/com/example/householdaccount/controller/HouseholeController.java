@@ -340,7 +340,7 @@ public class HouseholeController {
 	
 	//登録(支出)
 	@RequestMapping(value = "/expenditure", method = RequestMethod.POST) 
-	public String expenditure( @RequestBody @Validated ExpenditureHouseholdForm expenditureCommand, BindingResult result){
+	public String expenditureCreate( @RequestBody @Validated ExpenditureHouseholdForm expenditureCommand, BindingResult result){
 		
 		if(result.hasErrors()) {
 		     return "登録できません";

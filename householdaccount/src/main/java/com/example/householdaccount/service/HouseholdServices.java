@@ -68,11 +68,17 @@ public class HouseholdServices {
 	private SearchExpenditureSpecification searchExpenditureSpecification;
 	
 	
+	public int sample() {
+		return 5;
+    }
 	
 	public List<SearchResultIncome> getSearchIncomeInfoList(String balanceCode) {
 		System.out.println(balanceCode);
 		List<SearchResultIncome> searchIncomeInfoList = searchIncomeHouseholdRepository.findIncomeByBalanceCode(balanceCode);
-		System.out.println(searchIncomeInfoList);
+		System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+		System.out.println(searchIncomeInfoList.size());
+		
+		
 		
 		return searchIncomeInfoList;
     }
@@ -132,6 +138,7 @@ public class HouseholdServices {
 		return searchExpenditureInfo;
     }
 	
+	//収入の登録
 	public Income postCreateIncomeInfo(IncomeHouseholdForm incomeCommand) {
 		long dataList = incomeHouseholdRepository.count();
 		
@@ -149,12 +156,11 @@ public class HouseholdServices {
 		
 		Income income = new Income(incomeNumber, incomeCommand);
 		
-
 		
         return incomeHouseholdRepository.save(income);
     }
 	
-	
+	//支出の登録
 	public Expenditure postCreateExpenditureInfo(ExpenditureHouseholdForm expenditureCommand) {
 		long dataList = expenditureHouseholdRepository.count();
 		
