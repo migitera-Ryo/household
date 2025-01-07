@@ -335,6 +335,7 @@ public class HouseholeController {
 		    }
 		
 		householdServices.postCreateIncomeInfo(incomeCommmand);
+
 		return "登録しました";
 	}
 	

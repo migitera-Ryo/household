@@ -232,9 +232,6 @@ export default {
 <template>
   <div id="modal">
     <div id="modal-content" class="modal">
-      <p>aaa{{ SearchToEditInfo }}</p>
-      <p>bbb{{ statusCode }}</p>
-
       <BalanceRadio
         @execute-method="finalSetRadioName"
         radioName="editRadio"

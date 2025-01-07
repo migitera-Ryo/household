@@ -244,7 +244,7 @@ export default {
         <modal v-show="modal" @execute-method="executeMethod"></modal>
       </div>
 
-      <Button @click="showSearchModal()" btname="検索" />
+      <Button @click="showSearchModal()" btname="詳細検索" />
       <SearchModal
         v-show="searchModal"
         @execute-method1="executeSearchMethod"

@@ -102,8 +102,6 @@ public class HouseholdServices {
 		
 		System.out.println("2222222222222222222222222222222222222222222");
 		
-
-		searchIncomeInfoList.sort(null);
 		System.out.println(searchIncomeInfoList);
 		
 		return searchIncomeInfoList;
@@ -140,6 +138,11 @@ public class HouseholdServices {
 	
 	//収入の登録
 	public Income postCreateIncomeInfo(IncomeHouseholdForm incomeCommand) {
+		//
+		if(incomeCommand.getAmount() == null || incomeCommand.getIncomeDate() == null ||incomeCommand.getIncomeType() == null) {
+			throw new IllegalArgumentException("argument cannot be null.");
+		}
+		
 		long dataList = incomeHouseholdRepository.count();
 		
 		Calendar cal = Calendar.getInstance();
@@ -155,8 +158,7 @@ public class HouseholdServices {
 		String incomeNumber = "I" + subStrYear + strMonth + incomeCountNumber;
 		
 		Income income = new Income(incomeNumber, incomeCommand);
-		
-		
+				
         return incomeHouseholdRepository.save(income);
     }
 	
