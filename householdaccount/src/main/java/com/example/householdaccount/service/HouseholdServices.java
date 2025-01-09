@@ -138,9 +138,11 @@ public class HouseholdServices {
 	
 	//収入の登録
 	public Income postCreateIncomeInfo(IncomeHouseholdForm incomeCommand) {
-		//
+		//単体テスト用のIllegalArgumentExceptionをthrowする処理
 		if(incomeCommand.getAmount() == null || incomeCommand.getIncomeDate() == null ||incomeCommand.getIncomeType() == null) {
-			throw new IllegalArgumentException("argument cannot be null.");
+			throw new IllegalArgumentException("登録データがnullです");
+		}else if(String.valueOf( incomeCommand.getAmount() ).length() > 8) {
+			throw new IllegalArgumentException("登録情報が不正です");
 		}
 		
 		long dataList = incomeHouseholdRepository.count();
@@ -158,8 +160,10 @@ public class HouseholdServices {
 		String incomeNumber = "I" + subStrYear + strMonth + incomeCountNumber;
 		
 		Income income = new Income(incomeNumber, incomeCommand);
+		
+		incomeHouseholdRepository.save(income);
 				
-        return incomeHouseholdRepository.save(income);
+        return income;
     }
 	
 	//支出の登録
@@ -187,9 +191,10 @@ public class HouseholdServices {
 		
 		Expenditure expenditure = new Expenditure(expenditureNumber, expenditureCommand);
 		
-
+		expenditureHouseholdRepository.save(expenditure);
 		
-        return expenditureHouseholdRepository.save(expenditure);
+		
+        return expenditure;
     }
 	
 	//収入の編集
@@ -207,7 +212,9 @@ public class HouseholdServices {
 		
 		income.setVersion(version + 1);
 		
-        return incomeHouseholdRepository.save(income);
+		incomeHouseholdRepository.save(income);
+		
+        return income;
     }
 	
 	//支出の編集
@@ -227,9 +234,11 @@ public class HouseholdServices {
 		
 		Expenditure expenditure = new Expenditure(editCommand.getBalanceCode(),expenditureHouseholdForm);
 		expenditure.setVersion(version + 1);
+		
+		expenditureHouseholdRepository.save(expenditure);
 
 		
-        return expenditureHouseholdRepository.save(expenditure);
+        return expenditure;
     }
 	
 	//収入の削除

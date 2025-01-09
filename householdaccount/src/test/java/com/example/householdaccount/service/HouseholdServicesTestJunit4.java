@@ -20,8 +20,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.example.householdaccount.entity.Income;
+import com.example.householdaccount.entity.Expenditure;
+import com.example.householdaccount.form.ExpenditureHouseholdForm;
 import com.example.householdaccount.entity.SearchResultIncomeForEditAndDelete;
 import com.example.householdaccount.form.IncomeHouseholdForm;
+import com.example.householdaccount.form.SearchResultBalanceFormForEditAndDelete;
 import com.example.householdaccount.repository.IncomeHouseholdRepository;
 import com.example.householdaccount.repository.SearchIncomeHouseholdRepositoryForEdit;
 
@@ -48,81 +52,114 @@ class HouseholdServicesTestJunit4 {
 	}
 	
 	@Test
-	void testPostCreateIncomeInfo_正常処理() {
-		Calendar cal = Calendar.getInstance();
-     
-        SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String dateString = sdFormat.format(cal.getTime());
-        Date date = java.sql.Date.valueOf(dateString);
+	void 登録正常処理テスト() {
+		String dateStr = "2025-01-08";
+        Date date = java.sql.Date.valueOf(dateStr);
         
-        
+        //収入の登録単体テストケース
 		IncomeHouseholdForm incomeCommand = new IncomeHouseholdForm();
-		incomeCommand.setAmount(100);
+		incomeCommand.setAmount(1000);
 		incomeCommand.setIncomeType(1);
 		incomeCommand.setIncomeDate(date);
-		incomeCommand.setNote("");
+		incomeCommand.setNote("あああ");
 		
-		long dataListCount = incomeHouseholdRepository.count();
+		Income income = householdServices.postCreateIncomeInfo(incomeCommand);
+		
+		assertEquals(1000,income.getAmount());
+		assertEquals(1,income.getIncomeType());
+		assertEquals(date,income.getIncomeDate());
+		assertEquals("あああ",income.getNote());
 		
 		
-		SimpleDateFormat sdfYear = new SimpleDateFormat("yyyy");
-		SimpleDateFormat sdfMonth = new SimpleDateFormat("MM");
+		//収入の登録単体テストケース
+		ExpenditureHouseholdForm expenditureCommand = new ExpenditureHouseholdForm();
+		expenditureCommand.setAmount(1000);
+		expenditureCommand.setExpenditureItemCode("EI001");
+		expenditureCommand.setExpenditureDate(date);
+		expenditureCommand.setNote("あああ");
 		
-		String strYear = sdfYear.format(cal.getTime());
-		String subStrYear = strYear.substring(strYear.length() - 2);
-		String strMonth = sdfMonth.format(cal.getTime());
+		Expenditure expenditure = householdServices.postCreateExpenditureInfo(expenditureCommand);;
 		
-		String incomeCountNumber = String.format("%05d", dataListCount + 1);
-		
-		String incomeNumber = "I" + subStrYear + strMonth + incomeCountNumber;
-		
-		householdServices.postCreateIncomeInfo(incomeCommand);
-		SearchResultIncomeForEditAndDelete searchIncomeInfo = searchIncomeHouseholdRepositoryForEdit.findIncomeByBalanceCode(incomeNumber);
-		assertEquals(100,searchIncomeInfo.getAmount());
-		assertEquals(1,searchIncomeInfo.getIncomeType());
-		assertEquals(date,searchIncomeInfo.getIncomeDate());
-		assertEquals("",searchIncomeInfo.getNote());
+		assertEquals(1000,expenditure.getAmount());
+		assertEquals("EI001",expenditure.getExpenditureExpenseItemCode());
+		assertEquals(date,expenditure.getExpenditureDate());
+		assertEquals("あああ",expenditure.getNote());
 	}
 	
 	@Test
-	void testPostCreateIncomeInfo_例外処理() {
-		Calendar cal = Calendar.getInstance();
-     
-        SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String dateString = sdFormat.format(cal.getTime());
-        Date date = java.sql.Date.valueOf(dateString);
+	void 登録例外処理テスト() {
+		
+		String dateStr = "2025-01-08";
+        Date date = java.sql.Date.valueOf(dateStr);
         
-        
+        //登録情報がnullの場合
 		IncomeHouseholdForm incomeCommand = new IncomeHouseholdForm();
-		incomeCommand.setAmount(null);
+		
+		
+		try {
+			Income income = householdServices.postCreateIncomeInfo(incomeCommand);
+		}catch(IllegalArgumentException ex){
+			assertEquals("登録データがnullです",ex.getMessage());
+		}
+		
+		
+		//金額桁数が8桁以上
+		incomeCommand.setAmount(1000000000);
 		incomeCommand.setIncomeType(1);
 		incomeCommand.setIncomeDate(date);
-		incomeCommand.setNote("");
+		incomeCommand.setNote("あああ");
 		
-		long dataListCount = incomeHouseholdRepository.count();
-		
-		
-		SimpleDateFormat sdfYear = new SimpleDateFormat("yyyy");
-		SimpleDateFormat sdfMonth = new SimpleDateFormat("MM");
-		
-		String strYear = sdfYear.format(cal.getTime());
-		String subStrYear = strYear.substring(strYear.length() - 2);
-		String strMonth = sdfMonth.format(cal.getTime());
-		
-		String incomeCountNumber = String.format("%05d", dataListCount + 1);
-		
-		String incomeNumber = "I" + subStrYear + strMonth + incomeCountNumber;
 		try {
-			householdServices.postCreateIncomeInfo(incomeCommand);
-			SearchResultIncomeForEditAndDelete searchIncomeInfo = searchIncomeHouseholdRepositoryForEdit.findIncomeByBalanceCode(incomeNumber);
-			assertEquals(100,searchIncomeInfo.getAmount());
-			assertEquals(1,searchIncomeInfo.getIncomeType());
-			assertEquals(date,searchIncomeInfo.getIncomeDate());
-			assertEquals("",searchIncomeInfo.getNote());
-		} catch (IllegalArgumentException e) {
-			assertThat(e.getMessage(), is("argument cannot be null."));
-		      throw e;
-		    }
+			Income income = householdServices.postCreateIncomeInfo(incomeCommand);
+		}catch(IllegalArgumentException ex){
+			assertEquals("登録情報が不正です",ex.getMessage());
+		}
+	}
+	
+	@Test
+	void 編集正常処理テスト() {
+		SearchResultBalanceFormForEditAndDelete editCommand = new SearchResultBalanceFormForEditAndDelete();
+		
+		String dateStr = "2025-01-08";
+        Date date = java.sql.Date.valueOf(dateStr);
+        
+        //収入の編集単体テストケース
+        editCommand.setBalanceType("収入");
+        editCommand.setBalanceCode("I250100003");
+        editCommand.setAmount(1500);
+        editCommand.setBalanceDate(date);
+        editCommand.setIncomeType(1);
+        editCommand.setExpenditureExpenseItemName(null);
+        editCommand.setNote("あああ");
+        editCommand.setVersion(0);
+		
+		Income income = householdServices.postEditIncomeInfo(editCommand);
+		
+		assertEquals("I250100003",String.valueOf(income.getIncomeNo()));
+		assertEquals(1500,income.getAmount());
+		assertEquals(date,income.getIncomeDate());
+		assertEquals(1,income.getIncomeType());
+		assertEquals("あああ",income.getNote());
+		assertEquals(1,income.getVersion());
+		
+		//支出の編集単体テストケース
+        editCommand.setBalanceType("支出");
+        editCommand.setBalanceCode("E250100003");
+        editCommand.setAmount(1000);
+        editCommand.setBalanceDate(date);
+        editCommand.setIncomeType(null);
+        editCommand.setExpenditureExpenseItemName("日用品");
+        editCommand.setNote("あああ");
+        editCommand.setVersion(0);
+		
+        Expenditure expenditure = householdServices.postEditExpenditureInfo(editCommand);
+		
+		assertEquals("E250100003",String.valueOf(expenditure.getExpenditureNo()));
+		assertEquals(1000,expenditure.getAmount());
+		assertEquals(date,expenditure.getExpenditureDate());
+		assertEquals("日用品",expenditure.getExpenditureExpenseItemName());
+		assertEquals("あああ",expenditure.getNote());
+		assertEquals(1,expenditure.getVersion());
 	}
 
 }

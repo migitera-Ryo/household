@@ -348,6 +348,8 @@ public class HouseholeController {
 		    }
 		
 		
+		System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaa");
+		System.out.println(expenditureCommand);
 		householdServices.postCreateExpenditureInfo(expenditureCommand);
 		
 		return "登録しました";
