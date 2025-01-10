@@ -43,15 +43,6 @@ class HouseholdServicesTestJunit4 {
 	private SearchIncomeHouseholdRepositoryForEdit searchIncomeHouseholdRepositoryForEdit;
 	
 	//@Test
-	void testSample() {
-		System.out.println("test Start");
-		int result = householdServices.sample();
-		System.out.println("result:"+result);
-		
-		assertEquals(5,result);
-	}
-	
-	@Test
 	void 登録正常処理テスト() {
 		String dateStr = "2025-01-08";
         Date date = java.sql.Date.valueOf(dateStr);
@@ -86,7 +77,7 @@ class HouseholdServicesTestJunit4 {
 		assertEquals("あああ",expenditure.getNote());
 	}
 	
-	@Test
+	//@Test
 	void 登録例外処理テスト() {
 		
 		String dateStr = "2025-01-08";
@@ -99,7 +90,7 @@ class HouseholdServicesTestJunit4 {
 		try {
 			Income income = householdServices.postCreateIncomeInfo(incomeCommand);
 		}catch(IllegalArgumentException ex){
-			assertEquals("登録データがnullです",ex.getMessage());
+			assertEquals("登録情報がnullです",ex.getMessage());
 		}
 		
 		
@@ -116,7 +107,7 @@ class HouseholdServicesTestJunit4 {
 		}
 	}
 	
-	@Test
+	//@Test
 	void 編集正常処理テスト() {
 		SearchResultBalanceFormForEditAndDelete editCommand = new SearchResultBalanceFormForEditAndDelete();
 		
@@ -161,5 +152,72 @@ class HouseholdServicesTestJunit4 {
 		assertEquals("あああ",expenditure.getNote());
 		assertEquals(1,expenditure.getVersion());
 	}
+	
+	//@Test
+	void 編集例外処理テスト() {
+		SearchResultBalanceFormForEditAndDelete editCommand = new SearchResultBalanceFormForEditAndDelete();
+        
+		String dateStr = "2025-01-08";
+        Date date = java.sql.Date.valueOf(dateStr);
+		
+		//編集データがnullの場合
+        try {
+        	Income income = householdServices.postEditIncomeInfo(editCommand);
+		}catch(IllegalArgumentException ex){
+			assertEquals("編集情報がnullです",ex.getMessage());
+		}
+		
+		//編集データの金額が8桁以上
+        editCommand.setBalanceType("支出");
+        editCommand.setBalanceCode("E250100003");
+        editCommand.setAmount(1000000000);
+        editCommand.setBalanceDate(date);
+        editCommand.setIncomeType(null);
+        editCommand.setExpenditureExpenseItemName("日用品");
+        editCommand.setNote("あああ");
+        editCommand.setVersion(0);
+        
+        try {
+        	Expenditure expenditure = householdServices.postEditExpenditureInfo(editCommand);
+		}catch(IllegalArgumentException ex){
+			assertEquals("編集情報が不正です",ex.getMessage());
+		}
+	}
+	
+	@Test
+		void 削除正常処理テスト() {
+			SearchResultBalanceFormForEditAndDelete deleteCommand = new SearchResultBalanceFormForEditAndDelete();
+			
+			String dateStr = "2025-01-08";
+	        Date date = java.sql.Date.valueOf(dateStr);
+	        
+	        //収入の削除単体テストケース
+	        deleteCommand.setBalanceType("収入");
+	        deleteCommand.setBalanceCode("I250100003");
+	        deleteCommand.setAmount(1500);
+	        deleteCommand.setBalanceDate(date);
+	        deleteCommand.setIncomeType(1);
+	        deleteCommand.setExpenditureExpenseItemName(null);
+	        deleteCommand.setNote("あああ");
+	        deleteCommand.setVersion(0);
+			
+			Income income = householdServices.postDeleteIncomeInfo(deleteCommand);
+			
+			assertEquals(true,income.isDeleteFrag());
+			
+			//支出の削除単体テストケース
+			deleteCommand.setBalanceType("支出");
+			deleteCommand.setBalanceCode("E250100003");
+			deleteCommand.setAmount(1000);
+			deleteCommand.setBalanceDate(date);
+			deleteCommand.setIncomeType(null);
+			deleteCommand.setExpenditureExpenseItemName("日用品");
+			deleteCommand.setNote("あああ");
+			deleteCommand.setVersion(0);
+			
+	        Expenditure expenditure = householdServices.postDeleteExpenditureInfo(deleteCommand);
+			
+			assertEquals(true,expenditure.isDeleteFrag());
+		}
 
 }

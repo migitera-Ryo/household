@@ -68,10 +68,6 @@ public class HouseholdServices {
 	private SearchExpenditureSpecification searchExpenditureSpecification;
 	
 	
-	public int sample() {
-		return 5;
-    }
-	
 	public List<SearchResultIncome> getSearchIncomeInfoList(String balanceCode) {
 		System.out.println(balanceCode);
 		List<SearchResultIncome> searchIncomeInfoList = searchIncomeHouseholdRepository.findIncomeByBalanceCode(balanceCode);
@@ -83,7 +79,7 @@ public class HouseholdServices {
 		return searchIncomeInfoList;
     }
 	
-	//試作
+	//編集と削除用の収入データ検索
 	public SearchResultIncomeForEditAndDelete getSearchIncomeInfo(String balanceCode) {
 		System.out.println(balanceCode);
 		SearchResultIncomeForEditAndDelete searchIncomeInfo = searchIncomeHouseholdRepositoryForEdit.findIncomeByBalanceCode(balanceCode);
@@ -127,7 +123,7 @@ public class HouseholdServices {
 		return searchExpenditureInfoList;
     }
 	
-	//試作
+	//編集と削除用の支出データ検索
 	public SearchResultExpenditureForEditAndDelete getSearchExpenditureInfo(String balanceCode) {
 		System.out.println(balanceCode);
 		SearchResultExpenditureForEditAndDelete searchExpenditureInfo = searchExpenditureHouseholdRepositoryForEdit.findExpenditureByBalanceCode(balanceCode);
@@ -199,6 +195,12 @@ public class HouseholdServices {
 	
 	//収入の編集
 	public Income postEditIncomeInfo(SearchResultBalanceFormForEditAndDelete editCommand) {
+		//単体テスト用のIllegalArgumentExceptionをthrowする処理
+		if(editCommand.getAmount() == null || editCommand.getBalanceDate() == null ||editCommand.getIncomeType() == null) {
+			throw new IllegalArgumentException("編集情報がnullです");
+		}else if(String.valueOf( editCommand.getAmount() ).length() > 8) {
+			throw new IllegalArgumentException("編集情報が不正です");
+		}
 		
 		IncomeHouseholdForm incomeHouseholdForm = new IncomeHouseholdForm();
 		incomeHouseholdForm.setAmount(editCommand.getAmount());
@@ -219,6 +221,13 @@ public class HouseholdServices {
 	
 	//支出の編集
 	public Expenditure postEditExpenditureInfo(SearchResultBalanceFormForEditAndDelete editCommand) {
+		//単体テスト用のIllegalArgumentExceptionをthrowする処理
+				if(editCommand.getAmount() == null || editCommand.getBalanceDate() == null ||editCommand.getExpenditureExpenseItemName() == null) {
+					throw new IllegalArgumentException("編集情報がnullです");
+				}else if(String.valueOf( editCommand.getAmount() ).length() > 8) {
+					throw new IllegalArgumentException("編集情報が不正です");
+				}
+		
 		
 		ExpenditureItem expenditureItem = getExpenditureItemsRepository.findByExpenditureExpenseItemName(editCommand.getExpenditureExpenseItemName());
 		String expenditureExpenseItemCode= String.valueOf(expenditureItem.getExpenditureExpenseItemCode());
@@ -257,7 +266,9 @@ public class HouseholdServices {
 			income.setVersion(version + 1);
 			income.setDeleteFrag(true);
 			
-	        return incomeHouseholdRepository.save(income);
+			incomeHouseholdRepository.save(income);
+			
+	        return income;
 	    }
 		
 		//支出の削除
